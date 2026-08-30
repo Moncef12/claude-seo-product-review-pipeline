@@ -137,24 +137,3 @@ The current repository state was verified with **28 passing tests**. The checked
 - **Repair skipped:** the initial candidate passed both gates, so the repair stage made zero Sonnet calls and reused the initial Haiku pass as the final audit.
 
 The tests cover compact evidence/provenance handling, deterministic validation, factual-audit matrix rules, combined repair inputs, safe artifact escaping, Markdown rendering, and the ten-step result labels.
-
-## Deploy the demo to Vercel
-
-`review.html` is static, so the generated output directory can be deployed directly:
-
-```bash
-npx vercel data/arzopa-z3fc/output --prod
-```
-
-Complete Vercel's login/project prompts on the first run, then use the resulting URL with `/review.html`.
-
-The HTML is an audit and debugging deliverable, not a sanitized production template. It embeds source material, prompts, raw model responses, and parsed artifacts in collapsed markup. Review its contents and redistribution rights before publishing it outside a controlled demo.
-
-## Security and limitations
-
-- `.env` and the vendored cleaner are ignored by Git. Never commit API keys, DataForSEO credentials, or other secrets. If a credential has appeared in source, logs, screenshots, or Git history, rotate it immediately; deleting it later is not sufficient.
-- Product identity, queries, sources, prompts, and output paths are currently hardcoded for the Arzopa Z3FC. Supporting another product requires configuration and prompt changes.
-- Scraping depends on third-party page structure and availability. Cached inputs improve repeatability but can become stale.
-- The local audit HTML deliberately embeds source and prompt content. It is suitable for evaluation and debugging, not automatically safe for public production use.
-- Layer A cleanup removes invisible Unicode characters and normalizes exotic spaces. It does not paraphrase text, detect statistical signals, or claim to remove every possible model watermark.
-- Automated factual review reduces risk; it does not replace human editorial, legal, compliance, or hands-on product review.
