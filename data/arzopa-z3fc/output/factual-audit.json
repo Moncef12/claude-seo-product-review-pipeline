@@ -1,0 +1,1414 @@
+{
+  "model": "claude-haiku-4-5-20251001",
+  "prompt_version": "z3fc-factual-audit-v6-claim-matrix",
+  "evidence_sha256": "7cb6e0e1839482eda7c9e600ce15eab5d55f385931183c8cd61c59f05726596b",
+  "initial": {
+    "article_sha256": "4eb76f1b90af9dc1e8c524a26cba1d34c76e3d14621ad22fe1ead4b6a5095d2b",
+    "audited_at": "2026-08-30T13:24:45.007016+00:00",
+    "usage": {
+      "input_tokens": 10523,
+      "output_tokens": 6172
+    },
+    "system_prompt": "You are a strict factual-grounding auditor.\nAudit an article only against the supplied normalized evidence. Do not use outside\nknowledge. Check every factual assertion, number, product specification, source\nattribution, and treatment of conflicting evidence. Report only factual-grounding\nproblems, not style preferences. Return valid JSON matching the supplied schema.",
+    "prompt": "Audit every factual assertion in the article against the normalized\nevidence. Return exactly one JSON object matching the structured-output schema.\n\nCoverage contract:\n- Return one claim_checks row for every distinct factual assertion in the title,\n  metadata, prose, tables, bullets, and FAQs. Do not output only failures.\n- Use consecutive index values starting at 1 in article order.\n- Quote the smallest visible article span that contains the assertion. Visible link\n  text may be quoted without the Markdown URL.\n- Use verdict `supported` and severity `none` when the assertion is grounded.\n- For supported rows, briefly name the evidence IDs or conflict position that\n  grounds the assertion and leave suggested_correction as an empty string.\n- For every other verdict, use severity `major` or `critical` and provide the exact\n  factual correction. These rows block publication.\n\nGrounding rules:\n- Use only the supplied evidence. Do not validate claims from general knowledge.\n- Split prose, bullets, tables, the title, and metadata into atomic factual claims.\n- A claim passes when it is directly stated by, or conservatively entailed by, one\n  or more evidence claims.\n- Treat each evidence claim's status as authoritative. A `manufacturer_claim`\n  remains a manufacturer claim even when several publishers repeat it. Publishers\n  in the `sources` array reported the claim; they did not necessarily measure or\n  independently confirm it.\n- Treat positions and editorial guidance inside `conflicts` as first-class evidence,\n  even though conflict positions do not have claim IDs.\n- Recommendations may synthesize supported strengths, weaknesses, compatibility,\n  and purchase advice. Do not require an identical sentence in the evidence.\n- Flag any invented feature, specification, measurement, comparison, or use case.\n- Flag every number or range that is not supported by the evidence.\n- Flag a source attribution when that publisher does not support the attributed\n  claim.\n- Flag manufacturer claims or reviewer observations presented as independently\n  measured facts.\n- Conversely, do not flag a specification when the article clearly labels it as a\n  manufacturer claim. An extra inline publisher attribution is not required.\n- Accept cautious limitations such as \"no verified tier\" or \"the evidence does not\n  establish connection-specific support\" when the normalized evidence contains no\n  such detail. Absence-of-evidence qualifiers are not contradictions.\n- Never suggest wording such as \"confirmed by reviewers\" for a\n  `manufacturer_claim` unless a separate `observed` or `measured` evidence item\n  supports that stronger status.\n- Flag a disputed value presented as settled when the evidence records a conflict.\n- A numeric range is supported when its endpoints are supported; it does not need\n  to list every intermediate measurement. A concise conflict summary need not name\n  every publisher unless it claims to be exhaustive or hides the disagreement.\n- Do not flag headings, transitions, cautious editorial phrasing, or ordinary\n  product-category descriptions unless they introduce a factual assertion.\n- Report only substantive factual errors that require a correction. Do not fail an\n  article merely because more attribution or qualification could optionally be\n  added when its existing wording is already accurate.\n- Before adding an issue, perform a false-positive check. If your explanation would\n  say the quoted wording is accurate, acceptable, appropriate, or already correctly\n  qualified, do not report the issue. Never report optional attribution improvements.\n- Use evidence_ids from the normalized claims whenever relevant. An unsupported\n  claim may have an empty evidence_ids list when no evidence claim supports it.\n- Do not return aggregate pass or count fields. Python derives them from the complete\n  claim_checks matrix.\n\nCalibration examples for this evidence format:\n- PASS: \"AMD FreeSync is supported, though no verified tier or connection-specific\n  guarantee is available from the evidence\" when FreeSync is only a\n  `manufacturer_claim` and no tier or connection guarantee appears.\n- PASS: \"The manufacturer claims a 9ms pixel response time\" when the 9ms item has\n  status `manufacturer_claim`. An inline publisher citation is optional.\n- PASS: a statement paraphrasing a publisher position recorded inside `conflicts`.\n- PASS: \"TechRadar confirmed compatibility\" when TechRadar directly observed the\n  device working and the article preserves the recorded conditions.\n- FAIL: \"FreeSync Premium is supported\" when no FreeSync tier is in the evidence.\n- FAIL: \"Reviewers measured a 9ms response time\" when 9ms is only a manufacturer\n  claim.\n- FAIL: unconditional Switch compatibility when the evidence requires a dock and\n  external power.\n\nNORMALIZED EVIDENCE\n{\n  \"product\": {\n    \"brand\": \"Arzopa\",\n    \"model\": \"Z3FC\",\n    \"colour\": \"Grey\",\n    \"manufacturer\": \"Shenzhen G-world Technology Incorporated Company\"\n  },\n  \"source_count\": 5,\n  \"all_sources_confirm_exact_model\": true,\n  \"category_counts\": {\n    \"compatibility\": 6,\n    \"measurement\": 11,\n    \"purchase_advice\": 4,\n    \"specification\": 19,\n    \"strength\": 7,\n    \"uncertainty\": 1,\n    \"weakness\": 11\n  },\n  \"sources\": [\n    {\n      \"publisher\": \"How-To Geek\",\n      \"url\": \"https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review/\",\n      \"exact_model_reviewed\": true,\n      \"review_context\": \"Comprehensive hands-on review of the Arzopa Z3FC 16.1-inch portable monitor, testing display quality, connectivity, audio, and various use cases including gaming and productivity.\"\n    },\n    {\n      \"publisher\": \"PCWorld\",\n      \"url\": \"https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html\",\n      \"exact_model_reviewed\": true,\n      \"review_context\": \"Detailed technical review with instrumented measurements of image quality, contrast, color gamut, brightness, and comparison to competing portable monitors.\"\n    },\n    {\n      \"publisher\": \"ServeTheHome\",\n      \"url\": \"https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/\",\n      \"exact_model_reviewed\": true,\n      \"review_context\": \"Hardware overview and specifications review of the Arzopa Z3FC, focusing on design, connectivity, and included accessories.\"\n    },\n    {\n      \"publisher\": \"TechRadar\",\n      \"url\": \"https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review\",\n      \"exact_model_reviewed\": true,\n      \"review_context\": \"Hands-on review testing the Z3FC for work and gaming use cases, including performance with Nintendo Switch, Switch 2, and Xbox Series X.\"\n    },\n    {\n      \"publisher\": \"Tom's Hardware\",\n      \"url\": \"https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review\",\n      \"exact_model_reviewed\": true,\n      \"review_context\": \"Comprehensive review with instrumented testing of brightness, color gamut, contrast, and real-world usage testing with multiple devices.\"\n    }\n  ],\n  \"claims\": [\n    {\n      \"id\": \"d7074f73d3532353\",\n      \"category\": \"specification\",\n      \"claim\": \"16.1-inch diagonal IPS display panel\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"ServeTheHome\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"9cbb2d3f74547c29\",\n      \"category\": \"specification\",\n      \"claim\": \"2560 x 1440 resolution (2.5K QHD)\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"ServeTheHome\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"e51da9ab19e89b13\",\n      \"category\": \"specification\",\n      \"claim\": \"180Hz refresh rate via USB-C DisplayPort\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": \"USB-C connection\"\n    },\n    {\n      \"id\": \"8dba2bc8f612ae70\",\n      \"category\": \"specification\",\n      \"claim\": \"144Hz refresh rate via HDMI\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": \"Mini-HDMI connection\"\n    },\n    {\n      \"id\": \"4073c307d05f148c\",\n      \"category\": \"specification\",\n      \"claim\": \"HDR10+ support\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"a96a7305b3aa1a2d\",\n      \"category\": \"specification\",\n      \"claim\": \"400 nits maximum brightness\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"4d409e2e3ccca551\",\n      \"category\": \"specification\",\n      \"claim\": \"1000:1 contrast ratio\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"TechRadar\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"dd2cd2fe4e160fe8\",\n      \"category\": \"specification\",\n      \"claim\": \"1.6 to 1.72 lbs weight\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"83949f7264c93a71\",\n      \"category\": \"specification\",\n      \"claim\": \"0.36 to 0.39 inches thickness\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"ServeTheHome\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"7db1e83d0b44a650\",\n      \"category\": \"specification\",\n      \"claim\": \"Two USB-C ports with DisplayPort Alt Mode and Power Delivery\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"ServeTheHome\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"2c81c3e2958c9eb3\",\n      \"category\": \"specification\",\n      \"claim\": \"Mini-HDMI 2.0 port\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"ServeTheHome\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"8a14ce36acae5fc7\",\n      \"category\": \"specification\",\n      \"claim\": \"Two 1-watt stereo speakers\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"0b437b6524ea2089\",\n      \"category\": \"specification\",\n      \"claim\": \"16:9 aspect ratio\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"d7fc46905dd08374\",\n      \"category\": \"specification\",\n      \"claim\": \"AMD FreeSync support\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"27d11d3f50c72fe4\",\n      \"category\": \"specification\",\n      \"claim\": \"Supports 5V, 9V, 12V, 15V, or 20V voltage input with PD 2.0 protocol\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"27ffe44dd102407c\",\n      \"category\": \"specification\",\n      \"claim\": \"No built-in battery\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"3a35fecc1a03b80a\",\n      \"category\": \"specification\",\n      \"claim\": \"No touchscreen\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"03a963448a1a45e2\",\n      \"category\": \"specification\",\n      \"claim\": \"Adjustable kickstand supporting up to 80 degrees viewing angle\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"ServeTheHome\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"eb6070b8a86bb534\",\n      \"category\": \"specification\",\n      \"claim\": \"Supports both landscape and portrait orientations\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"5404951bd105b4f9\",\n      \"category\": \"measurement\",\n      \"claim\": \"Measured maximum brightness of 287.7 nits in default display mode\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": \"Default display mode\"\n    },\n    {\n      \"id\": \"461f8515a32ecf30\",\n      \"category\": \"measurement\",\n      \"claim\": \"Measured maximum brightness of 322.6 nits in FPS display mode\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": \"FPS display mode\"\n    },\n    {\n      \"id\": \"d6fac06b25a94ef3\",\n      \"category\": \"measurement\",\n      \"claim\": \"Covers 115.7 percent of sRGB color gamut\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"5d998943f0071801\",\n      \"category\": \"measurement\",\n      \"claim\": \"Covers 82 percent of DCI-P3 color gamut\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"4daafeb1efd5a7ed\",\n      \"category\": \"measurement\",\n      \"claim\": \"Covers 99 percent of sRGB color gamut\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"46e4e98e5658f919\",\n      \"category\": \"measurement\",\n      \"claim\": \"Covers 78 percent of DCI-P3 color gamut\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"2f2ca55bfebd3e20\",\n      \"category\": \"measurement\",\n      \"claim\": \"Covers 78 percent of AdobeRGB color gamut\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"30aa10844378bcd3\",\n      \"category\": \"measurement\",\n      \"claim\": \"Color temperature of 6300K\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"8ffea823c72dc516\",\n      \"category\": \"measurement\",\n      \"claim\": \"Gamma curve of 2.2\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"3543a47ea8ed1801\",\n      \"category\": \"measurement\",\n      \"claim\": \"Pixel density of approximately 182 pixels per inch\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"a088892d552b71bc\",\n      \"category\": \"measurement\",\n      \"claim\": \"Pixel response time of 9 milliseconds\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"876ba5f3e2d9259c\",\n      \"category\": \"strength\",\n      \"claim\": \"High resolution and fast refresh rate for a portable monitor at the price point\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"da85ba1a06e257ed\",\n      \"category\": \"strength\",\n      \"claim\": \"Excellent image quality with vibrant colors in both SDR and HDR modes\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"284e492cf4543c4a\",\n      \"category\": \"strength\",\n      \"claim\": \"Thin and lightweight design makes it highly portable\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"d6a59c2d8577bfa7\",\n      \"category\": \"strength\",\n      \"claim\": \"High brightness suitable for use in bright environments\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"PCWorld\",\n        \"TechRadar\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"4277248d35eb640b\",\n      \"category\": \"strength\",\n      \"claim\": \"Aluminum chassis provides premium feel and resists flexing\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"51670ebda092f5c6\",\n      \"category\": \"strength\",\n      \"claim\": \"Includes protective sleeve and braided cables\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"c01de276a54ccbbd\",\n      \"category\": \"strength\",\n      \"claim\": \"Speakers are better than expected for a portable monitor\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"TechRadar\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"f0b308b037ac59c6\",\n      \"category\": \"weakness\",\n      \"claim\": \"Limited viewing angles; screen darkens noticeably when viewed off-axis\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"955f2ccf4e85b583\",\n      \"category\": \"weakness\",\n      \"claim\": \"No built-in battery requires external power source for operation\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"8522d466eec84a37\",\n      \"category\": \"weakness\",\n      \"claim\": \"No touchscreen functionality\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"7eadb505e29e0932\",\n      \"category\": \"weakness\",\n      \"claim\": \"Mini-HDMI port is less common and inconvenient; full-size HDMI adapter required\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"ServeTheHome\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"ef13af1d813bab76\",\n      \"category\": \"weakness\",\n      \"claim\": \"Settings apply globally to all inputs instead of per-input configuration\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"99b8cb536df4915e\",\n      \"category\": \"weakness\",\n      \"claim\": \"Contrast ratio is limited compared to OLED alternatives\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"98a2be28a7102a4c\",\n      \"category\": \"weakness\",\n      \"claim\": \"HDR implementation is underwhelming with limited practical benefit\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"PCWorld\",\n        \"TechRadar\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"7fe0d446f4bd6cae\",\n      \"category\": \"weakness\",\n      \"claim\": \"Speakers lack bass and sound tinny at higher volumes\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"58e6bfc333015bf0\",\n      \"category\": \"weakness\",\n      \"claim\": \"HDR appears washed out on Nintendo Switch 2\",\n      \"status\": \"observed\",\n      \"sources\": [\n        \"TechRadar\"\n      ],\n      \"conditions\": \"Nintendo Switch 2 with HDR enabled\"\n    },\n    {\n      \"id\": \"ca15961a99fa5c57\",\n      \"category\": \"weakness\",\n      \"claim\": \"On-screen display menu navigation is clunky\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"TechRadar\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"70b84445373bca47\",\n      \"category\": \"weakness\",\n      \"claim\": \"Monitor runs warm after extended use\",\n      \"status\": \"observed\",\n      \"sources\": [\n        \"TechRadar\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"358e0bafc8b6e682\",\n      \"category\": \"compatibility\",\n      \"claim\": \"Works with laptops and tablets via USB-C for extended or duplicated display\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"14a8cfa6a0732db9\",\n      \"category\": \"compatibility\",\n      \"claim\": \"Compatible with smartphones with TV-out functionality via USB-C\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"b331459c1ff233da\",\n      \"category\": \"compatibility\",\n      \"claim\": \"Compatible with Nintendo Switch when connected to 15V minimum PD power source\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": \"15V minimum PD power source required for charging\"\n    },\n    {\n      \"id\": \"5dfe9f8580e080a6\",\n      \"category\": \"compatibility\",\n      \"claim\": \"Compatible with Xbox Series X and PlayStation 5 Pro via HDMI\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"855705c8a6a27c8a\",\n      \"category\": \"compatibility\",\n      \"claim\": \"Works with Nintendo Switch 2 via HDMI with external power\",\n      \"status\": \"observed\",\n      \"sources\": [\n        \"TechRadar\"\n      ],\n      \"conditions\": \"Requires docking console and external power supply\"\n    },\n    {\n      \"id\": \"272cfe182904763d\",\n      \"category\": \"compatibility\",\n      \"claim\": \"Compatible with Lenovo Legion Go handheld gaming PC\",\n      \"status\": \"observed\",\n      \"sources\": [\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"e1d788d2344af15e\",\n      \"category\": \"purchase_advice\",\n      \"claim\": \"Recommended for business travel and professionals needing portable screen expansion\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"10d67b22e7936b51\",\n      \"category\": \"purchase_advice\",\n      \"claim\": \"Suitable for mobile gaming with 180Hz refresh rate\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"666287228385b89f\",\n      \"category\": \"purchase_advice\",\n      \"claim\": \"Not recommended for professional content creators due to limited color accuracy at 107% sRGB\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"TechRadar\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"6fb358b86aa5c63d\",\n      \"category\": \"purchase_advice\",\n      \"claim\": \"Better value proposition than predecessor Arzopa Z1FC at similar price\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"0f5e7aea293ab2fe\",\n      \"category\": \"uncertainty\",\n      \"claim\": \"Exact power requirements for USB-C power delivery not specified in documentation\",\n      \"status\": \"unclear\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    }\n  ],\n  \"conflicts\": [\n    {\n      \"topic\": \"HDR support specification\",\n      \"positions\": [\n        {\n          \"publisher\": \"How-To Geek\",\n          \"claim\": \"Monitor supports HDR10+\"\n        },\n        {\n          \"publisher\": \"PCWorld\",\n          \"claim\": \"Monitor supports HDR but quality is underwhelming\"\n        },\n        {\n          \"publisher\": \"TechRadar\",\n          \"claim\": \"Monitor supports HDR 10\"\n        }\n      ],\n      \"editorial_guidance\": \"Reviewers agree HDR is present but differ on designation (HDR10+ vs HDR10) and implementation quality. How-To Geek claims HDR10+ support while PCWorld and TechRadar indicate HDR10. The practical consensus is that HDR implementation is limited in benefit regardless of specification.\"\n    },\n    {\n      \"topic\": \"Color gamut coverage\",\n      \"positions\": [\n        {\n          \"publisher\": \"Tom's Hardware\",\n          \"claim\": \"Covers 115.7% sRGB and 82% DCI-P3\"\n        },\n        {\n          \"publisher\": \"PCWorld\",\n          \"claim\": \"Covers 99% sRGB and 78% DCI-P3\"\n        },\n        {\n          \"publisher\": \"TechRadar\",\n          \"claim\": \"Covers 107% sRGB\"\n        }\n      ],\n      \"editorial_guidance\": \"Measured color gamut varies across reviewers, likely due to different measurement conditions and calibration methods. Tom's Hardware reports the highest sRGB coverage at 115.7%, while PCWorld reports 99% and TechRadar reports 107%. These differences are within typical measurement variance for portable displays.\"\n    },\n    {\n      \"topic\": \"Maximum brightness measurement\",\n      \"positions\": [\n        {\n          \"publisher\": \"Tom's Hardware\",\n          \"claim\": \"Measured 287.7 nits maximum in default mode and 322.6 nits in FPS mode\"\n        },\n        {\n          \"publisher\": \"How-To Geek\",\n          \"claim\": \"400 nits maximum brightness specification met or exceeded in testing\"\n        },\n        {\n          \"publisher\": \"PCWorld\",\n          \"claim\": \"Comes close to 400 nits of SDR brightness\"\n        }\n      ],\n      \"editorial_guidance\": \"Tom's Hardware's instrumented measurements show lower brightness than manufacturer spec and other reviewers' observations. This may reflect different measurement methodology or display settings. Readers should note the discrepancy between manufacturer claim (400 nits) and Tom's Hardware's measured results (287.7-322.6 nits).\"\n    }\n  ]\n}\n\nARTICLE TO AUDIT\n# Arzopa Z3FC Review: 2.5K 180Hz Portable Monitor Assessed\n\n**Meta description:** Arzopa Z3FC review covering its 2.5K 180Hz screen, portable design, gaming performance, connectivity, measured results, limitations, and ideal users.\n\n## Quick Verdict\n\nThe Arzopa Z3FC suits mobile gamers and travelling professionals who want a sharp, fast portable screen without paying a premium. Its 2.5K 180Hz panel is a strong specification combination at this size. The largest compromise is the absence of a built-in battery, which means you always need an external power source.\n\n## Review Snapshot\n\n| | |\n|---|---|\n| **Overall assessment** | Capable portable monitor with a strong specification set for the price |\n| **Best for** | Mobile gamers, business travellers, laptop users needing a second screen |\n| **Avoid if** | You need battery-powered operation or professional colour accuracy |\n| **Standout feature** | 2560x1440 resolution paired with a 180Hz refresh rate |\n| **Biggest compromise** | No built-in battery; requires external power at all times |\n\n## Pros and Cons\n\n**Pros**\n- 2.5K resolution and 180Hz refresh rate form a strong specification combination for a portable monitor at this price point, per multiple reviewers\n- Aluminium chassis resists flexing and the package includes a protective sleeve and braided cables\n- Thin profile of 0.36 to 0.39 inches and weight of 1.6 to 1.72 lb make it genuinely portable\n\n**Cons**\n- No built-in battery; the monitor requires a powered USB-C connection or separate supply at all times\n- Off-axis viewing causes noticeable screen darkening, observed by How-To Geek and PCWorld\n- HDR implementation is assessed as underwhelming by PCWorld and TechRadar, with washed-out results observed on Nintendo Switch 2\n\n## Specifications\n\n| Specification | Detail |\n|---|---|\n| Panel | 16.1-inch IPS, 16:9 (manufacturer claim) |\n| Resolution | 2560x1440 QHD at ~182 ppi (manufacturer claim; ppi measured by [PCWorld](https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html)) |\n| Refresh rate | 180Hz via USB-C DisplayPort; 144Hz via Mini-HDMI (manufacturer claim) |\n| Brightness | 400 nits claimed; [Tom's Hardware](https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review) measured 287.7 nits default, 322.6 nits in FPS mode |\n| Colour gamut | sRGB coverage measured at 99% ([PCWorld](https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html)) to 115.7% ([Tom's Hardware](https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review)); DCI-P3 at 78 to 82% |\n| Connectivity | Two USB-C with DisplayPort Alt Mode and Power Delivery; one Mini-HDMI 2.0 |\n| Variable refresh | AMD FreeSync supported (manufacturer claim) |\n| Other | No battery, no touchscreen; adjustable kickstand to 80 degrees; two 1-watt stereo speakers |\n\n## Design and Portability\n\nMultiple reviewers assess the Z3FC as genuinely portable. The aluminium chassis resists flexing and contributes to a premium feel, according to Tom's Hardware. At 0.36 to 0.39 inches thick and 1.6 to 1.72 lb, it slides into a bag without difficulty. The adjustable kickstand supports angles up to 80 degrees and the monitor can operate in both landscape and portrait orientations. Arzopa includes a protective sleeve and braided cables in the box.\n\n## Display Quality\n\nBrightness measurements conflict across sources. Tom's Hardware recorded 287.7 nits in default mode and 322.6 nits in FPS mode, both below the manufacturer's 400-nit claim, while PCWorld noted the panel comes close to that figure. Colour gamut measurements also vary: PCWorld measured 99 percent sRGB coverage and 78 percent DCI-P3, while Tom's Hardware recorded 115.7 percent sRGB and 82 percent DCI-P3. PCWorld measured a colour temperature of 6300K and a gamma of 2.2. HDR designation differs between sources, with How-To Geek citing HDR10+ and TechRadar citing HDR10; both PCWorld and TechRadar assess the practical HDR benefit as limited.\n\n## Gaming Performance\n\nThe 180Hz refresh rate is available over USB-C DisplayPort, dropping to 144Hz over Mini-HDMI, per manufacturer claims confirmed by [TechRadar](https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review) and Tom's Hardware. AMD FreeSync is supported. Several reviewers consider the combination of 2.5K resolution and 180Hz a strong proposition for mobile gaming at this price. TechRadar observed the monitor working with Nintendo Switch 2 via HDMI when docked with external power, though HDR appeared washed out in that configuration. Tom's Hardware observed compatibility with the Lenovo Legion Go handheld.\n\n## Connectivity and Everyday Use\n\nThe two USB-C ports support DisplayPort Alt Mode and Power Delivery, and the Mini-HDMI port carries both audio and video but does not power the monitor. A full-size HDMI adapter is needed for standard cables, which multiple reviewers flag as inconvenient. Nintendo Switch compatibility requires a minimum 15V Power Delivery source for simultaneous charging. PCWorld notes that exact USB-C power delivery requirements are not clearly documented. The on-screen display menu navigation is described as clunky by TechRadar, and display settings apply globally across all inputs rather than per-input, a limitation noted by How-To Geek.\n\n## How It Compares\n\nReviewers from How-To Geek, PCWorld, and Tom's Hardware assess the Z3FC's resolution and refresh rate as a strong specification combination for a portable monitor at its price point. IPS contrast remains a limitation relative to OLED portable monitors, which PCWorld notes offer deeper blacks. The Z3FC does not carry a battery, which some competing portable monitors include, making power access a practical differentiator for buyers.\n\n## Who Should Buy It and Who Should Not\n\nTechRadar and Tom's Hardware recommend the Z3FC for business travellers and professionals who need portable screen expansion. Mobile gamers who can guarantee USB-C power access will benefit from the 180Hz panel. Buyers who need battery-powered operation, touchscreen input, or professional-grade colour accuracy for content creation should look elsewhere, as TechRadar specifically advises against it for the last use case.\n\n## Final Verdict\n\nThis Arzopa Z3FC review finds a portable monitor that delivers a genuinely capable display for gaming and productivity on the move. The 2.5K 180Hz panel, aluminium build, and competitive accessory bundle represent good value at this size. The absence of a battery, the Mini-HDMI inconvenience, and a limited HDR implementation are real trade-offs. Buyers who can live with those constraints and have reliable power access will find it a well-rounded portable screen.\n\n## Frequently Asked Questions\n\n**Does the Arzopa Z3FC work with a Nintendo Switch?**\nYes, with conditions. USB-C connection requires a minimum 15V Power Delivery source for simultaneous charging. HDMI connection works when the Switch is docked with external power supplied separately.\n\n**Can the Arzopa Z3FC reach 180Hz over HDMI?**\nNo. The 180Hz refresh rate is available only over USB-C with DisplayPort Alt Mode. The Mini-HDMI connection is limited to 144Hz per manufacturer specifications.\n\n**Does the Arzopa Z3FC have a built-in battery?**\nNo. The monitor has no internal battery and must be powered via USB-C Power Delivery or an external supply whenever it is in use.\n\n## How We Researched This Review\n\nThis review is an evidence-based synthesis drawn from five published sources. No hands-on testing was conducted by this publication.\n\n- [How-To Geek](https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review/)\n- [PCWorld](https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html)\n- [ServeTheHome](https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/)\n- [TechRadar](https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review)\n- [Tom's Hardware](https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review)\n",
+    "raw_response": "{\"claim_checks\": [{\"index\": 1, \"article_quote\": \"Arzopa Z3FC Review: 2.5K 180Hz Portable Monitor Assessed\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The article title accurately describes the product model and key specifications (2.5K resolution and 180Hz refresh rate) which are confirmed as manufacturer claims across all five sources.\", \"evidence_ids\": [\"9cbb2d3f74547c29\", \"e51da9ab19e89b13\"], \"suggested_correction\": \"\"}, {\"index\": 2, \"article_quote\": \"The Arzopa Z3FC suits mobile gamers and travelling professionals who want a sharp, fast portable screen without paying a premium.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"This recommendation is supported by reviewer assessments that the Z3FC is suitable for mobile gaming and business travel professionals, with strong specifications at its price point.\", \"evidence_ids\": [\"10d67b22e7936b51\", \"e1d788d2344af15e\"], \"suggested_correction\": \"\"}, {\"index\": 3, \"article_quote\": \"Its 2.5K 180Hz panel is a strong specification combination at this size.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Multiple reviewers assess the combination of 2.5K resolution and 180Hz refresh rate as a strong specification for a portable monitor at this price point.\", \"evidence_ids\": [\"876ba5f3e2d9259c\"], \"suggested_correction\": \"\"}, {\"index\": 4, \"article_quote\": \"The largest compromise is the absence of a built-in battery, which means you always need an external power source.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The lack of a built-in battery is confirmed as a manufacturer specification and is identified by multiple reviewers as a significant limitation.\", \"evidence_ids\": [\"27ffe44dd102407c\", \"955f2ccf4e85b583\"], \"suggested_correction\": \"\"}, {\"index\": 5, \"article_quote\": \"Capable portable monitor with a strong specification set for the price\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"This assessment aligns with reviewer assessments that the Z3FC offers strong specifications at its price point.\", \"evidence_ids\": [\"876ba5f3e2d9259c\"], \"suggested_correction\": \"\"}, {\"index\": 6, \"article_quote\": \"Mobile gamers, business travellers, laptop users needing a second screen\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"These use cases are supported by reviewer assessments of the Z3FC's suitability for mobile gaming, business travel, and productivity use.\", \"evidence_ids\": [\"10d67b22e7936b51\", \"e1d788d2344af15e\", \"358e0bafc8b6e682\"], \"suggested_correction\": \"\"}, {\"index\": 7, \"article_quote\": \"You need battery-powered operation or professional colour accuracy\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The lack of battery is confirmed as a specification, and TechRadar specifically advises against the Z3FC for professional content creators due to limited color accuracy.\", \"evidence_ids\": [\"27ffe44dd102407c\", \"666287228385b89f\"], \"suggested_correction\": \"\"}, {\"index\": 8, \"article_quote\": \"2560x1440 resolution paired with a 180Hz refresh rate\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both specifications are confirmed as manufacturer claims across all five sources.\", \"evidence_ids\": [\"9cbb2d3f74547c29\", \"e51da9ab19e89b13\"], \"suggested_correction\": \"\"}, {\"index\": 9, \"article_quote\": \"No built-in battery; requires external power at all times\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"This is confirmed as a manufacturer specification and reviewer assessment.\", \"evidence_ids\": [\"27ffe44dd102407c\", \"955f2ccf4e85b583\"], \"suggested_correction\": \"\"}, {\"index\": 10, \"article_quote\": \"2.5K resolution and 180Hz refresh rate form a strong specification combination for a portable monitor at this price point, per multiple reviewers\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Multiple reviewers (How-To Geek, PCWorld, Tom's Hardware) assess this specification combination as strong for the price.\", \"evidence_ids\": [\"876ba5f3e2d9259c\"], \"suggested_correction\": \"\"}, {\"index\": 11, \"article_quote\": \"Aluminium chassis resists flexing and the package includes a protective sleeve and braided cables\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Tom's Hardware confirms the aluminum chassis resists flexing, and multiple reviewers confirm the protective sleeve and braided cables are included.\", \"evidence_ids\": [\"4277248d35eb640b\", \"51670ebda092f5c6\"], \"suggested_correction\": \"\"}, {\"index\": 12, \"article_quote\": \"Thin profile of 0.36 to 0.39 inches and weight of 1.6 to 1.72 lb make it genuinely portable\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"These specifications are confirmed as manufacturer claims across multiple sources, and reviewers assess the design as genuinely portable.\", \"evidence_ids\": [\"dd2cd2fe4e160fe8\", \"83949f7264c93a71\", \"284e492cf4543c4a\"], \"suggested_correction\": \"\"}, {\"index\": 13, \"article_quote\": \"No built-in battery; the monitor requires a powered USB-C connection or separate supply at all times\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"This is confirmed as a manufacturer specification and reviewer assessment.\", \"evidence_ids\": [\"27ffe44dd102407c\", \"955f2ccf4e85b583\"], \"suggested_correction\": \"\"}, {\"index\": 14, \"article_quote\": \"Off-axis viewing causes noticeable screen darkening, observed by How-To Geek and PCWorld\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"This weakness is confirmed as a reviewer assessment from both How-To Geek and PCWorld.\", \"evidence_ids\": [\"f0b308b037ac59c6\"], \"suggested_correction\": \"\"}, {\"index\": 15, \"article_quote\": \"HDR implementation is assessed as underwhelming by PCWorld and TechRadar, with washed-out results observed on Nintendo Switch 2\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"PCWorld and TechRadar both assess HDR as underwhelming, and TechRadar specifically observed washed-out HDR on Nintendo Switch 2.\", \"evidence_ids\": [\"98a2be28a7102a4c\", \"58e6bfc333015bf0\"], \"suggested_correction\": \"\"}, {\"index\": 16, \"article_quote\": \"16.1-inch IPS, 16:9 (manufacturer claim)\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both the 16.1-inch diagonal and 16:9 aspect ratio are confirmed as manufacturer claims across multiple sources.\", \"evidence_ids\": [\"d7074f73d3532353\", \"0b437b6524ea2089\"], \"suggested_correction\": \"\"}, {\"index\": 17, \"article_quote\": \"2560x1440 QHD at ~182 ppi (manufacturer claim; ppi measured by PCWorld)\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The resolution is a manufacturer claim confirmed across all sources. PCWorld measured the pixel density at approximately 182 ppi.\", \"evidence_ids\": [\"9cbb2d3f74547c29\", \"3543a47ea8ed1801\"], \"suggested_correction\": \"\"}, {\"index\": 18, \"article_quote\": \"180Hz via USB-C DisplayPort; 144Hz via Mini-HDMI (manufacturer claim)\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both refresh rate specifications are confirmed as manufacturer claims across multiple sources.\", \"evidence_ids\": [\"e51da9ab19e89b13\", \"8dba2bc8f612ae70\"], \"suggested_correction\": \"\"}, {\"index\": 19, \"article_quote\": \"400 nits claimed; Tom's Hardware measured 287.7 nits default, 322.6 nits in FPS mode\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The 400-nit manufacturer claim is confirmed across multiple sources. Tom's Hardware's measured values of 287.7 nits (default) and 322.6 nits (FPS mode) are accurately reported.\", \"evidence_ids\": [\"a96a7305b3aa1a2d\", \"5404951bd105b4f9\", \"461f8515a32ecf30\"], \"suggested_correction\": \"\"}, {\"index\": 20, \"article_quote\": \"sRGB coverage measured at 99% (PCWorld) to 115.7% (Tom's Hardware); DCI-P3 at 78 to 82%\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"PCWorld measured 99% sRGB and 78% DCI-P3. Tom's Hardware measured 115.7% sRGB and 82% DCI-P3. These measurements are accurately reported with proper attribution.\", \"evidence_ids\": [\"4daafeb1efd5a7ed\", \"46e4e98e5658f919\", \"d6fac06b25a94ef3\", \"5d998943f0071801\"], \"suggested_correction\": \"\"}, {\"index\": 21, \"article_quote\": \"Two USB-C with DisplayPort Alt Mode and Power Delivery; one Mini-HDMI 2.0\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"These connectivity specifications are confirmed as manufacturer claims across multiple sources.\", \"evidence_ids\": [\"7db1e83d0b44a650\", \"2c81c3e2958c9eb3\"], \"suggested_correction\": \"\"}, {\"index\": 22, \"article_quote\": \"AMD FreeSync supported (manufacturer claim)\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"AMD FreeSync support is confirmed as a manufacturer claim across multiple sources.\", \"evidence_ids\": [\"d7fc46905dd08374\"], \"suggested_correction\": \"\"}, {\"index\": 23, \"article_quote\": \"No battery, no touchscreen; adjustable kickstand to 80 degrees; two 1-watt stereo speakers\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"All specifications are confirmed as manufacturer claims: no battery, no touchscreen, 80-degree kickstand, and two 1-watt speakers.\", \"evidence_ids\": [\"27ffe44dd102407c\", \"3a35fecc1a03b80a\", \"03a963448a1a45e2\", \"8a14ce36acae5fc7\"], \"suggested_correction\": \"\"}, {\"index\": 24, \"article_quote\": \"The aluminium chassis resists flexing and contributes to a premium feel, according to Tom's Hardware.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Tom's Hardware confirms the aluminum chassis resists flexing and provides a premium feel.\", \"evidence_ids\": [\"4277248d35eb640b\"], \"suggested_correction\": \"\"}, {\"index\": 25, \"article_quote\": \"At 0.36 to 0.39 inches thick and 1.6 to 1.72 lb, it slides into a bag without difficulty.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"These dimensions and weight specifications are confirmed as manufacturer claims, and reviewers assess the design as genuinely portable.\", \"evidence_ids\": [\"dd2cd2fe4e160fe8\", \"83949f7264c93a71\", \"284e492cf4543c4a\"], \"suggested_correction\": \"\"}, {\"index\": 26, \"article_quote\": \"The adjustable kickstand supports angles up to 80 degrees and the monitor can operate in both landscape and portrait orientations.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both the 80-degree kickstand and landscape/portrait orientation support are confirmed as manufacturer claims.\", \"evidence_ids\": [\"03a963448a1a45e2\", \"eb6070b8a86bb534\"], \"suggested_correction\": \"\"}, {\"index\": 27, \"article_quote\": \"Arzopa includes a protective sleeve and braided cables in the box.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Multiple reviewers confirm that the protective sleeve and braided cables are included in the package.\", \"evidence_ids\": [\"51670ebda092f5c6\"], \"suggested_correction\": \"\"}, {\"index\": 28, \"article_quote\": \"Tom's Hardware recorded 287.7 nits in default mode and 322.6 nits in FPS mode, both below the manufacturer's 400-nit claim, while PCWorld noted the panel comes close to that figure.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Tom's Hardware's measurements are accurately reported. PCWorld's assessment that the panel comes close to 400 nits is supported by the evidence.\", \"evidence_ids\": [\"5404951bd105b4f9\", \"461f8515a32ecf30\"], \"suggested_correction\": \"\"}, {\"index\": 29, \"article_quote\": \"Colour gamut measurements also vary: PCWorld measured 99 percent sRGB coverage and 78 percent DCI-P3, while Tom's Hardware recorded 115.7 percent sRGB and 82 percent DCI-P3.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both sets of measurements are accurately reported with proper attribution to the respective sources.\", \"evidence_ids\": [\"4daafeb1efd5a7ed\", \"46e4e98e5658f919\", \"d6fac06b25a94ef3\", \"5d998943f0071801\"], \"suggested_correction\": \"\"}, {\"index\": 30, \"article_quote\": \"PCWorld measured a colour temperature of 6300K and a gamma of 2.2.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"PCWorld's measurements of 6300K color temperature and 2.2 gamma are confirmed in the evidence.\", \"evidence_ids\": [\"30aa10844378bcd3\", \"8ffea823c72dc516\"], \"suggested_correction\": \"\"}, {\"index\": 31, \"article_quote\": \"HDR designation differs between sources, with How-To Geek citing HDR10+ and TechRadar citing HDR10; both PCWorld and TechRadar assess the practical HDR benefit as limited.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The conflict in HDR designation is documented in the evidence. How-To Geek claims HDR10+, while TechRadar cites HDR10. Both PCWorld and TechRadar assess HDR implementation as limited in practical benefit.\", \"evidence_ids\": [\"4073c307d05f148c\", \"98a2be28a7102a4c\"], \"suggested_correction\": \"\"}, {\"index\": 32, \"article_quote\": \"The 180Hz refresh rate is available over USB-C DisplayPort, dropping to 144Hz over Mini-HDMI, per manufacturer claims confirmed by TechRadar and Tom's Hardware.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both refresh rate specifications are manufacturer claims confirmed across multiple sources including TechRadar and Tom's Hardware.\", \"evidence_ids\": [\"e51da9ab19e89b13\", \"8dba2bc8f612ae70\"], \"suggested_correction\": \"\"}, {\"index\": 33, \"article_quote\": \"AMD FreeSync is supported.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"AMD FreeSync support is confirmed as a manufacturer claim across multiple sources.\", \"evidence_ids\": [\"d7fc46905dd08374\"], \"suggested_correction\": \"\"}, {\"index\": 34, \"article_quote\": \"Several reviewers consider the combination of 2.5K resolution and 180Hz a strong proposition for mobile gaming at this price.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Multiple reviewers (How-To Geek, PCWorld, Tom's Hardware) assess this specification combination as strong for mobile gaming at the price point.\", \"evidence_ids\": [\"876ba5f3e2d9259c\", \"10d67b22e7936b51\"], \"suggested_correction\": \"\"}, {\"index\": 35, \"article_quote\": \"TechRadar observed the monitor working with Nintendo Switch 2 via HDMI when docked with external power, though HDR appeared washed out in that configuration.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"TechRadar observed compatibility with Nintendo Switch 2 via HDMI with docking and external power, and specifically observed washed-out HDR in that configuration.\", \"evidence_ids\": [\"855705c8a6a27c8a\", \"58e6bfc333015bf0\"], \"suggested_correction\": \"\"}, {\"index\": 36, \"article_quote\": \"Tom's Hardware observed compatibility with the Lenovo Legion Go handheld.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Tom's Hardware observed the Z3FC working with the Lenovo Legion Go handheld gaming PC.\", \"evidence_ids\": [\"272cfe182904763d\"], \"suggested_correction\": \"\"}, {\"index\": 37, \"article_quote\": \"The two USB-C ports support DisplayPort Alt Mode and Power Delivery, and the Mini-HDMI port carries both audio and video but does not power the monitor.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The USB-C and Mini-HDMI specifications are confirmed as manufacturer claims. The statement that Mini-HDMI does not power the monitor is consistent with the evidence that the monitor requires external power.\", \"evidence_ids\": [\"7db1e83d0b44a650\", \"2c81c3e2958c9eb3\", \"27ffe44dd102407c\"], \"suggested_correction\": \"\"}, {\"index\": 38, \"article_quote\": \"A full-size HDMI adapter is needed for standard cables, which multiple reviewers flag as inconvenient.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Multiple reviewers (How-To Geek, PCWorld, ServeTheHome, Tom's Hardware) identify the Mini-HDMI port as inconvenient and note that a full-size HDMI adapter is required.\", \"evidence_ids\": [\"7eadb505e29e0932\"], \"suggested_correction\": \"\"}, {\"index\": 39, \"article_quote\": \"Nintendo Switch compatibility requires a minimum 15V Power Delivery source for simultaneous charging.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"How-To Geek confirms that Nintendo Switch compatibility requires a minimum 15V Power Delivery source for simultaneous charging.\", \"evidence_ids\": [\"b331459c1ff233da\"], \"suggested_correction\": \"\"}, {\"index\": 40, \"article_quote\": \"PCWorld notes that exact USB-C power delivery requirements are not clearly documented.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"PCWorld identifies uncertainty about exact power requirements for USB-C power delivery, which is documented in the evidence as an unclear specification.\", \"evidence_ids\": [\"0f5e7aea293ab2fe\"], \"suggested_correction\": \"\"}, {\"index\": 41, \"article_quote\": \"The on-screen display menu navigation is described as clunky by TechRadar, and display settings apply globally across all inputs rather than per-input, a limitation noted by How-To Geek.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"TechRadar describes the OSD menu navigation as clunky, and How-To Geek notes that settings apply globally rather than per-input.\", \"evidence_ids\": [\"ca15961a99fa5c57\", \"ef13af1d813bab76\"], \"suggested_correction\": \"\"}, {\"index\": 42, \"article_quote\": \"Reviewers from How-To Geek, PCWorld, and Tom's Hardware assess the Z3FC's resolution and refresh rate as a strong specification combination for a portable monitor at its price point.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Multiple reviewers assess the 2.5K 180Hz specification combination as strong for the price point.\", \"evidence_ids\": [\"876ba5f3e2d9259c\"], \"suggested_correction\": \"\"}, {\"index\": 43, \"article_quote\": \"IPS contrast remains a limitation relative to OLED portable monitors, which PCWorld notes offer deeper blacks.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"PCWorld notes that IPS contrast is limited compared to OLED alternatives, which offer deeper blacks.\", \"evidence_ids\": [\"99b8cb536df4915e\"], \"suggested_correction\": \"\"}, {\"index\": 44, \"article_quote\": \"The Z3FC does not carry a battery, which some competing portable monitors include, making power access a practical differentiator for buyers.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The lack of a built-in battery is confirmed as a specification, and this is identified as a practical differentiator compared to competing models.\", \"evidence_ids\": [\"27ffe44dd102407c\"], \"suggested_correction\": \"\"}, {\"index\": 45, \"article_quote\": \"TechRadar and Tom's Hardware recommend the Z3FC for business travellers and professionals who need portable screen expansion.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both TechRadar and Tom's Hardware recommend the Z3FC for business travel and professional use cases requiring portable screen expansion.\", \"evidence_ids\": [\"e1d788d2344af15e\"], \"suggested_correction\": \"\"}, {\"index\": 46, \"article_quote\": \"Mobile gamers who can guarantee USB-C power access will benefit from the 180Hz panel.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Multiple reviewers assess the 180Hz refresh rate as beneficial for mobile gaming, and the power requirement is confirmed as a specification.\", \"evidence_ids\": [\"10d67b22e7936b51\", \"27ffe44dd102407c\"], \"suggested_correction\": \"\"}, {\"index\": 47, \"article_quote\": \"Buyers who need battery-powered operation, touchscreen input, or professional-grade colour accuracy for content creation should look elsewhere, as TechRadar specifically advises against it for the last use case.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The lack of battery and touchscreen are confirmed specifications. TechRadar specifically advises against the Z3FC for professional content creators due to limited color accuracy.\", \"evidence_ids\": [\"27ffe44dd102407c\", \"3a35fecc1a03b80a\", \"666287228385b89f\"], \"suggested_correction\": \"\"}, {\"index\": 48, \"article_quote\": \"The 2.5K 180Hz panel, aluminium build, and competitive accessory bundle represent good value at this size.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The specifications and included accessories are confirmed. Reviewers assess the value proposition as strong for the price point.\", \"evidence_ids\": [\"9cbb2d3f74547c29\", \"e51da9ab19e89b13\", \"4277248d35eb640b\", \"51670ebda092f5c6\", \"876ba5f3e2d9259c\"], \"suggested_correction\": \"\"}, {\"index\": 49, \"article_quote\": \"The absence of a battery, the Mini-HDMI inconvenience, and a limited HDR implementation are real trade-offs.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"All three trade-offs are confirmed by the evidence: no battery is a specification, Mini-HDMI is flagged as inconvenient by multiple reviewers, and HDR implementation is assessed as limited.\", \"evidence_ids\": [\"27ffe44dd102407c\", \"7eadb505e29e0932\", \"98a2be28a7102a4c\"], \"suggested_correction\": \"\"}, {\"index\": 50, \"article_quote\": \"Yes, with conditions. USB-C connection requires a minimum 15V Power Delivery source for simultaneous charging. HDMI connection works when the Switch is docked with external power supplied separately.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"How-To Geek confirms USB-C Nintendo Switch compatibility requires 15V minimum PD for charging. TechRadar confirms HDMI compatibility when docked with external power.\", \"evidence_ids\": [\"b331459c1ff233da\", \"855705c8a6a27c8a\"], \"suggested_correction\": \"\"}, {\"index\": 51, \"article_quote\": \"No. The 180Hz refresh rate is available only over USB-C with DisplayPort Alt Mode. The Mini-HDMI connection is limited to 144Hz per manufacturer specifications.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both refresh rate specifications are confirmed as manufacturer claims: 180Hz via USB-C DisplayPort and 144Hz via Mini-HDMI.\", \"evidence_ids\": [\"e51da9ab19e89b13\", \"8dba2bc8f612ae70\"], \"suggested_correction\": \"\"}, {\"index\": 52, \"article_quote\": \"No. The monitor has no internal battery and must be powered via USB-C Power Delivery or an external supply whenever it is in use.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The lack of a built-in battery is confirmed as a manufacturer specification.\", \"evidence_ids\": [\"27ffe44dd102407c\"], \"suggested_correction\": \"\"}, {\"index\": 53, \"article_quote\": \"This review is an evidence-based synthesis drawn from five published sources.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The evidence confirms that five sources were reviewed: How-To Geek, PCWorld, ServeTheHome, TechRadar, and Tom's Hardware.\", \"evidence_ids\": [], \"suggested_correction\": \"\"}]}",
+    "audit": {
+      "passed": true,
+      "audited_claim_count": 53,
+      "supported_claim_count": 53,
+      "issues": [],
+      "claim_checks": [
+        {
+          "index": 1,
+          "article_quote": "Arzopa Z3FC Review: 2.5K 180Hz Portable Monitor Assessed",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The article title accurately describes the product model and key specifications (2.5K resolution and 180Hz refresh rate) which are confirmed as manufacturer claims across all five sources.",
+          "evidence_ids": [
+            "9cbb2d3f74547c29",
+            "e51da9ab19e89b13"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 2,
+          "article_quote": "The Arzopa Z3FC suits mobile gamers and travelling professionals who want a sharp, fast portable screen without paying a premium.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "This recommendation is supported by reviewer assessments that the Z3FC is suitable for mobile gaming and business travel professionals, with strong specifications at its price point.",
+          "evidence_ids": [
+            "10d67b22e7936b51",
+            "e1d788d2344af15e"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 3,
+          "article_quote": "Its 2.5K 180Hz panel is a strong specification combination at this size.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Multiple reviewers assess the combination of 2.5K resolution and 180Hz refresh rate as a strong specification for a portable monitor at this price point.",
+          "evidence_ids": [
+            "876ba5f3e2d9259c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 4,
+          "article_quote": "The largest compromise is the absence of a built-in battery, which means you always need an external power source.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The lack of a built-in battery is confirmed as a manufacturer specification and is identified by multiple reviewers as a significant limitation.",
+          "evidence_ids": [
+            "27ffe44dd102407c",
+            "955f2ccf4e85b583"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 5,
+          "article_quote": "Capable portable monitor with a strong specification set for the price",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "This assessment aligns with reviewer assessments that the Z3FC offers strong specifications at its price point.",
+          "evidence_ids": [
+            "876ba5f3e2d9259c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 6,
+          "article_quote": "Mobile gamers, business travellers, laptop users needing a second screen",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "These use cases are supported by reviewer assessments of the Z3FC's suitability for mobile gaming, business travel, and productivity use.",
+          "evidence_ids": [
+            "10d67b22e7936b51",
+            "e1d788d2344af15e",
+            "358e0bafc8b6e682"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 7,
+          "article_quote": "You need battery-powered operation or professional colour accuracy",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The lack of battery is confirmed as a specification, and TechRadar specifically advises against the Z3FC for professional content creators due to limited color accuracy.",
+          "evidence_ids": [
+            "27ffe44dd102407c",
+            "666287228385b89f"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 8,
+          "article_quote": "2560x1440 resolution paired with a 180Hz refresh rate",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both specifications are confirmed as manufacturer claims across all five sources.",
+          "evidence_ids": [
+            "9cbb2d3f74547c29",
+            "e51da9ab19e89b13"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 9,
+          "article_quote": "No built-in battery; requires external power at all times",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "This is confirmed as a manufacturer specification and reviewer assessment.",
+          "evidence_ids": [
+            "27ffe44dd102407c",
+            "955f2ccf4e85b583"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 10,
+          "article_quote": "2.5K resolution and 180Hz refresh rate form a strong specification combination for a portable monitor at this price point, per multiple reviewers",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Multiple reviewers (How-To Geek, PCWorld, Tom's Hardware) assess this specification combination as strong for the price.",
+          "evidence_ids": [
+            "876ba5f3e2d9259c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 11,
+          "article_quote": "Aluminium chassis resists flexing and the package includes a protective sleeve and braided cables",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Tom's Hardware confirms the aluminum chassis resists flexing, and multiple reviewers confirm the protective sleeve and braided cables are included.",
+          "evidence_ids": [
+            "4277248d35eb640b",
+            "51670ebda092f5c6"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 12,
+          "article_quote": "Thin profile of 0.36 to 0.39 inches and weight of 1.6 to 1.72 lb make it genuinely portable",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "These specifications are confirmed as manufacturer claims across multiple sources, and reviewers assess the design as genuinely portable.",
+          "evidence_ids": [
+            "dd2cd2fe4e160fe8",
+            "83949f7264c93a71",
+            "284e492cf4543c4a"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 13,
+          "article_quote": "No built-in battery; the monitor requires a powered USB-C connection or separate supply at all times",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "This is confirmed as a manufacturer specification and reviewer assessment.",
+          "evidence_ids": [
+            "27ffe44dd102407c",
+            "955f2ccf4e85b583"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 14,
+          "article_quote": "Off-axis viewing causes noticeable screen darkening, observed by How-To Geek and PCWorld",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "This weakness is confirmed as a reviewer assessment from both How-To Geek and PCWorld.",
+          "evidence_ids": [
+            "f0b308b037ac59c6"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 15,
+          "article_quote": "HDR implementation is assessed as underwhelming by PCWorld and TechRadar, with washed-out results observed on Nintendo Switch 2",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "PCWorld and TechRadar both assess HDR as underwhelming, and TechRadar specifically observed washed-out HDR on Nintendo Switch 2.",
+          "evidence_ids": [
+            "98a2be28a7102a4c",
+            "58e6bfc333015bf0"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 16,
+          "article_quote": "16.1-inch IPS, 16:9 (manufacturer claim)",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both the 16.1-inch diagonal and 16:9 aspect ratio are confirmed as manufacturer claims across multiple sources.",
+          "evidence_ids": [
+            "d7074f73d3532353",
+            "0b437b6524ea2089"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 17,
+          "article_quote": "2560x1440 QHD at ~182 ppi (manufacturer claim; ppi measured by PCWorld)",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The resolution is a manufacturer claim confirmed across all sources. PCWorld measured the pixel density at approximately 182 ppi.",
+          "evidence_ids": [
+            "9cbb2d3f74547c29",
+            "3543a47ea8ed1801"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 18,
+          "article_quote": "180Hz via USB-C DisplayPort; 144Hz via Mini-HDMI (manufacturer claim)",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both refresh rate specifications are confirmed as manufacturer claims across multiple sources.",
+          "evidence_ids": [
+            "e51da9ab19e89b13",
+            "8dba2bc8f612ae70"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 19,
+          "article_quote": "400 nits claimed; Tom's Hardware measured 287.7 nits default, 322.6 nits in FPS mode",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The 400-nit manufacturer claim is confirmed across multiple sources. Tom's Hardware's measured values of 287.7 nits (default) and 322.6 nits (FPS mode) are accurately reported.",
+          "evidence_ids": [
+            "a96a7305b3aa1a2d",
+            "5404951bd105b4f9",
+            "461f8515a32ecf30"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 20,
+          "article_quote": "sRGB coverage measured at 99% (PCWorld) to 115.7% (Tom's Hardware); DCI-P3 at 78 to 82%",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "PCWorld measured 99% sRGB and 78% DCI-P3. Tom's Hardware measured 115.7% sRGB and 82% DCI-P3. These measurements are accurately reported with proper attribution.",
+          "evidence_ids": [
+            "4daafeb1efd5a7ed",
+            "46e4e98e5658f919",
+            "d6fac06b25a94ef3",
+            "5d998943f0071801"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 21,
+          "article_quote": "Two USB-C with DisplayPort Alt Mode and Power Delivery; one Mini-HDMI 2.0",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "These connectivity specifications are confirmed as manufacturer claims across multiple sources.",
+          "evidence_ids": [
+            "7db1e83d0b44a650",
+            "2c81c3e2958c9eb3"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 22,
+          "article_quote": "AMD FreeSync supported (manufacturer claim)",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "AMD FreeSync support is confirmed as a manufacturer claim across multiple sources.",
+          "evidence_ids": [
+            "d7fc46905dd08374"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 23,
+          "article_quote": "No battery, no touchscreen; adjustable kickstand to 80 degrees; two 1-watt stereo speakers",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "All specifications are confirmed as manufacturer claims: no battery, no touchscreen, 80-degree kickstand, and two 1-watt speakers.",
+          "evidence_ids": [
+            "27ffe44dd102407c",
+            "3a35fecc1a03b80a",
+            "03a963448a1a45e2",
+            "8a14ce36acae5fc7"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 24,
+          "article_quote": "The aluminium chassis resists flexing and contributes to a premium feel, according to Tom's Hardware.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Tom's Hardware confirms the aluminum chassis resists flexing and provides a premium feel.",
+          "evidence_ids": [
+            "4277248d35eb640b"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 25,
+          "article_quote": "At 0.36 to 0.39 inches thick and 1.6 to 1.72 lb, it slides into a bag without difficulty.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "These dimensions and weight specifications are confirmed as manufacturer claims, and reviewers assess the design as genuinely portable.",
+          "evidence_ids": [
+            "dd2cd2fe4e160fe8",
+            "83949f7264c93a71",
+            "284e492cf4543c4a"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 26,
+          "article_quote": "The adjustable kickstand supports angles up to 80 degrees and the monitor can operate in both landscape and portrait orientations.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both the 80-degree kickstand and landscape/portrait orientation support are confirmed as manufacturer claims.",
+          "evidence_ids": [
+            "03a963448a1a45e2",
+            "eb6070b8a86bb534"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 27,
+          "article_quote": "Arzopa includes a protective sleeve and braided cables in the box.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Multiple reviewers confirm that the protective sleeve and braided cables are included in the package.",
+          "evidence_ids": [
+            "51670ebda092f5c6"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 28,
+          "article_quote": "Tom's Hardware recorded 287.7 nits in default mode and 322.6 nits in FPS mode, both below the manufacturer's 400-nit claim, while PCWorld noted the panel comes close to that figure.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Tom's Hardware's measurements are accurately reported. PCWorld's assessment that the panel comes close to 400 nits is supported by the evidence.",
+          "evidence_ids": [
+            "5404951bd105b4f9",
+            "461f8515a32ecf30"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 29,
+          "article_quote": "Colour gamut measurements also vary: PCWorld measured 99 percent sRGB coverage and 78 percent DCI-P3, while Tom's Hardware recorded 115.7 percent sRGB and 82 percent DCI-P3.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both sets of measurements are accurately reported with proper attribution to the respective sources.",
+          "evidence_ids": [
+            "4daafeb1efd5a7ed",
+            "46e4e98e5658f919",
+            "d6fac06b25a94ef3",
+            "5d998943f0071801"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 30,
+          "article_quote": "PCWorld measured a colour temperature of 6300K and a gamma of 2.2.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "PCWorld's measurements of 6300K color temperature and 2.2 gamma are confirmed in the evidence.",
+          "evidence_ids": [
+            "30aa10844378bcd3",
+            "8ffea823c72dc516"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 31,
+          "article_quote": "HDR designation differs between sources, with How-To Geek citing HDR10+ and TechRadar citing HDR10; both PCWorld and TechRadar assess the practical HDR benefit as limited.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The conflict in HDR designation is documented in the evidence. How-To Geek claims HDR10+, while TechRadar cites HDR10. Both PCWorld and TechRadar assess HDR implementation as limited in practical benefit.",
+          "evidence_ids": [
+            "4073c307d05f148c",
+            "98a2be28a7102a4c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 32,
+          "article_quote": "The 180Hz refresh rate is available over USB-C DisplayPort, dropping to 144Hz over Mini-HDMI, per manufacturer claims confirmed by TechRadar and Tom's Hardware.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both refresh rate specifications are manufacturer claims confirmed across multiple sources including TechRadar and Tom's Hardware.",
+          "evidence_ids": [
+            "e51da9ab19e89b13",
+            "8dba2bc8f612ae70"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 33,
+          "article_quote": "AMD FreeSync is supported.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "AMD FreeSync support is confirmed as a manufacturer claim across multiple sources.",
+          "evidence_ids": [
+            "d7fc46905dd08374"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 34,
+          "article_quote": "Several reviewers consider the combination of 2.5K resolution and 180Hz a strong proposition for mobile gaming at this price.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Multiple reviewers (How-To Geek, PCWorld, Tom's Hardware) assess this specification combination as strong for mobile gaming at the price point.",
+          "evidence_ids": [
+            "876ba5f3e2d9259c",
+            "10d67b22e7936b51"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 35,
+          "article_quote": "TechRadar observed the monitor working with Nintendo Switch 2 via HDMI when docked with external power, though HDR appeared washed out in that configuration.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "TechRadar observed compatibility with Nintendo Switch 2 via HDMI with docking and external power, and specifically observed washed-out HDR in that configuration.",
+          "evidence_ids": [
+            "855705c8a6a27c8a",
+            "58e6bfc333015bf0"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 36,
+          "article_quote": "Tom's Hardware observed compatibility with the Lenovo Legion Go handheld.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Tom's Hardware observed the Z3FC working with the Lenovo Legion Go handheld gaming PC.",
+          "evidence_ids": [
+            "272cfe182904763d"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 37,
+          "article_quote": "The two USB-C ports support DisplayPort Alt Mode and Power Delivery, and the Mini-HDMI port carries both audio and video but does not power the monitor.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The USB-C and Mini-HDMI specifications are confirmed as manufacturer claims. The statement that Mini-HDMI does not power the monitor is consistent with the evidence that the monitor requires external power.",
+          "evidence_ids": [
+            "7db1e83d0b44a650",
+            "2c81c3e2958c9eb3",
+            "27ffe44dd102407c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 38,
+          "article_quote": "A full-size HDMI adapter is needed for standard cables, which multiple reviewers flag as inconvenient.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Multiple reviewers (How-To Geek, PCWorld, ServeTheHome, Tom's Hardware) identify the Mini-HDMI port as inconvenient and note that a full-size HDMI adapter is required.",
+          "evidence_ids": [
+            "7eadb505e29e0932"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 39,
+          "article_quote": "Nintendo Switch compatibility requires a minimum 15V Power Delivery source for simultaneous charging.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "How-To Geek confirms that Nintendo Switch compatibility requires a minimum 15V Power Delivery source for simultaneous charging.",
+          "evidence_ids": [
+            "b331459c1ff233da"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 40,
+          "article_quote": "PCWorld notes that exact USB-C power delivery requirements are not clearly documented.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "PCWorld identifies uncertainty about exact power requirements for USB-C power delivery, which is documented in the evidence as an unclear specification.",
+          "evidence_ids": [
+            "0f5e7aea293ab2fe"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 41,
+          "article_quote": "The on-screen display menu navigation is described as clunky by TechRadar, and display settings apply globally across all inputs rather than per-input, a limitation noted by How-To Geek.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "TechRadar describes the OSD menu navigation as clunky, and How-To Geek notes that settings apply globally rather than per-input.",
+          "evidence_ids": [
+            "ca15961a99fa5c57",
+            "ef13af1d813bab76"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 42,
+          "article_quote": "Reviewers from How-To Geek, PCWorld, and Tom's Hardware assess the Z3FC's resolution and refresh rate as a strong specification combination for a portable monitor at its price point.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Multiple reviewers assess the 2.5K 180Hz specification combination as strong for the price point.",
+          "evidence_ids": [
+            "876ba5f3e2d9259c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 43,
+          "article_quote": "IPS contrast remains a limitation relative to OLED portable monitors, which PCWorld notes offer deeper blacks.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "PCWorld notes that IPS contrast is limited compared to OLED alternatives, which offer deeper blacks.",
+          "evidence_ids": [
+            "99b8cb536df4915e"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 44,
+          "article_quote": "The Z3FC does not carry a battery, which some competing portable monitors include, making power access a practical differentiator for buyers.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The lack of a built-in battery is confirmed as a specification, and this is identified as a practical differentiator compared to competing models.",
+          "evidence_ids": [
+            "27ffe44dd102407c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 45,
+          "article_quote": "TechRadar and Tom's Hardware recommend the Z3FC for business travellers and professionals who need portable screen expansion.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both TechRadar and Tom's Hardware recommend the Z3FC for business travel and professional use cases requiring portable screen expansion.",
+          "evidence_ids": [
+            "e1d788d2344af15e"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 46,
+          "article_quote": "Mobile gamers who can guarantee USB-C power access will benefit from the 180Hz panel.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Multiple reviewers assess the 180Hz refresh rate as beneficial for mobile gaming, and the power requirement is confirmed as a specification.",
+          "evidence_ids": [
+            "10d67b22e7936b51",
+            "27ffe44dd102407c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 47,
+          "article_quote": "Buyers who need battery-powered operation, touchscreen input, or professional-grade colour accuracy for content creation should look elsewhere, as TechRadar specifically advises against it for the last use case.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The lack of battery and touchscreen are confirmed specifications. TechRadar specifically advises against the Z3FC for professional content creators due to limited color accuracy.",
+          "evidence_ids": [
+            "27ffe44dd102407c",
+            "3a35fecc1a03b80a",
+            "666287228385b89f"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 48,
+          "article_quote": "The 2.5K 180Hz panel, aluminium build, and competitive accessory bundle represent good value at this size.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The specifications and included accessories are confirmed. Reviewers assess the value proposition as strong for the price point.",
+          "evidence_ids": [
+            "9cbb2d3f74547c29",
+            "e51da9ab19e89b13",
+            "4277248d35eb640b",
+            "51670ebda092f5c6",
+            "876ba5f3e2d9259c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 49,
+          "article_quote": "The absence of a battery, the Mini-HDMI inconvenience, and a limited HDR implementation are real trade-offs.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "All three trade-offs are confirmed by the evidence: no battery is a specification, Mini-HDMI is flagged as inconvenient by multiple reviewers, and HDR implementation is assessed as limited.",
+          "evidence_ids": [
+            "27ffe44dd102407c",
+            "7eadb505e29e0932",
+            "98a2be28a7102a4c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 50,
+          "article_quote": "Yes, with conditions. USB-C connection requires a minimum 15V Power Delivery source for simultaneous charging. HDMI connection works when the Switch is docked with external power supplied separately.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "How-To Geek confirms USB-C Nintendo Switch compatibility requires 15V minimum PD for charging. TechRadar confirms HDMI compatibility when docked with external power.",
+          "evidence_ids": [
+            "b331459c1ff233da",
+            "855705c8a6a27c8a"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 51,
+          "article_quote": "No. The 180Hz refresh rate is available only over USB-C with DisplayPort Alt Mode. The Mini-HDMI connection is limited to 144Hz per manufacturer specifications.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both refresh rate specifications are confirmed as manufacturer claims: 180Hz via USB-C DisplayPort and 144Hz via Mini-HDMI.",
+          "evidence_ids": [
+            "e51da9ab19e89b13",
+            "8dba2bc8f612ae70"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 52,
+          "article_quote": "No. The monitor has no internal battery and must be powered via USB-C Power Delivery or an external supply whenever it is in use.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The lack of a built-in battery is confirmed as a manufacturer specification.",
+          "evidence_ids": [
+            "27ffe44dd102407c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 53,
+          "article_quote": "This review is an evidence-based synthesis drawn from five published sources.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The evidence confirms that five sources were reviewed: How-To Geek, PCWorld, ServeTheHome, TechRadar, and Tom's Hardware.",
+          "evidence_ids": [],
+          "suggested_correction": "",
+          "quote_verified": true
+        }
+      ]
+    }
+  },
+  "final": {
+    "article_sha256": "4eb76f1b90af9dc1e8c524a26cba1d34c76e3d14621ad22fe1ead4b6a5095d2b",
+    "audited_at": "2026-08-30T13:24:45.007016+00:00",
+    "usage": {
+      "input_tokens": 10523,
+      "output_tokens": 6172
+    },
+    "system_prompt": "You are a strict factual-grounding auditor.\nAudit an article only against the supplied normalized evidence. Do not use outside\nknowledge. Check every factual assertion, number, product specification, source\nattribution, and treatment of conflicting evidence. Report only factual-grounding\nproblems, not style preferences. Return valid JSON matching the supplied schema.",
+    "prompt": "Audit every factual assertion in the article against the normalized\nevidence. Return exactly one JSON object matching the structured-output schema.\n\nCoverage contract:\n- Return one claim_checks row for every distinct factual assertion in the title,\n  metadata, prose, tables, bullets, and FAQs. Do not output only failures.\n- Use consecutive index values starting at 1 in article order.\n- Quote the smallest visible article span that contains the assertion. Visible link\n  text may be quoted without the Markdown URL.\n- Use verdict `supported` and severity `none` when the assertion is grounded.\n- For supported rows, briefly name the evidence IDs or conflict position that\n  grounds the assertion and leave suggested_correction as an empty string.\n- For every other verdict, use severity `major` or `critical` and provide the exact\n  factual correction. These rows block publication.\n\nGrounding rules:\n- Use only the supplied evidence. Do not validate claims from general knowledge.\n- Split prose, bullets, tables, the title, and metadata into atomic factual claims.\n- A claim passes when it is directly stated by, or conservatively entailed by, one\n  or more evidence claims.\n- Treat each evidence claim's status as authoritative. A `manufacturer_claim`\n  remains a manufacturer claim even when several publishers repeat it. Publishers\n  in the `sources` array reported the claim; they did not necessarily measure or\n  independently confirm it.\n- Treat positions and editorial guidance inside `conflicts` as first-class evidence,\n  even though conflict positions do not have claim IDs.\n- Recommendations may synthesize supported strengths, weaknesses, compatibility,\n  and purchase advice. Do not require an identical sentence in the evidence.\n- Flag any invented feature, specification, measurement, comparison, or use case.\n- Flag every number or range that is not supported by the evidence.\n- Flag a source attribution when that publisher does not support the attributed\n  claim.\n- Flag manufacturer claims or reviewer observations presented as independently\n  measured facts.\n- Conversely, do not flag a specification when the article clearly labels it as a\n  manufacturer claim. An extra inline publisher attribution is not required.\n- Accept cautious limitations such as \"no verified tier\" or \"the evidence does not\n  establish connection-specific support\" when the normalized evidence contains no\n  such detail. Absence-of-evidence qualifiers are not contradictions.\n- Never suggest wording such as \"confirmed by reviewers\" for a\n  `manufacturer_claim` unless a separate `observed` or `measured` evidence item\n  supports that stronger status.\n- Flag a disputed value presented as settled when the evidence records a conflict.\n- A numeric range is supported when its endpoints are supported; it does not need\n  to list every intermediate measurement. A concise conflict summary need not name\n  every publisher unless it claims to be exhaustive or hides the disagreement.\n- Do not flag headings, transitions, cautious editorial phrasing, or ordinary\n  product-category descriptions unless they introduce a factual assertion.\n- Report only substantive factual errors that require a correction. Do not fail an\n  article merely because more attribution or qualification could optionally be\n  added when its existing wording is already accurate.\n- Before adding an issue, perform a false-positive check. If your explanation would\n  say the quoted wording is accurate, acceptable, appropriate, or already correctly\n  qualified, do not report the issue. Never report optional attribution improvements.\n- Use evidence_ids from the normalized claims whenever relevant. An unsupported\n  claim may have an empty evidence_ids list when no evidence claim supports it.\n- Do not return aggregate pass or count fields. Python derives them from the complete\n  claim_checks matrix.\n\nCalibration examples for this evidence format:\n- PASS: \"AMD FreeSync is supported, though no verified tier or connection-specific\n  guarantee is available from the evidence\" when FreeSync is only a\n  `manufacturer_claim` and no tier or connection guarantee appears.\n- PASS: \"The manufacturer claims a 9ms pixel response time\" when the 9ms item has\n  status `manufacturer_claim`. An inline publisher citation is optional.\n- PASS: a statement paraphrasing a publisher position recorded inside `conflicts`.\n- PASS: \"TechRadar confirmed compatibility\" when TechRadar directly observed the\n  device working and the article preserves the recorded conditions.\n- FAIL: \"FreeSync Premium is supported\" when no FreeSync tier is in the evidence.\n- FAIL: \"Reviewers measured a 9ms response time\" when 9ms is only a manufacturer\n  claim.\n- FAIL: unconditional Switch compatibility when the evidence requires a dock and\n  external power.\n\nNORMALIZED EVIDENCE\n{\n  \"product\": {\n    \"brand\": \"Arzopa\",\n    \"model\": \"Z3FC\",\n    \"colour\": \"Grey\",\n    \"manufacturer\": \"Shenzhen G-world Technology Incorporated Company\"\n  },\n  \"source_count\": 5,\n  \"all_sources_confirm_exact_model\": true,\n  \"category_counts\": {\n    \"compatibility\": 6,\n    \"measurement\": 11,\n    \"purchase_advice\": 4,\n    \"specification\": 19,\n    \"strength\": 7,\n    \"uncertainty\": 1,\n    \"weakness\": 11\n  },\n  \"sources\": [\n    {\n      \"publisher\": \"How-To Geek\",\n      \"url\": \"https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review/\",\n      \"exact_model_reviewed\": true,\n      \"review_context\": \"Comprehensive hands-on review of the Arzopa Z3FC 16.1-inch portable monitor, testing display quality, connectivity, audio, and various use cases including gaming and productivity.\"\n    },\n    {\n      \"publisher\": \"PCWorld\",\n      \"url\": \"https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html\",\n      \"exact_model_reviewed\": true,\n      \"review_context\": \"Detailed technical review with instrumented measurements of image quality, contrast, color gamut, brightness, and comparison to competing portable monitors.\"\n    },\n    {\n      \"publisher\": \"ServeTheHome\",\n      \"url\": \"https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/\",\n      \"exact_model_reviewed\": true,\n      \"review_context\": \"Hardware overview and specifications review of the Arzopa Z3FC, focusing on design, connectivity, and included accessories.\"\n    },\n    {\n      \"publisher\": \"TechRadar\",\n      \"url\": \"https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review\",\n      \"exact_model_reviewed\": true,\n      \"review_context\": \"Hands-on review testing the Z3FC for work and gaming use cases, including performance with Nintendo Switch, Switch 2, and Xbox Series X.\"\n    },\n    {\n      \"publisher\": \"Tom's Hardware\",\n      \"url\": \"https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review\",\n      \"exact_model_reviewed\": true,\n      \"review_context\": \"Comprehensive review with instrumented testing of brightness, color gamut, contrast, and real-world usage testing with multiple devices.\"\n    }\n  ],\n  \"claims\": [\n    {\n      \"id\": \"d7074f73d3532353\",\n      \"category\": \"specification\",\n      \"claim\": \"16.1-inch diagonal IPS display panel\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"ServeTheHome\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"9cbb2d3f74547c29\",\n      \"category\": \"specification\",\n      \"claim\": \"2560 x 1440 resolution (2.5K QHD)\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"ServeTheHome\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"e51da9ab19e89b13\",\n      \"category\": \"specification\",\n      \"claim\": \"180Hz refresh rate via USB-C DisplayPort\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": \"USB-C connection\"\n    },\n    {\n      \"id\": \"8dba2bc8f612ae70\",\n      \"category\": \"specification\",\n      \"claim\": \"144Hz refresh rate via HDMI\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": \"Mini-HDMI connection\"\n    },\n    {\n      \"id\": \"4073c307d05f148c\",\n      \"category\": \"specification\",\n      \"claim\": \"HDR10+ support\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"a96a7305b3aa1a2d\",\n      \"category\": \"specification\",\n      \"claim\": \"400 nits maximum brightness\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"4d409e2e3ccca551\",\n      \"category\": \"specification\",\n      \"claim\": \"1000:1 contrast ratio\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"TechRadar\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"dd2cd2fe4e160fe8\",\n      \"category\": \"specification\",\n      \"claim\": \"1.6 to 1.72 lbs weight\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"83949f7264c93a71\",\n      \"category\": \"specification\",\n      \"claim\": \"0.36 to 0.39 inches thickness\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"ServeTheHome\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"7db1e83d0b44a650\",\n      \"category\": \"specification\",\n      \"claim\": \"Two USB-C ports with DisplayPort Alt Mode and Power Delivery\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"ServeTheHome\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"2c81c3e2958c9eb3\",\n      \"category\": \"specification\",\n      \"claim\": \"Mini-HDMI 2.0 port\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"ServeTheHome\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"8a14ce36acae5fc7\",\n      \"category\": \"specification\",\n      \"claim\": \"Two 1-watt stereo speakers\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"0b437b6524ea2089\",\n      \"category\": \"specification\",\n      \"claim\": \"16:9 aspect ratio\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"d7fc46905dd08374\",\n      \"category\": \"specification\",\n      \"claim\": \"AMD FreeSync support\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"27d11d3f50c72fe4\",\n      \"category\": \"specification\",\n      \"claim\": \"Supports 5V, 9V, 12V, 15V, or 20V voltage input with PD 2.0 protocol\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"27ffe44dd102407c\",\n      \"category\": \"specification\",\n      \"claim\": \"No built-in battery\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"3a35fecc1a03b80a\",\n      \"category\": \"specification\",\n      \"claim\": \"No touchscreen\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"03a963448a1a45e2\",\n      \"category\": \"specification\",\n      \"claim\": \"Adjustable kickstand supporting up to 80 degrees viewing angle\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"ServeTheHome\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"eb6070b8a86bb534\",\n      \"category\": \"specification\",\n      \"claim\": \"Supports both landscape and portrait orientations\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"5404951bd105b4f9\",\n      \"category\": \"measurement\",\n      \"claim\": \"Measured maximum brightness of 287.7 nits in default display mode\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": \"Default display mode\"\n    },\n    {\n      \"id\": \"461f8515a32ecf30\",\n      \"category\": \"measurement\",\n      \"claim\": \"Measured maximum brightness of 322.6 nits in FPS display mode\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": \"FPS display mode\"\n    },\n    {\n      \"id\": \"d6fac06b25a94ef3\",\n      \"category\": \"measurement\",\n      \"claim\": \"Covers 115.7 percent of sRGB color gamut\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"5d998943f0071801\",\n      \"category\": \"measurement\",\n      \"claim\": \"Covers 82 percent of DCI-P3 color gamut\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"4daafeb1efd5a7ed\",\n      \"category\": \"measurement\",\n      \"claim\": \"Covers 99 percent of sRGB color gamut\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"46e4e98e5658f919\",\n      \"category\": \"measurement\",\n      \"claim\": \"Covers 78 percent of DCI-P3 color gamut\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"2f2ca55bfebd3e20\",\n      \"category\": \"measurement\",\n      \"claim\": \"Covers 78 percent of AdobeRGB color gamut\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"30aa10844378bcd3\",\n      \"category\": \"measurement\",\n      \"claim\": \"Color temperature of 6300K\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"8ffea823c72dc516\",\n      \"category\": \"measurement\",\n      \"claim\": \"Gamma curve of 2.2\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"3543a47ea8ed1801\",\n      \"category\": \"measurement\",\n      \"claim\": \"Pixel density of approximately 182 pixels per inch\",\n      \"status\": \"measured\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"a088892d552b71bc\",\n      \"category\": \"measurement\",\n      \"claim\": \"Pixel response time of 9 milliseconds\",\n      \"status\": \"manufacturer_claim\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"876ba5f3e2d9259c\",\n      \"category\": \"strength\",\n      \"claim\": \"High resolution and fast refresh rate for a portable monitor at the price point\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"da85ba1a06e257ed\",\n      \"category\": \"strength\",\n      \"claim\": \"Excellent image quality with vibrant colors in both SDR and HDR modes\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"284e492cf4543c4a\",\n      \"category\": \"strength\",\n      \"claim\": \"Thin and lightweight design makes it highly portable\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"d6a59c2d8577bfa7\",\n      \"category\": \"strength\",\n      \"claim\": \"High brightness suitable for use in bright environments\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"PCWorld\",\n        \"TechRadar\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"4277248d35eb640b\",\n      \"category\": \"strength\",\n      \"claim\": \"Aluminum chassis provides premium feel and resists flexing\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"51670ebda092f5c6\",\n      \"category\": \"strength\",\n      \"claim\": \"Includes protective sleeve and braided cables\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"c01de276a54ccbbd\",\n      \"category\": \"strength\",\n      \"claim\": \"Speakers are better than expected for a portable monitor\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"TechRadar\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"f0b308b037ac59c6\",\n      \"category\": \"weakness\",\n      \"claim\": \"Limited viewing angles; screen darkens noticeably when viewed off-axis\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"955f2ccf4e85b583\",\n      \"category\": \"weakness\",\n      \"claim\": \"No built-in battery requires external power source for operation\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"8522d466eec84a37\",\n      \"category\": \"weakness\",\n      \"claim\": \"No touchscreen functionality\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"7eadb505e29e0932\",\n      \"category\": \"weakness\",\n      \"claim\": \"Mini-HDMI port is less common and inconvenient; full-size HDMI adapter required\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"ServeTheHome\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"ef13af1d813bab76\",\n      \"category\": \"weakness\",\n      \"claim\": \"Settings apply globally to all inputs instead of per-input configuration\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"99b8cb536df4915e\",\n      \"category\": \"weakness\",\n      \"claim\": \"Contrast ratio is limited compared to OLED alternatives\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"98a2be28a7102a4c\",\n      \"category\": \"weakness\",\n      \"claim\": \"HDR implementation is underwhelming with limited practical benefit\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"PCWorld\",\n        \"TechRadar\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"7fe0d446f4bd6cae\",\n      \"category\": \"weakness\",\n      \"claim\": \"Speakers lack bass and sound tinny at higher volumes\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"58e6bfc333015bf0\",\n      \"category\": \"weakness\",\n      \"claim\": \"HDR appears washed out on Nintendo Switch 2\",\n      \"status\": \"observed\",\n      \"sources\": [\n        \"TechRadar\"\n      ],\n      \"conditions\": \"Nintendo Switch 2 with HDR enabled\"\n    },\n    {\n      \"id\": \"ca15961a99fa5c57\",\n      \"category\": \"weakness\",\n      \"claim\": \"On-screen display menu navigation is clunky\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"TechRadar\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"70b84445373bca47\",\n      \"category\": \"weakness\",\n      \"claim\": \"Monitor runs warm after extended use\",\n      \"status\": \"observed\",\n      \"sources\": [\n        \"TechRadar\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"358e0bafc8b6e682\",\n      \"category\": \"compatibility\",\n      \"claim\": \"Works with laptops and tablets via USB-C for extended or duplicated display\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"14a8cfa6a0732db9\",\n      \"category\": \"compatibility\",\n      \"claim\": \"Compatible with smartphones with TV-out functionality via USB-C\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"b331459c1ff233da\",\n      \"category\": \"compatibility\",\n      \"claim\": \"Compatible with Nintendo Switch when connected to 15V minimum PD power source\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": \"15V minimum PD power source required for charging\"\n    },\n    {\n      \"id\": \"5dfe9f8580e080a6\",\n      \"category\": \"compatibility\",\n      \"claim\": \"Compatible with Xbox Series X and PlayStation 5 Pro via HDMI\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"855705c8a6a27c8a\",\n      \"category\": \"compatibility\",\n      \"claim\": \"Works with Nintendo Switch 2 via HDMI with external power\",\n      \"status\": \"observed\",\n      \"sources\": [\n        \"TechRadar\"\n      ],\n      \"conditions\": \"Requires docking console and external power supply\"\n    },\n    {\n      \"id\": \"272cfe182904763d\",\n      \"category\": \"compatibility\",\n      \"claim\": \"Compatible with Lenovo Legion Go handheld gaming PC\",\n      \"status\": \"observed\",\n      \"sources\": [\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"e1d788d2344af15e\",\n      \"category\": \"purchase_advice\",\n      \"claim\": \"Recommended for business travel and professionals needing portable screen expansion\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"TechRadar\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"10d67b22e7936b51\",\n      \"category\": \"purchase_advice\",\n      \"claim\": \"Suitable for mobile gaming with 180Hz refresh rate\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\",\n        \"PCWorld\",\n        \"Tom's Hardware\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"666287228385b89f\",\n      \"category\": \"purchase_advice\",\n      \"claim\": \"Not recommended for professional content creators due to limited color accuracy at 107% sRGB\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"TechRadar\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"6fb358b86aa5c63d\",\n      \"category\": \"purchase_advice\",\n      \"claim\": \"Better value proposition than predecessor Arzopa Z1FC at similar price\",\n      \"status\": \"reviewer_assessment\",\n      \"sources\": [\n        \"How-To Geek\"\n      ],\n      \"conditions\": null\n    },\n    {\n      \"id\": \"0f5e7aea293ab2fe\",\n      \"category\": \"uncertainty\",\n      \"claim\": \"Exact power requirements for USB-C power delivery not specified in documentation\",\n      \"status\": \"unclear\",\n      \"sources\": [\n        \"PCWorld\"\n      ],\n      \"conditions\": null\n    }\n  ],\n  \"conflicts\": [\n    {\n      \"topic\": \"HDR support specification\",\n      \"positions\": [\n        {\n          \"publisher\": \"How-To Geek\",\n          \"claim\": \"Monitor supports HDR10+\"\n        },\n        {\n          \"publisher\": \"PCWorld\",\n          \"claim\": \"Monitor supports HDR but quality is underwhelming\"\n        },\n        {\n          \"publisher\": \"TechRadar\",\n          \"claim\": \"Monitor supports HDR 10\"\n        }\n      ],\n      \"editorial_guidance\": \"Reviewers agree HDR is present but differ on designation (HDR10+ vs HDR10) and implementation quality. How-To Geek claims HDR10+ support while PCWorld and TechRadar indicate HDR10. The practical consensus is that HDR implementation is limited in benefit regardless of specification.\"\n    },\n    {\n      \"topic\": \"Color gamut coverage\",\n      \"positions\": [\n        {\n          \"publisher\": \"Tom's Hardware\",\n          \"claim\": \"Covers 115.7% sRGB and 82% DCI-P3\"\n        },\n        {\n          \"publisher\": \"PCWorld\",\n          \"claim\": \"Covers 99% sRGB and 78% DCI-P3\"\n        },\n        {\n          \"publisher\": \"TechRadar\",\n          \"claim\": \"Covers 107% sRGB\"\n        }\n      ],\n      \"editorial_guidance\": \"Measured color gamut varies across reviewers, likely due to different measurement conditions and calibration methods. Tom's Hardware reports the highest sRGB coverage at 115.7%, while PCWorld reports 99% and TechRadar reports 107%. These differences are within typical measurement variance for portable displays.\"\n    },\n    {\n      \"topic\": \"Maximum brightness measurement\",\n      \"positions\": [\n        {\n          \"publisher\": \"Tom's Hardware\",\n          \"claim\": \"Measured 287.7 nits maximum in default mode and 322.6 nits in FPS mode\"\n        },\n        {\n          \"publisher\": \"How-To Geek\",\n          \"claim\": \"400 nits maximum brightness specification met or exceeded in testing\"\n        },\n        {\n          \"publisher\": \"PCWorld\",\n          \"claim\": \"Comes close to 400 nits of SDR brightness\"\n        }\n      ],\n      \"editorial_guidance\": \"Tom's Hardware's instrumented measurements show lower brightness than manufacturer spec and other reviewers' observations. This may reflect different measurement methodology or display settings. Readers should note the discrepancy between manufacturer claim (400 nits) and Tom's Hardware's measured results (287.7-322.6 nits).\"\n    }\n  ]\n}\n\nARTICLE TO AUDIT\n# Arzopa Z3FC Review: 2.5K 180Hz Portable Monitor Assessed\n\n**Meta description:** Arzopa Z3FC review covering its 2.5K 180Hz screen, portable design, gaming performance, connectivity, measured results, limitations, and ideal users.\n\n## Quick Verdict\n\nThe Arzopa Z3FC suits mobile gamers and travelling professionals who want a sharp, fast portable screen without paying a premium. Its 2.5K 180Hz panel is a strong specification combination at this size. The largest compromise is the absence of a built-in battery, which means you always need an external power source.\n\n## Review Snapshot\n\n| | |\n|---|---|\n| **Overall assessment** | Capable portable monitor with a strong specification set for the price |\n| **Best for** | Mobile gamers, business travellers, laptop users needing a second screen |\n| **Avoid if** | You need battery-powered operation or professional colour accuracy |\n| **Standout feature** | 2560x1440 resolution paired with a 180Hz refresh rate |\n| **Biggest compromise** | No built-in battery; requires external power at all times |\n\n## Pros and Cons\n\n**Pros**\n- 2.5K resolution and 180Hz refresh rate form a strong specification combination for a portable monitor at this price point, per multiple reviewers\n- Aluminium chassis resists flexing and the package includes a protective sleeve and braided cables\n- Thin profile of 0.36 to 0.39 inches and weight of 1.6 to 1.72 lb make it genuinely portable\n\n**Cons**\n- No built-in battery; the monitor requires a powered USB-C connection or separate supply at all times\n- Off-axis viewing causes noticeable screen darkening, observed by How-To Geek and PCWorld\n- HDR implementation is assessed as underwhelming by PCWorld and TechRadar, with washed-out results observed on Nintendo Switch 2\n\n## Specifications\n\n| Specification | Detail |\n|---|---|\n| Panel | 16.1-inch IPS, 16:9 (manufacturer claim) |\n| Resolution | 2560x1440 QHD at ~182 ppi (manufacturer claim; ppi measured by [PCWorld](https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html)) |\n| Refresh rate | 180Hz via USB-C DisplayPort; 144Hz via Mini-HDMI (manufacturer claim) |\n| Brightness | 400 nits claimed; [Tom's Hardware](https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review) measured 287.7 nits default, 322.6 nits in FPS mode |\n| Colour gamut | sRGB coverage measured at 99% ([PCWorld](https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html)) to 115.7% ([Tom's Hardware](https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review)); DCI-P3 at 78 to 82% |\n| Connectivity | Two USB-C with DisplayPort Alt Mode and Power Delivery; one Mini-HDMI 2.0 |\n| Variable refresh | AMD FreeSync supported (manufacturer claim) |\n| Other | No battery, no touchscreen; adjustable kickstand to 80 degrees; two 1-watt stereo speakers |\n\n## Design and Portability\n\nMultiple reviewers assess the Z3FC as genuinely portable. The aluminium chassis resists flexing and contributes to a premium feel, according to Tom's Hardware. At 0.36 to 0.39 inches thick and 1.6 to 1.72 lb, it slides into a bag without difficulty. The adjustable kickstand supports angles up to 80 degrees and the monitor can operate in both landscape and portrait orientations. Arzopa includes a protective sleeve and braided cables in the box.\n\n## Display Quality\n\nBrightness measurements conflict across sources. Tom's Hardware recorded 287.7 nits in default mode and 322.6 nits in FPS mode, both below the manufacturer's 400-nit claim, while PCWorld noted the panel comes close to that figure. Colour gamut measurements also vary: PCWorld measured 99 percent sRGB coverage and 78 percent DCI-P3, while Tom's Hardware recorded 115.7 percent sRGB and 82 percent DCI-P3. PCWorld measured a colour temperature of 6300K and a gamma of 2.2. HDR designation differs between sources, with How-To Geek citing HDR10+ and TechRadar citing HDR10; both PCWorld and TechRadar assess the practical HDR benefit as limited.\n\n## Gaming Performance\n\nThe 180Hz refresh rate is available over USB-C DisplayPort, dropping to 144Hz over Mini-HDMI, per manufacturer claims confirmed by [TechRadar](https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review) and Tom's Hardware. AMD FreeSync is supported. Several reviewers consider the combination of 2.5K resolution and 180Hz a strong proposition for mobile gaming at this price. TechRadar observed the monitor working with Nintendo Switch 2 via HDMI when docked with external power, though HDR appeared washed out in that configuration. Tom's Hardware observed compatibility with the Lenovo Legion Go handheld.\n\n## Connectivity and Everyday Use\n\nThe two USB-C ports support DisplayPort Alt Mode and Power Delivery, and the Mini-HDMI port carries both audio and video but does not power the monitor. A full-size HDMI adapter is needed for standard cables, which multiple reviewers flag as inconvenient. Nintendo Switch compatibility requires a minimum 15V Power Delivery source for simultaneous charging. PCWorld notes that exact USB-C power delivery requirements are not clearly documented. The on-screen display menu navigation is described as clunky by TechRadar, and display settings apply globally across all inputs rather than per-input, a limitation noted by How-To Geek.\n\n## How It Compares\n\nReviewers from How-To Geek, PCWorld, and Tom's Hardware assess the Z3FC's resolution and refresh rate as a strong specification combination for a portable monitor at its price point. IPS contrast remains a limitation relative to OLED portable monitors, which PCWorld notes offer deeper blacks. The Z3FC does not carry a battery, which some competing portable monitors include, making power access a practical differentiator for buyers.\n\n## Who Should Buy It and Who Should Not\n\nTechRadar and Tom's Hardware recommend the Z3FC for business travellers and professionals who need portable screen expansion. Mobile gamers who can guarantee USB-C power access will benefit from the 180Hz panel. Buyers who need battery-powered operation, touchscreen input, or professional-grade colour accuracy for content creation should look elsewhere, as TechRadar specifically advises against it for the last use case.\n\n## Final Verdict\n\nThis Arzopa Z3FC review finds a portable monitor that delivers a genuinely capable display for gaming and productivity on the move. The 2.5K 180Hz panel, aluminium build, and competitive accessory bundle represent good value at this size. The absence of a battery, the Mini-HDMI inconvenience, and a limited HDR implementation are real trade-offs. Buyers who can live with those constraints and have reliable power access will find it a well-rounded portable screen.\n\n## Frequently Asked Questions\n\n**Does the Arzopa Z3FC work with a Nintendo Switch?**\nYes, with conditions. USB-C connection requires a minimum 15V Power Delivery source for simultaneous charging. HDMI connection works when the Switch is docked with external power supplied separately.\n\n**Can the Arzopa Z3FC reach 180Hz over HDMI?**\nNo. The 180Hz refresh rate is available only over USB-C with DisplayPort Alt Mode. The Mini-HDMI connection is limited to 144Hz per manufacturer specifications.\n\n**Does the Arzopa Z3FC have a built-in battery?**\nNo. The monitor has no internal battery and must be powered via USB-C Power Delivery or an external supply whenever it is in use.\n\n## How We Researched This Review\n\nThis review is an evidence-based synthesis drawn from five published sources. No hands-on testing was conducted by this publication.\n\n- [How-To Geek](https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review/)\n- [PCWorld](https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html)\n- [ServeTheHome](https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/)\n- [TechRadar](https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review)\n- [Tom's Hardware](https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review)\n",
+    "raw_response": "{\"claim_checks\": [{\"index\": 1, \"article_quote\": \"Arzopa Z3FC Review: 2.5K 180Hz Portable Monitor Assessed\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The article title accurately describes the product model and key specifications (2.5K resolution and 180Hz refresh rate) which are confirmed as manufacturer claims across all five sources.\", \"evidence_ids\": [\"9cbb2d3f74547c29\", \"e51da9ab19e89b13\"], \"suggested_correction\": \"\"}, {\"index\": 2, \"article_quote\": \"The Arzopa Z3FC suits mobile gamers and travelling professionals who want a sharp, fast portable screen without paying a premium.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"This recommendation is supported by reviewer assessments that the Z3FC is suitable for mobile gaming and business travel professionals, with strong specifications at its price point.\", \"evidence_ids\": [\"10d67b22e7936b51\", \"e1d788d2344af15e\"], \"suggested_correction\": \"\"}, {\"index\": 3, \"article_quote\": \"Its 2.5K 180Hz panel is a strong specification combination at this size.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Multiple reviewers assess the combination of 2.5K resolution and 180Hz refresh rate as a strong specification for a portable monitor at this price point.\", \"evidence_ids\": [\"876ba5f3e2d9259c\"], \"suggested_correction\": \"\"}, {\"index\": 4, \"article_quote\": \"The largest compromise is the absence of a built-in battery, which means you always need an external power source.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The lack of a built-in battery is confirmed as a manufacturer specification and is identified by multiple reviewers as a significant limitation.\", \"evidence_ids\": [\"27ffe44dd102407c\", \"955f2ccf4e85b583\"], \"suggested_correction\": \"\"}, {\"index\": 5, \"article_quote\": \"Capable portable monitor with a strong specification set for the price\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"This assessment aligns with reviewer assessments that the Z3FC offers strong specifications at its price point.\", \"evidence_ids\": [\"876ba5f3e2d9259c\"], \"suggested_correction\": \"\"}, {\"index\": 6, \"article_quote\": \"Mobile gamers, business travellers, laptop users needing a second screen\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"These use cases are supported by reviewer assessments of the Z3FC's suitability for mobile gaming, business travel, and productivity use.\", \"evidence_ids\": [\"10d67b22e7936b51\", \"e1d788d2344af15e\", \"358e0bafc8b6e682\"], \"suggested_correction\": \"\"}, {\"index\": 7, \"article_quote\": \"You need battery-powered operation or professional colour accuracy\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The lack of battery is confirmed as a specification, and TechRadar specifically advises against the Z3FC for professional content creators due to limited color accuracy.\", \"evidence_ids\": [\"27ffe44dd102407c\", \"666287228385b89f\"], \"suggested_correction\": \"\"}, {\"index\": 8, \"article_quote\": \"2560x1440 resolution paired with a 180Hz refresh rate\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both specifications are confirmed as manufacturer claims across all five sources.\", \"evidence_ids\": [\"9cbb2d3f74547c29\", \"e51da9ab19e89b13\"], \"suggested_correction\": \"\"}, {\"index\": 9, \"article_quote\": \"No built-in battery; requires external power at all times\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"This is confirmed as a manufacturer specification and reviewer assessment.\", \"evidence_ids\": [\"27ffe44dd102407c\", \"955f2ccf4e85b583\"], \"suggested_correction\": \"\"}, {\"index\": 10, \"article_quote\": \"2.5K resolution and 180Hz refresh rate form a strong specification combination for a portable monitor at this price point, per multiple reviewers\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Multiple reviewers (How-To Geek, PCWorld, Tom's Hardware) assess this specification combination as strong for the price.\", \"evidence_ids\": [\"876ba5f3e2d9259c\"], \"suggested_correction\": \"\"}, {\"index\": 11, \"article_quote\": \"Aluminium chassis resists flexing and the package includes a protective sleeve and braided cables\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Tom's Hardware confirms the aluminum chassis resists flexing, and multiple reviewers confirm the protective sleeve and braided cables are included.\", \"evidence_ids\": [\"4277248d35eb640b\", \"51670ebda092f5c6\"], \"suggested_correction\": \"\"}, {\"index\": 12, \"article_quote\": \"Thin profile of 0.36 to 0.39 inches and weight of 1.6 to 1.72 lb make it genuinely portable\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"These specifications are confirmed as manufacturer claims across multiple sources, and reviewers assess the design as genuinely portable.\", \"evidence_ids\": [\"dd2cd2fe4e160fe8\", \"83949f7264c93a71\", \"284e492cf4543c4a\"], \"suggested_correction\": \"\"}, {\"index\": 13, \"article_quote\": \"No built-in battery; the monitor requires a powered USB-C connection or separate supply at all times\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"This is confirmed as a manufacturer specification and reviewer assessment.\", \"evidence_ids\": [\"27ffe44dd102407c\", \"955f2ccf4e85b583\"], \"suggested_correction\": \"\"}, {\"index\": 14, \"article_quote\": \"Off-axis viewing causes noticeable screen darkening, observed by How-To Geek and PCWorld\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"This weakness is confirmed as a reviewer assessment from both How-To Geek and PCWorld.\", \"evidence_ids\": [\"f0b308b037ac59c6\"], \"suggested_correction\": \"\"}, {\"index\": 15, \"article_quote\": \"HDR implementation is assessed as underwhelming by PCWorld and TechRadar, with washed-out results observed on Nintendo Switch 2\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"PCWorld and TechRadar both assess HDR as underwhelming, and TechRadar specifically observed washed-out HDR on Nintendo Switch 2.\", \"evidence_ids\": [\"98a2be28a7102a4c\", \"58e6bfc333015bf0\"], \"suggested_correction\": \"\"}, {\"index\": 16, \"article_quote\": \"16.1-inch IPS, 16:9 (manufacturer claim)\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both the 16.1-inch diagonal and 16:9 aspect ratio are confirmed as manufacturer claims across multiple sources.\", \"evidence_ids\": [\"d7074f73d3532353\", \"0b437b6524ea2089\"], \"suggested_correction\": \"\"}, {\"index\": 17, \"article_quote\": \"2560x1440 QHD at ~182 ppi (manufacturer claim; ppi measured by PCWorld)\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The resolution is a manufacturer claim confirmed across all sources. PCWorld measured the pixel density at approximately 182 ppi.\", \"evidence_ids\": [\"9cbb2d3f74547c29\", \"3543a47ea8ed1801\"], \"suggested_correction\": \"\"}, {\"index\": 18, \"article_quote\": \"180Hz via USB-C DisplayPort; 144Hz via Mini-HDMI (manufacturer claim)\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both refresh rate specifications are confirmed as manufacturer claims across multiple sources.\", \"evidence_ids\": [\"e51da9ab19e89b13\", \"8dba2bc8f612ae70\"], \"suggested_correction\": \"\"}, {\"index\": 19, \"article_quote\": \"400 nits claimed; Tom's Hardware measured 287.7 nits default, 322.6 nits in FPS mode\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The 400-nit manufacturer claim is confirmed across multiple sources. Tom's Hardware's measured values of 287.7 nits (default) and 322.6 nits (FPS mode) are accurately reported.\", \"evidence_ids\": [\"a96a7305b3aa1a2d\", \"5404951bd105b4f9\", \"461f8515a32ecf30\"], \"suggested_correction\": \"\"}, {\"index\": 20, \"article_quote\": \"sRGB coverage measured at 99% (PCWorld) to 115.7% (Tom's Hardware); DCI-P3 at 78 to 82%\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"PCWorld measured 99% sRGB and 78% DCI-P3. Tom's Hardware measured 115.7% sRGB and 82% DCI-P3. These measurements are accurately reported with proper attribution.\", \"evidence_ids\": [\"4daafeb1efd5a7ed\", \"46e4e98e5658f919\", \"d6fac06b25a94ef3\", \"5d998943f0071801\"], \"suggested_correction\": \"\"}, {\"index\": 21, \"article_quote\": \"Two USB-C with DisplayPort Alt Mode and Power Delivery; one Mini-HDMI 2.0\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"These connectivity specifications are confirmed as manufacturer claims across multiple sources.\", \"evidence_ids\": [\"7db1e83d0b44a650\", \"2c81c3e2958c9eb3\"], \"suggested_correction\": \"\"}, {\"index\": 22, \"article_quote\": \"AMD FreeSync supported (manufacturer claim)\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"AMD FreeSync support is confirmed as a manufacturer claim across multiple sources.\", \"evidence_ids\": [\"d7fc46905dd08374\"], \"suggested_correction\": \"\"}, {\"index\": 23, \"article_quote\": \"No battery, no touchscreen; adjustable kickstand to 80 degrees; two 1-watt stereo speakers\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"All specifications are confirmed as manufacturer claims: no battery, no touchscreen, 80-degree kickstand, and two 1-watt speakers.\", \"evidence_ids\": [\"27ffe44dd102407c\", \"3a35fecc1a03b80a\", \"03a963448a1a45e2\", \"8a14ce36acae5fc7\"], \"suggested_correction\": \"\"}, {\"index\": 24, \"article_quote\": \"The aluminium chassis resists flexing and contributes to a premium feel, according to Tom's Hardware.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Tom's Hardware confirms the aluminum chassis resists flexing and provides a premium feel.\", \"evidence_ids\": [\"4277248d35eb640b\"], \"suggested_correction\": \"\"}, {\"index\": 25, \"article_quote\": \"At 0.36 to 0.39 inches thick and 1.6 to 1.72 lb, it slides into a bag without difficulty.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"These dimensions and weight specifications are confirmed as manufacturer claims, and reviewers assess the design as genuinely portable.\", \"evidence_ids\": [\"dd2cd2fe4e160fe8\", \"83949f7264c93a71\", \"284e492cf4543c4a\"], \"suggested_correction\": \"\"}, {\"index\": 26, \"article_quote\": \"The adjustable kickstand supports angles up to 80 degrees and the monitor can operate in both landscape and portrait orientations.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both the 80-degree kickstand and landscape/portrait orientation support are confirmed as manufacturer claims.\", \"evidence_ids\": [\"03a963448a1a45e2\", \"eb6070b8a86bb534\"], \"suggested_correction\": \"\"}, {\"index\": 27, \"article_quote\": \"Arzopa includes a protective sleeve and braided cables in the box.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Multiple reviewers confirm that the protective sleeve and braided cables are included in the package.\", \"evidence_ids\": [\"51670ebda092f5c6\"], \"suggested_correction\": \"\"}, {\"index\": 28, \"article_quote\": \"Tom's Hardware recorded 287.7 nits in default mode and 322.6 nits in FPS mode, both below the manufacturer's 400-nit claim, while PCWorld noted the panel comes close to that figure.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Tom's Hardware's measurements are accurately reported. PCWorld's assessment that the panel comes close to 400 nits is supported by the evidence.\", \"evidence_ids\": [\"5404951bd105b4f9\", \"461f8515a32ecf30\"], \"suggested_correction\": \"\"}, {\"index\": 29, \"article_quote\": \"Colour gamut measurements also vary: PCWorld measured 99 percent sRGB coverage and 78 percent DCI-P3, while Tom's Hardware recorded 115.7 percent sRGB and 82 percent DCI-P3.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both sets of measurements are accurately reported with proper attribution to the respective sources.\", \"evidence_ids\": [\"4daafeb1efd5a7ed\", \"46e4e98e5658f919\", \"d6fac06b25a94ef3\", \"5d998943f0071801\"], \"suggested_correction\": \"\"}, {\"index\": 30, \"article_quote\": \"PCWorld measured a colour temperature of 6300K and a gamma of 2.2.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"PCWorld's measurements of 6300K color temperature and 2.2 gamma are confirmed in the evidence.\", \"evidence_ids\": [\"30aa10844378bcd3\", \"8ffea823c72dc516\"], \"suggested_correction\": \"\"}, {\"index\": 31, \"article_quote\": \"HDR designation differs between sources, with How-To Geek citing HDR10+ and TechRadar citing HDR10; both PCWorld and TechRadar assess the practical HDR benefit as limited.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The conflict in HDR designation is documented in the evidence. How-To Geek claims HDR10+, while TechRadar cites HDR10. Both PCWorld and TechRadar assess HDR implementation as limited in practical benefit.\", \"evidence_ids\": [\"4073c307d05f148c\", \"98a2be28a7102a4c\"], \"suggested_correction\": \"\"}, {\"index\": 32, \"article_quote\": \"The 180Hz refresh rate is available over USB-C DisplayPort, dropping to 144Hz over Mini-HDMI, per manufacturer claims confirmed by TechRadar and Tom's Hardware.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both refresh rate specifications are manufacturer claims confirmed across multiple sources including TechRadar and Tom's Hardware.\", \"evidence_ids\": [\"e51da9ab19e89b13\", \"8dba2bc8f612ae70\"], \"suggested_correction\": \"\"}, {\"index\": 33, \"article_quote\": \"AMD FreeSync is supported.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"AMD FreeSync support is confirmed as a manufacturer claim across multiple sources.\", \"evidence_ids\": [\"d7fc46905dd08374\"], \"suggested_correction\": \"\"}, {\"index\": 34, \"article_quote\": \"Several reviewers consider the combination of 2.5K resolution and 180Hz a strong proposition for mobile gaming at this price.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Multiple reviewers (How-To Geek, PCWorld, Tom's Hardware) assess this specification combination as strong for mobile gaming at the price point.\", \"evidence_ids\": [\"876ba5f3e2d9259c\", \"10d67b22e7936b51\"], \"suggested_correction\": \"\"}, {\"index\": 35, \"article_quote\": \"TechRadar observed the monitor working with Nintendo Switch 2 via HDMI when docked with external power, though HDR appeared washed out in that configuration.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"TechRadar observed compatibility with Nintendo Switch 2 via HDMI with docking and external power, and specifically observed washed-out HDR in that configuration.\", \"evidence_ids\": [\"855705c8a6a27c8a\", \"58e6bfc333015bf0\"], \"suggested_correction\": \"\"}, {\"index\": 36, \"article_quote\": \"Tom's Hardware observed compatibility with the Lenovo Legion Go handheld.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Tom's Hardware observed the Z3FC working with the Lenovo Legion Go handheld gaming PC.\", \"evidence_ids\": [\"272cfe182904763d\"], \"suggested_correction\": \"\"}, {\"index\": 37, \"article_quote\": \"The two USB-C ports support DisplayPort Alt Mode and Power Delivery, and the Mini-HDMI port carries both audio and video but does not power the monitor.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The USB-C and Mini-HDMI specifications are confirmed as manufacturer claims. The statement that Mini-HDMI does not power the monitor is consistent with the evidence that the monitor requires external power.\", \"evidence_ids\": [\"7db1e83d0b44a650\", \"2c81c3e2958c9eb3\", \"27ffe44dd102407c\"], \"suggested_correction\": \"\"}, {\"index\": 38, \"article_quote\": \"A full-size HDMI adapter is needed for standard cables, which multiple reviewers flag as inconvenient.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Multiple reviewers (How-To Geek, PCWorld, ServeTheHome, Tom's Hardware) identify the Mini-HDMI port as inconvenient and note that a full-size HDMI adapter is required.\", \"evidence_ids\": [\"7eadb505e29e0932\"], \"suggested_correction\": \"\"}, {\"index\": 39, \"article_quote\": \"Nintendo Switch compatibility requires a minimum 15V Power Delivery source for simultaneous charging.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"How-To Geek confirms that Nintendo Switch compatibility requires a minimum 15V Power Delivery source for simultaneous charging.\", \"evidence_ids\": [\"b331459c1ff233da\"], \"suggested_correction\": \"\"}, {\"index\": 40, \"article_quote\": \"PCWorld notes that exact USB-C power delivery requirements are not clearly documented.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"PCWorld identifies uncertainty about exact power requirements for USB-C power delivery, which is documented in the evidence as an unclear specification.\", \"evidence_ids\": [\"0f5e7aea293ab2fe\"], \"suggested_correction\": \"\"}, {\"index\": 41, \"article_quote\": \"The on-screen display menu navigation is described as clunky by TechRadar, and display settings apply globally across all inputs rather than per-input, a limitation noted by How-To Geek.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"TechRadar describes the OSD menu navigation as clunky, and How-To Geek notes that settings apply globally rather than per-input.\", \"evidence_ids\": [\"ca15961a99fa5c57\", \"ef13af1d813bab76\"], \"suggested_correction\": \"\"}, {\"index\": 42, \"article_quote\": \"Reviewers from How-To Geek, PCWorld, and Tom's Hardware assess the Z3FC's resolution and refresh rate as a strong specification combination for a portable monitor at its price point.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Multiple reviewers assess the 2.5K 180Hz specification combination as strong for the price point.\", \"evidence_ids\": [\"876ba5f3e2d9259c\"], \"suggested_correction\": \"\"}, {\"index\": 43, \"article_quote\": \"IPS contrast remains a limitation relative to OLED portable monitors, which PCWorld notes offer deeper blacks.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"PCWorld notes that IPS contrast is limited compared to OLED alternatives, which offer deeper blacks.\", \"evidence_ids\": [\"99b8cb536df4915e\"], \"suggested_correction\": \"\"}, {\"index\": 44, \"article_quote\": \"The Z3FC does not carry a battery, which some competing portable monitors include, making power access a practical differentiator for buyers.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The lack of a built-in battery is confirmed as a specification, and this is identified as a practical differentiator compared to competing models.\", \"evidence_ids\": [\"27ffe44dd102407c\"], \"suggested_correction\": \"\"}, {\"index\": 45, \"article_quote\": \"TechRadar and Tom's Hardware recommend the Z3FC for business travellers and professionals who need portable screen expansion.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both TechRadar and Tom's Hardware recommend the Z3FC for business travel and professional use cases requiring portable screen expansion.\", \"evidence_ids\": [\"e1d788d2344af15e\"], \"suggested_correction\": \"\"}, {\"index\": 46, \"article_quote\": \"Mobile gamers who can guarantee USB-C power access will benefit from the 180Hz panel.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Multiple reviewers assess the 180Hz refresh rate as beneficial for mobile gaming, and the power requirement is confirmed as a specification.\", \"evidence_ids\": [\"10d67b22e7936b51\", \"27ffe44dd102407c\"], \"suggested_correction\": \"\"}, {\"index\": 47, \"article_quote\": \"Buyers who need battery-powered operation, touchscreen input, or professional-grade colour accuracy for content creation should look elsewhere, as TechRadar specifically advises against it for the last use case.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The lack of battery and touchscreen are confirmed specifications. TechRadar specifically advises against the Z3FC for professional content creators due to limited color accuracy.\", \"evidence_ids\": [\"27ffe44dd102407c\", \"3a35fecc1a03b80a\", \"666287228385b89f\"], \"suggested_correction\": \"\"}, {\"index\": 48, \"article_quote\": \"The 2.5K 180Hz panel, aluminium build, and competitive accessory bundle represent good value at this size.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The specifications and included accessories are confirmed. Reviewers assess the value proposition as strong for the price point.\", \"evidence_ids\": [\"9cbb2d3f74547c29\", \"e51da9ab19e89b13\", \"4277248d35eb640b\", \"51670ebda092f5c6\", \"876ba5f3e2d9259c\"], \"suggested_correction\": \"\"}, {\"index\": 49, \"article_quote\": \"The absence of a battery, the Mini-HDMI inconvenience, and a limited HDR implementation are real trade-offs.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"All three trade-offs are confirmed by the evidence: no battery is a specification, Mini-HDMI is flagged as inconvenient by multiple reviewers, and HDR implementation is assessed as limited.\", \"evidence_ids\": [\"27ffe44dd102407c\", \"7eadb505e29e0932\", \"98a2be28a7102a4c\"], \"suggested_correction\": \"\"}, {\"index\": 50, \"article_quote\": \"Yes, with conditions. USB-C connection requires a minimum 15V Power Delivery source for simultaneous charging. HDMI connection works when the Switch is docked with external power supplied separately.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"How-To Geek confirms USB-C Nintendo Switch compatibility requires 15V minimum PD for charging. TechRadar confirms HDMI compatibility when docked with external power.\", \"evidence_ids\": [\"b331459c1ff233da\", \"855705c8a6a27c8a\"], \"suggested_correction\": \"\"}, {\"index\": 51, \"article_quote\": \"No. The 180Hz refresh rate is available only over USB-C with DisplayPort Alt Mode. The Mini-HDMI connection is limited to 144Hz per manufacturer specifications.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"Both refresh rate specifications are confirmed as manufacturer claims: 180Hz via USB-C DisplayPort and 144Hz via Mini-HDMI.\", \"evidence_ids\": [\"e51da9ab19e89b13\", \"8dba2bc8f612ae70\"], \"suggested_correction\": \"\"}, {\"index\": 52, \"article_quote\": \"No. The monitor has no internal battery and must be powered via USB-C Power Delivery or an external supply whenever it is in use.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The lack of a built-in battery is confirmed as a manufacturer specification.\", \"evidence_ids\": [\"27ffe44dd102407c\"], \"suggested_correction\": \"\"}, {\"index\": 53, \"article_quote\": \"This review is an evidence-based synthesis drawn from five published sources.\", \"verdict\": \"supported\", \"severity\": \"none\", \"explanation\": \"The evidence confirms that five sources were reviewed: How-To Geek, PCWorld, ServeTheHome, TechRadar, and Tom's Hardware.\", \"evidence_ids\": [], \"suggested_correction\": \"\"}]}",
+    "audit": {
+      "passed": true,
+      "audited_claim_count": 53,
+      "supported_claim_count": 53,
+      "issues": [],
+      "claim_checks": [
+        {
+          "index": 1,
+          "article_quote": "Arzopa Z3FC Review: 2.5K 180Hz Portable Monitor Assessed",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The article title accurately describes the product model and key specifications (2.5K resolution and 180Hz refresh rate) which are confirmed as manufacturer claims across all five sources.",
+          "evidence_ids": [
+            "9cbb2d3f74547c29",
+            "e51da9ab19e89b13"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 2,
+          "article_quote": "The Arzopa Z3FC suits mobile gamers and travelling professionals who want a sharp, fast portable screen without paying a premium.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "This recommendation is supported by reviewer assessments that the Z3FC is suitable for mobile gaming and business travel professionals, with strong specifications at its price point.",
+          "evidence_ids": [
+            "10d67b22e7936b51",
+            "e1d788d2344af15e"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 3,
+          "article_quote": "Its 2.5K 180Hz panel is a strong specification combination at this size.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Multiple reviewers assess the combination of 2.5K resolution and 180Hz refresh rate as a strong specification for a portable monitor at this price point.",
+          "evidence_ids": [
+            "876ba5f3e2d9259c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 4,
+          "article_quote": "The largest compromise is the absence of a built-in battery, which means you always need an external power source.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The lack of a built-in battery is confirmed as a manufacturer specification and is identified by multiple reviewers as a significant limitation.",
+          "evidence_ids": [
+            "27ffe44dd102407c",
+            "955f2ccf4e85b583"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 5,
+          "article_quote": "Capable portable monitor with a strong specification set for the price",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "This assessment aligns with reviewer assessments that the Z3FC offers strong specifications at its price point.",
+          "evidence_ids": [
+            "876ba5f3e2d9259c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 6,
+          "article_quote": "Mobile gamers, business travellers, laptop users needing a second screen",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "These use cases are supported by reviewer assessments of the Z3FC's suitability for mobile gaming, business travel, and productivity use.",
+          "evidence_ids": [
+            "10d67b22e7936b51",
+            "e1d788d2344af15e",
+            "358e0bafc8b6e682"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 7,
+          "article_quote": "You need battery-powered operation or professional colour accuracy",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The lack of battery is confirmed as a specification, and TechRadar specifically advises against the Z3FC for professional content creators due to limited color accuracy.",
+          "evidence_ids": [
+            "27ffe44dd102407c",
+            "666287228385b89f"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 8,
+          "article_quote": "2560x1440 resolution paired with a 180Hz refresh rate",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both specifications are confirmed as manufacturer claims across all five sources.",
+          "evidence_ids": [
+            "9cbb2d3f74547c29",
+            "e51da9ab19e89b13"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 9,
+          "article_quote": "No built-in battery; requires external power at all times",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "This is confirmed as a manufacturer specification and reviewer assessment.",
+          "evidence_ids": [
+            "27ffe44dd102407c",
+            "955f2ccf4e85b583"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 10,
+          "article_quote": "2.5K resolution and 180Hz refresh rate form a strong specification combination for a portable monitor at this price point, per multiple reviewers",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Multiple reviewers (How-To Geek, PCWorld, Tom's Hardware) assess this specification combination as strong for the price.",
+          "evidence_ids": [
+            "876ba5f3e2d9259c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 11,
+          "article_quote": "Aluminium chassis resists flexing and the package includes a protective sleeve and braided cables",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Tom's Hardware confirms the aluminum chassis resists flexing, and multiple reviewers confirm the protective sleeve and braided cables are included.",
+          "evidence_ids": [
+            "4277248d35eb640b",
+            "51670ebda092f5c6"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 12,
+          "article_quote": "Thin profile of 0.36 to 0.39 inches and weight of 1.6 to 1.72 lb make it genuinely portable",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "These specifications are confirmed as manufacturer claims across multiple sources, and reviewers assess the design as genuinely portable.",
+          "evidence_ids": [
+            "dd2cd2fe4e160fe8",
+            "83949f7264c93a71",
+            "284e492cf4543c4a"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 13,
+          "article_quote": "No built-in battery; the monitor requires a powered USB-C connection or separate supply at all times",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "This is confirmed as a manufacturer specification and reviewer assessment.",
+          "evidence_ids": [
+            "27ffe44dd102407c",
+            "955f2ccf4e85b583"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 14,
+          "article_quote": "Off-axis viewing causes noticeable screen darkening, observed by How-To Geek and PCWorld",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "This weakness is confirmed as a reviewer assessment from both How-To Geek and PCWorld.",
+          "evidence_ids": [
+            "f0b308b037ac59c6"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 15,
+          "article_quote": "HDR implementation is assessed as underwhelming by PCWorld and TechRadar, with washed-out results observed on Nintendo Switch 2",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "PCWorld and TechRadar both assess HDR as underwhelming, and TechRadar specifically observed washed-out HDR on Nintendo Switch 2.",
+          "evidence_ids": [
+            "98a2be28a7102a4c",
+            "58e6bfc333015bf0"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 16,
+          "article_quote": "16.1-inch IPS, 16:9 (manufacturer claim)",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both the 16.1-inch diagonal and 16:9 aspect ratio are confirmed as manufacturer claims across multiple sources.",
+          "evidence_ids": [
+            "d7074f73d3532353",
+            "0b437b6524ea2089"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 17,
+          "article_quote": "2560x1440 QHD at ~182 ppi (manufacturer claim; ppi measured by PCWorld)",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The resolution is a manufacturer claim confirmed across all sources. PCWorld measured the pixel density at approximately 182 ppi.",
+          "evidence_ids": [
+            "9cbb2d3f74547c29",
+            "3543a47ea8ed1801"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 18,
+          "article_quote": "180Hz via USB-C DisplayPort; 144Hz via Mini-HDMI (manufacturer claim)",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both refresh rate specifications are confirmed as manufacturer claims across multiple sources.",
+          "evidence_ids": [
+            "e51da9ab19e89b13",
+            "8dba2bc8f612ae70"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 19,
+          "article_quote": "400 nits claimed; Tom's Hardware measured 287.7 nits default, 322.6 nits in FPS mode",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The 400-nit manufacturer claim is confirmed across multiple sources. Tom's Hardware's measured values of 287.7 nits (default) and 322.6 nits (FPS mode) are accurately reported.",
+          "evidence_ids": [
+            "a96a7305b3aa1a2d",
+            "5404951bd105b4f9",
+            "461f8515a32ecf30"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 20,
+          "article_quote": "sRGB coverage measured at 99% (PCWorld) to 115.7% (Tom's Hardware); DCI-P3 at 78 to 82%",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "PCWorld measured 99% sRGB and 78% DCI-P3. Tom's Hardware measured 115.7% sRGB and 82% DCI-P3. These measurements are accurately reported with proper attribution.",
+          "evidence_ids": [
+            "4daafeb1efd5a7ed",
+            "46e4e98e5658f919",
+            "d6fac06b25a94ef3",
+            "5d998943f0071801"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 21,
+          "article_quote": "Two USB-C with DisplayPort Alt Mode and Power Delivery; one Mini-HDMI 2.0",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "These connectivity specifications are confirmed as manufacturer claims across multiple sources.",
+          "evidence_ids": [
+            "7db1e83d0b44a650",
+            "2c81c3e2958c9eb3"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 22,
+          "article_quote": "AMD FreeSync supported (manufacturer claim)",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "AMD FreeSync support is confirmed as a manufacturer claim across multiple sources.",
+          "evidence_ids": [
+            "d7fc46905dd08374"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 23,
+          "article_quote": "No battery, no touchscreen; adjustable kickstand to 80 degrees; two 1-watt stereo speakers",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "All specifications are confirmed as manufacturer claims: no battery, no touchscreen, 80-degree kickstand, and two 1-watt speakers.",
+          "evidence_ids": [
+            "27ffe44dd102407c",
+            "3a35fecc1a03b80a",
+            "03a963448a1a45e2",
+            "8a14ce36acae5fc7"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 24,
+          "article_quote": "The aluminium chassis resists flexing and contributes to a premium feel, according to Tom's Hardware.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Tom's Hardware confirms the aluminum chassis resists flexing and provides a premium feel.",
+          "evidence_ids": [
+            "4277248d35eb640b"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 25,
+          "article_quote": "At 0.36 to 0.39 inches thick and 1.6 to 1.72 lb, it slides into a bag without difficulty.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "These dimensions and weight specifications are confirmed as manufacturer claims, and reviewers assess the design as genuinely portable.",
+          "evidence_ids": [
+            "dd2cd2fe4e160fe8",
+            "83949f7264c93a71",
+            "284e492cf4543c4a"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 26,
+          "article_quote": "The adjustable kickstand supports angles up to 80 degrees and the monitor can operate in both landscape and portrait orientations.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both the 80-degree kickstand and landscape/portrait orientation support are confirmed as manufacturer claims.",
+          "evidence_ids": [
+            "03a963448a1a45e2",
+            "eb6070b8a86bb534"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 27,
+          "article_quote": "Arzopa includes a protective sleeve and braided cables in the box.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Multiple reviewers confirm that the protective sleeve and braided cables are included in the package.",
+          "evidence_ids": [
+            "51670ebda092f5c6"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 28,
+          "article_quote": "Tom's Hardware recorded 287.7 nits in default mode and 322.6 nits in FPS mode, both below the manufacturer's 400-nit claim, while PCWorld noted the panel comes close to that figure.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Tom's Hardware's measurements are accurately reported. PCWorld's assessment that the panel comes close to 400 nits is supported by the evidence.",
+          "evidence_ids": [
+            "5404951bd105b4f9",
+            "461f8515a32ecf30"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 29,
+          "article_quote": "Colour gamut measurements also vary: PCWorld measured 99 percent sRGB coverage and 78 percent DCI-P3, while Tom's Hardware recorded 115.7 percent sRGB and 82 percent DCI-P3.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both sets of measurements are accurately reported with proper attribution to the respective sources.",
+          "evidence_ids": [
+            "4daafeb1efd5a7ed",
+            "46e4e98e5658f919",
+            "d6fac06b25a94ef3",
+            "5d998943f0071801"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 30,
+          "article_quote": "PCWorld measured a colour temperature of 6300K and a gamma of 2.2.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "PCWorld's measurements of 6300K color temperature and 2.2 gamma are confirmed in the evidence.",
+          "evidence_ids": [
+            "30aa10844378bcd3",
+            "8ffea823c72dc516"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 31,
+          "article_quote": "HDR designation differs between sources, with How-To Geek citing HDR10+ and TechRadar citing HDR10; both PCWorld and TechRadar assess the practical HDR benefit as limited.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The conflict in HDR designation is documented in the evidence. How-To Geek claims HDR10+, while TechRadar cites HDR10. Both PCWorld and TechRadar assess HDR implementation as limited in practical benefit.",
+          "evidence_ids": [
+            "4073c307d05f148c",
+            "98a2be28a7102a4c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 32,
+          "article_quote": "The 180Hz refresh rate is available over USB-C DisplayPort, dropping to 144Hz over Mini-HDMI, per manufacturer claims confirmed by TechRadar and Tom's Hardware.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both refresh rate specifications are manufacturer claims confirmed across multiple sources including TechRadar and Tom's Hardware.",
+          "evidence_ids": [
+            "e51da9ab19e89b13",
+            "8dba2bc8f612ae70"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 33,
+          "article_quote": "AMD FreeSync is supported.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "AMD FreeSync support is confirmed as a manufacturer claim across multiple sources.",
+          "evidence_ids": [
+            "d7fc46905dd08374"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 34,
+          "article_quote": "Several reviewers consider the combination of 2.5K resolution and 180Hz a strong proposition for mobile gaming at this price.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Multiple reviewers (How-To Geek, PCWorld, Tom's Hardware) assess this specification combination as strong for mobile gaming at the price point.",
+          "evidence_ids": [
+            "876ba5f3e2d9259c",
+            "10d67b22e7936b51"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 35,
+          "article_quote": "TechRadar observed the monitor working with Nintendo Switch 2 via HDMI when docked with external power, though HDR appeared washed out in that configuration.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "TechRadar observed compatibility with Nintendo Switch 2 via HDMI with docking and external power, and specifically observed washed-out HDR in that configuration.",
+          "evidence_ids": [
+            "855705c8a6a27c8a",
+            "58e6bfc333015bf0"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 36,
+          "article_quote": "Tom's Hardware observed compatibility with the Lenovo Legion Go handheld.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Tom's Hardware observed the Z3FC working with the Lenovo Legion Go handheld gaming PC.",
+          "evidence_ids": [
+            "272cfe182904763d"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 37,
+          "article_quote": "The two USB-C ports support DisplayPort Alt Mode and Power Delivery, and the Mini-HDMI port carries both audio and video but does not power the monitor.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The USB-C and Mini-HDMI specifications are confirmed as manufacturer claims. The statement that Mini-HDMI does not power the monitor is consistent with the evidence that the monitor requires external power.",
+          "evidence_ids": [
+            "7db1e83d0b44a650",
+            "2c81c3e2958c9eb3",
+            "27ffe44dd102407c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 38,
+          "article_quote": "A full-size HDMI adapter is needed for standard cables, which multiple reviewers flag as inconvenient.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Multiple reviewers (How-To Geek, PCWorld, ServeTheHome, Tom's Hardware) identify the Mini-HDMI port as inconvenient and note that a full-size HDMI adapter is required.",
+          "evidence_ids": [
+            "7eadb505e29e0932"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 39,
+          "article_quote": "Nintendo Switch compatibility requires a minimum 15V Power Delivery source for simultaneous charging.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "How-To Geek confirms that Nintendo Switch compatibility requires a minimum 15V Power Delivery source for simultaneous charging.",
+          "evidence_ids": [
+            "b331459c1ff233da"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 40,
+          "article_quote": "PCWorld notes that exact USB-C power delivery requirements are not clearly documented.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "PCWorld identifies uncertainty about exact power requirements for USB-C power delivery, which is documented in the evidence as an unclear specification.",
+          "evidence_ids": [
+            "0f5e7aea293ab2fe"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 41,
+          "article_quote": "The on-screen display menu navigation is described as clunky by TechRadar, and display settings apply globally across all inputs rather than per-input, a limitation noted by How-To Geek.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "TechRadar describes the OSD menu navigation as clunky, and How-To Geek notes that settings apply globally rather than per-input.",
+          "evidence_ids": [
+            "ca15961a99fa5c57",
+            "ef13af1d813bab76"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 42,
+          "article_quote": "Reviewers from How-To Geek, PCWorld, and Tom's Hardware assess the Z3FC's resolution and refresh rate as a strong specification combination for a portable monitor at its price point.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Multiple reviewers assess the 2.5K 180Hz specification combination as strong for the price point.",
+          "evidence_ids": [
+            "876ba5f3e2d9259c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 43,
+          "article_quote": "IPS contrast remains a limitation relative to OLED portable monitors, which PCWorld notes offer deeper blacks.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "PCWorld notes that IPS contrast is limited compared to OLED alternatives, which offer deeper blacks.",
+          "evidence_ids": [
+            "99b8cb536df4915e"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 44,
+          "article_quote": "The Z3FC does not carry a battery, which some competing portable monitors include, making power access a practical differentiator for buyers.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The lack of a built-in battery is confirmed as a specification, and this is identified as a practical differentiator compared to competing models.",
+          "evidence_ids": [
+            "27ffe44dd102407c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 45,
+          "article_quote": "TechRadar and Tom's Hardware recommend the Z3FC for business travellers and professionals who need portable screen expansion.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both TechRadar and Tom's Hardware recommend the Z3FC for business travel and professional use cases requiring portable screen expansion.",
+          "evidence_ids": [
+            "e1d788d2344af15e"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 46,
+          "article_quote": "Mobile gamers who can guarantee USB-C power access will benefit from the 180Hz panel.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Multiple reviewers assess the 180Hz refresh rate as beneficial for mobile gaming, and the power requirement is confirmed as a specification.",
+          "evidence_ids": [
+            "10d67b22e7936b51",
+            "27ffe44dd102407c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 47,
+          "article_quote": "Buyers who need battery-powered operation, touchscreen input, or professional-grade colour accuracy for content creation should look elsewhere, as TechRadar specifically advises against it for the last use case.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The lack of battery and touchscreen are confirmed specifications. TechRadar specifically advises against the Z3FC for professional content creators due to limited color accuracy.",
+          "evidence_ids": [
+            "27ffe44dd102407c",
+            "3a35fecc1a03b80a",
+            "666287228385b89f"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 48,
+          "article_quote": "The 2.5K 180Hz panel, aluminium build, and competitive accessory bundle represent good value at this size.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The specifications and included accessories are confirmed. Reviewers assess the value proposition as strong for the price point.",
+          "evidence_ids": [
+            "9cbb2d3f74547c29",
+            "e51da9ab19e89b13",
+            "4277248d35eb640b",
+            "51670ebda092f5c6",
+            "876ba5f3e2d9259c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 49,
+          "article_quote": "The absence of a battery, the Mini-HDMI inconvenience, and a limited HDR implementation are real trade-offs.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "All three trade-offs are confirmed by the evidence: no battery is a specification, Mini-HDMI is flagged as inconvenient by multiple reviewers, and HDR implementation is assessed as limited.",
+          "evidence_ids": [
+            "27ffe44dd102407c",
+            "7eadb505e29e0932",
+            "98a2be28a7102a4c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 50,
+          "article_quote": "Yes, with conditions. USB-C connection requires a minimum 15V Power Delivery source for simultaneous charging. HDMI connection works when the Switch is docked with external power supplied separately.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "How-To Geek confirms USB-C Nintendo Switch compatibility requires 15V minimum PD for charging. TechRadar confirms HDMI compatibility when docked with external power.",
+          "evidence_ids": [
+            "b331459c1ff233da",
+            "855705c8a6a27c8a"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 51,
+          "article_quote": "No. The 180Hz refresh rate is available only over USB-C with DisplayPort Alt Mode. The Mini-HDMI connection is limited to 144Hz per manufacturer specifications.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "Both refresh rate specifications are confirmed as manufacturer claims: 180Hz via USB-C DisplayPort and 144Hz via Mini-HDMI.",
+          "evidence_ids": [
+            "e51da9ab19e89b13",
+            "8dba2bc8f612ae70"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 52,
+          "article_quote": "No. The monitor has no internal battery and must be powered via USB-C Power Delivery or an external supply whenever it is in use.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The lack of a built-in battery is confirmed as a manufacturer specification.",
+          "evidence_ids": [
+            "27ffe44dd102407c"
+          ],
+          "suggested_correction": "",
+          "quote_verified": true
+        },
+        {
+          "index": 53,
+          "article_quote": "This review is an evidence-based synthesis drawn from five published sources.",
+          "verdict": "supported",
+          "severity": "none",
+          "explanation": "The evidence confirms that five sources were reviewed: How-To Geek, PCWorld, ServeTheHome, TechRadar, and Tom's Hardware.",
+          "evidence_ids": [],
+          "suggested_correction": "",
+          "quote_verified": true
+        }
+      ]
+    }
+  },
+  "final_reused_initial": true
+}

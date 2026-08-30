@@ -1,0 +1,52 @@
+[
+  {
+    "publisher": "ServeTheHome",
+    "url": "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/",
+    "final_url": "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/",
+    "title": "Arzopa Z3FC 16.1in 180Hz 2.5K Portable Monitor - ServeTheHome",
+    "fetched_at": "2026-08-30T12:44:54.610969+00:00",
+    "content_sha256": "248dc31e5a57f3428b1b5789cba59361b226b445cd54ab093e1e360450a54c3c",
+    "word_count": 632,
+    "contains_exact_model": true
+  },
+  {
+    "publisher": "TechRadar",
+    "url": "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
+    "final_url": "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
+    "title": "Arzopa Z3FC portable monitor review | TechRadar",
+    "fetched_at": "2026-08-30T12:44:55.300851+00:00",
+    "content_sha256": "d0c911c2a8a08cd65a7b71ef9eeb94edf33f4fc0ce3838b76f2a71dd03350daa",
+    "word_count": 2320,
+    "contains_exact_model": true
+  },
+  {
+    "publisher": "Tom's Hardware",
+    "url": "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
+    "final_url": "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
+    "title": "Arzopa Z3FC 16.1-inch portable monitor review: 1440p resolution and 180 Hz for mobile gamers | Tom's Hardware",
+    "fetched_at": "2026-08-30T12:44:56.249952+00:00",
+    "content_sha256": "bbe41e41fdcd575447bd4b5bec7a2b2f0f3b424ce5f656c061b0351137bd728f",
+    "word_count": 1604,
+    "contains_exact_model": true
+  },
+  {
+    "publisher": "How-To Geek",
+    "url": "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review/",
+    "final_url": "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review/",
+    "title": "Arzopa Z3FC 16.1-Inch Portable Monitor review: Quality where you need it",
+    "fetched_at": "2026-08-30T12:44:57.199150+00:00",
+    "content_sha256": "141a46bbfed0b6358176d6bc413e8c52de4cbc4624af11b36f70364595c4e3eb",
+    "word_count": 2090,
+    "contains_exact_model": true
+  },
+  {
+    "publisher": "PCWorld",
+    "url": "https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html",
+    "final_url": "https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html",
+    "title": "Arzopa Z3FC review: A portable monitor with a 180Hz refresh rate | PCWorld",
+    "fetched_at": "2026-08-30T12:44:57.733365+00:00",
+    "content_sha256": "b9b17cd7f36e920dd1d9ed8429174fba3c8f8d56c2be597cbd603c7b0c2d3a82",
+    "word_count": 2029,
+    "contains_exact_model": true
+  }
+]

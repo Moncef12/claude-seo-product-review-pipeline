@@ -1,0 +1,7 @@
+anthropic
+beautifulsoup4
+certifi
+lxml
+Markdown
+python-dotenv
+requests

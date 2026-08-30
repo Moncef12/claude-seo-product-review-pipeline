@@ -1,0 +1,373 @@
+{
+  "product": {
+    "brand": "Arzopa",
+    "model": "Z3FC",
+    "colour": "Grey",
+    "manufacturer": "Shenzhen G-world Technology Incorporated Company"
+  },
+  "collection": {
+    "provider": "DataForSEO Google Organic Live Advanced",
+    "location": "United States",
+    "language": "English",
+    "collected_at": "2026-08-30",
+    "queries": [
+      "site:arzopa.com \"Z3FC\"",
+      "\"Arzopa Z3FC\" specifications manual",
+      "\"Arzopa Z3FC\" review test",
+      "\"Arzopa Z3FC\" problems limitations"
+    ],
+    "tasks": [
+      {
+        "query": "site:arzopa.com \"Z3FC\"",
+        "status_code": 20000,
+        "status_message": "Ok.",
+        "cost": 0.01
+      },
+      {
+        "query": "\"Arzopa Z3FC\" specifications manual",
+        "status_code": 20000,
+        "status_message": "Ok.",
+        "cost": 0.002
+      },
+      {
+        "query": "\"Arzopa Z3FC\" review test",
+        "status_code": 20000,
+        "status_message": "Ok.",
+        "cost": 0.002
+      },
+      {
+        "query": "\"Arzopa Z3FC\" problems limitations",
+        "status_code": 20000,
+        "status_message": "Ok.",
+        "cost": 0.002
+      }
+    ]
+  },
+  "sources": [
+    {
+      "url": "https://www.arzopa.com/products/arzopa-z3fc-16-1-180hz-2560x1440-qhd-portable-gaming-monitor",
+      "domain": "www.arzopa.com",
+      "title": "Arzopa Z3FC 16.1\" 2.5K 180Hz Portable Gaming Monitor ...",
+      "description": "[Official Store] Shop ARZOPA Z3FC & Save 40%. 16.1\" 2.5K 180Hz portable screen with FreeSync for PS5, Steam Deck & Laptop. Pro-speed, zero-lag gaming.",
+      "source_type": "official",
+      "queries": [
+        "site:arzopa.com \"Z3FC\"",
+        "\"Arzopa Z3FC\" specifications manual"
+      ],
+      "best_rank": 1
+    },
+    {
+      "url": "https://www.arzopa.com/pages/download",
+      "domain": "www.arzopa.com",
+      "title": "Downloadable Instructions & Support",
+      "description": "In this video, we show you exactly how to set up the ARZOPA Z3FC portable monitor for smooth gaming anywhere. The Z3FC features a stunning 2.5K resolution and\u00a0... Read more",
+      "source_type": "official",
+      "queries": [
+        "\"Arzopa Z3FC\" specifications manual"
+      ],
+      "best_rank": 1
+    },
+    {
+      "url": "https://global.arzopa.com/pages/comparison2025",
+      "domain": "global.arzopa.com",
+      "title": "Arzopa Product Comparison - 2026",
+      "description": "Arzopa Z3FC 16.1\" 2.5K 180Hz Portable Gaming Monitor FreeSync. Buy Now Learn More>. ARZOPA Z3FC Grey, ARZOPA Z1RC, ARZOPA Z1FC Grey, ARZOPA A1M, ARZOPA Z1FC\u00a0... Read more",
+      "source_type": "official",
+      "queries": [
+        "site:arzopa.com \"Z3FC\""
+      ],
+      "best_rank": 2
+    },
+    {
+      "url": "https://global.arzopa.com/collections/faq",
+      "domain": "global.arzopa.com",
+      "title": "Faq \u2013 Arzopa Global",
+      "description": "Arzopa Z3FC 16.1\" 2.5K 180Hz Portable Gaming Monitor FreeSync. ARZOPA Z3FC ... When experiencing display issues with your portable monitor, a systematic\u00a0... Read more",
+      "source_type": "official",
+      "queries": [
+        "\"Arzopa Z3FC\" problems limitations"
+      ],
+      "best_rank": 2
+    },
+    {
+      "url": "https://www.arzopa.com",
+      "domain": "www.arzopa.com",
+      "title": "Arzopa\u00ae US | #1 Best-Selling Portable Monitor Brand",
+      "description": "Redefine productivity with industry-leading Z3FC, featuring a lightning-fast 180Hz refresh rate, 2.5K QHD resolution, and plug&play setup.",
+      "source_type": "official",
+      "queries": [
+        "site:arzopa.com \"Z3FC\""
+      ],
+      "best_rank": 3
+    },
+    {
+      "url": "https://global.arzopa.com/collections/top-deals",
+      "domain": "global.arzopa.com",
+      "title": "Best Deals on Portable Monitors & Accessories",
+      "description": "Arzopa Z3FC 16.1\" 2.5K 180Hz Portable Gaming Monitor FreeSync. \u20ac142,99 \u20ac359,99 ; Arzopa Z1FC Black 16.1\" 144Hz FHD 100%sRGB Portable Monitor. \u20ac119,99 \u20ac209,99. Read more",
+      "source_type": "official",
+      "queries": [
+        "site:arzopa.com \"Z3FC\""
+      ],
+      "best_rank": 4
+    },
+    {
+      "url": "https://global.arzopa.com/pages/arzopa-manual-guide-center",
+      "domain": "global.arzopa.com",
+      "title": "Arzopa Manual & Guide Center",
+      "description": "Arzopa Z3FC 16.1\" 2.5K 180Hz Portable Gaming Monitor FreeSync. ARZOPA Z3FC Grey. Ultimate 180Hz Flagship. Hot. Arzopa Z1RC | 16\" 2.5K Portable Monitor with\u00a0... Read more",
+      "source_type": "official",
+      "queries": [
+        "site:arzopa.com \"Z3FC\"",
+        "\"Arzopa Z3FC\" specifications manual"
+      ],
+      "best_rank": 5
+    },
+    {
+      "url": "https://www.arzopa.com/blogs/guide/hdr-troubleshooting-instruction",
+      "domain": "www.arzopa.com",
+      "title": "HDR Is Not Working? Fixed! [2024 HDR Troubleshooting]",
+      "description": "Nov 14, 2024 \u2014 Arzopa Z3FC 16.1\" 2.5K 180Hz Portable Gaming Monitor FreeSync. ARZOPA ... Software Limitations: Sometimes software issues within the\u00a0... Read more",
+      "source_type": "official",
+      "queries": [
+        "\"Arzopa Z3FC\" problems limitations"
+      ],
+      "best_rank": 5
+    },
+    {
+      "url": "https://global.arzopa.com/fr/collections/portable-monitor/products/arzopa-z3fc-16-portable-gaming-monitor-2k-qhd-180hz-bundle",
+      "domain": "global.arzopa.com",
+      "title": "ARZOPA Z3FC 16,1\" \u00c9cran de Jeu Portable 2,5K 180Hz",
+      "description": "Rapide. Net. Illimit\u00e9. Le moniteur portable Arzopa Z3FC : r\u00e9solution QHD 2560\u00d71440 associ\u00e9e \u00e0 une performance fulgurante de 180 Hz. Glissez ce moniteur portable\u00a0...",
+      "source_type": "official",
+      "queries": [
+        "site:arzopa.com \"Z3FC\""
+      ],
+      "best_rank": 6
+    },
+    {
+      "url": "https://global.arzopa.com/pages/spring-sale",
+      "domain": "global.arzopa.com",
+      "title": "Arzopa Spring Promo \u2013 Up to 63% OFF Now",
+      "description": "I got my hands on the ARZOPA 16.1\" portable monitor (the Z3FC model), and honestly, I'm pretty impressed. The picture quality is seriously great, thanks to the\u00a0...",
+      "source_type": "official",
+      "queries": [
+        "site:arzopa.com \"Z3FC\""
+      ],
+      "best_rank": 7
+    },
+    {
+      "url": "https://global.arzopa.com/blogs/review/tagged/portable-monitor",
+      "domain": "global.arzopa.com",
+      "title": "Review \u2013 Tagged \"Portable Monitor\"",
+      "description": "May 15, 2025 \u2014 Arzopa Z3FC 16.1\" 2.5K 180Hz Portable Gaming Monitor FreeSync. ARZOPA Z3FC Grey. Ultimate 180Hz Flagship. Hot. Arzopa Z1RC | 16\" 2.5K\u00a0... Read more",
+      "source_type": "official",
+      "queries": [
+        "site:arzopa.com \"Z3FC\""
+      ],
+      "best_rank": 8
+    },
+    {
+      "url": "https://www.arzopa.com/blogs/guide/why-portable-monitor-not-working",
+      "domain": "www.arzopa.com",
+      "title": "Why Is My Portable Monitor Not Working? A ...",
+      "description": "Oct 23, 2024 \u2014 Arzopa ... Connection Problems: Often, the issue lies in how the monitor\u00a0... Read more",
+      "source_type": "official",
+      "queries": [
+        "\"Arzopa Z3FC\" problems limitations"
+      ],
+      "best_rank": 8
+    },
+    {
+      "url": "https://global.arzopa.com/blogs/news/1080p-vs-2-5k-portable-monitors",
+      "domain": "global.arzopa.com",
+      "title": "What is the Difference Between 1080P and 2.5K Portable ...",
+      "description": "Apr 23, 2025 \u2014 The Arzopa Z3FC is the stronger choice if you want both 2.5K detail and high refresh rate performance. Its 2560 \u00d7 1440 resolution improves\u00a0... Read more",
+      "source_type": "official",
+      "queries": [
+        "site:arzopa.com \"Z3FC\""
+      ],
+      "best_rank": 9
+    },
+    {
+      "url": "https://www.arzopa.com/collections/portable-monitors",
+      "domain": "www.arzopa.com",
+      "title": "Portable Monitors for Work, Gaming & Travel",
+      "description": "Z3FC, ARZOPA 16.1'' 180Hz QHD best portable gaming monitor, boasts a stunning 400 nits, delivering crisp, vibrant details even in well-lit environments. For\u00a0... Read more",
+      "source_type": "official",
+      "queries": [
+        "site:arzopa.com \"Z3FC\""
+      ],
+      "best_rank": 10
+    },
+    {
+      "url": "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor",
+      "domain": "www.servethehome.com",
+      "title": "Arzopa Z3FC 16.1in 180Hz 2.5K Portable Monitor",
+      "description": "Apr 12, 2026 \u2014 Currently priced just $143 on Amazon (at the time of writing), the Arzopa Z3FC is one of the cheapest QHD/2.5K portable monitors on the market,\u00a0... Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review test",
+        "\"Arzopa Z3FC\" problems limitations"
+      ],
+      "best_rank": 1
+    },
+    {
+      "url": "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
+      "domain": "www.techradar.com",
+      "title": "Arzopa Z3FC portable monitor review",
+      "description": "Jun 12, 2026 \u2014 The Arzopa Z3FC is a super-lightweight and thin portable monitor that performed very well during my tests. I chiefly used this as a second\u00a0... Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" problems limitations"
+      ],
+      "best_rank": 1
+    },
+    {
+      "url": "https://root-nation.com/en/pc-en/pc-monitors-en/en-arzopa-z3fc-review",
+      "domain": "root-nation.com",
+      "title": "ARZOPA Z3FC Review: 2K 180Hz Mobile Monitor",
+      "description": "Feb 1, 2026 \u2014 ARZOPA Z3FC specifications \u00b7 Screen diagonal: 16.1\u201d \u00b7 Panel type: IPS \u00b7 Aspect ratio: 16:9 \u00b7 Resolution: 2560 \u00d7 1440 (2K) \u00b7 Colour depth: 8-bit\u00a0... Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" specifications manual",
+        "\"Arzopa Z3FC\" review test"
+      ],
+      "best_rank": 2
+    },
+    {
+      "url": "https://www.youtube.com/watch",
+      "domain": "www.youtube.com",
+      "title": "Arzopa Z3FC Portable Monitor Unboxing and Review -- A ...",
+      "description": "This thing supports HDR, a whopping 180 Hz refresh rate, solid viewing angles and 1440p.",
+      "source_type": "video",
+      "queries": [
+        "\"Arzopa Z3FC\" specifications manual"
+      ],
+      "best_rank": 3
+    },
+    {
+      "url": "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
+      "domain": "www.tomshardware.com",
+      "title": "Arzopa Z3FC 16.1-inch portable monitor review",
+      "description": "Mar 26, 2026 \u2014 Tom's Hardware Verdict. The Arzopa Z3FC is a remarkable value in the portable monitor segment skewed towards a gamer audience. Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review test"
+      ],
+      "best_rank": 3
+    },
+    {
+      "url": "https://www.facebook.com/groups/160110789401691/posts/1129822039097223",
+      "domain": "www.facebook.com",
+      "title": "Hey guys, I just got an Arzopa Z3FC monitor for my ...",
+      "description": "Hey guys, I just got an Arzopa Z3FC monitor for my Nintendo Switch 2, and I'm noticing the colors look a bit washed-out. When I turn on HDR,\u00a0...",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" problems limitations"
+      ],
+      "best_rank": 3
+    },
+    {
+      "url": "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review",
+      "domain": "www.howtogeek.com",
+      "title": "Arzopa Z3FC 16.1-Inch Portable Monitor review",
+      "description": "Dec 17, 2025 \u2014 The Arzopa Z3FC 16.1-Inch Portable Monitor offers a high resolution, fast refresh rate, HDR10+, and other performance-oriented features for\u00a0...",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review test",
+        "\"Arzopa Z3FC\" problems limitations"
+      ],
+      "best_rank": 4
+    },
+    {
+      "url": "https://www.reddit.com/r/SteamDeck/comments/1hwkqlu/really_enjoying_this_portable_display_from_arzopa",
+      "domain": "www.reddit.com",
+      "title": "Really enjoying this portable display from Arzopa",
+      "description": "All the advantages of a larger display? I use it because there's no ... Arzopa Z3FC - is it the best portable monitor for Steamdeck? 5\u00a0... Read more",
+      "source_type": "community",
+      "queries": [
+        "\"Arzopa Z3FC\" problems limitations"
+      ],
+      "best_rank": 4
+    },
+    {
+      "url": "https://manuals.plus/category/arzopa/page/2",
+      "domain": "manuals.plus",
+      "title": "ARZOPA Manuals & User Guides",
+      "description": "Comprehensive user manual for the ARZOPA Z3FC 16.1-inch 2.5K 180Hz Portable Monitor. Includes setup, operation, maintenance, troubleshooting, and specifications ... Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" specifications manual"
+      ],
+      "best_rank": 5
+    },
+    {
+      "url": "https://techaeris.com/2025/12/24/arzopa-z3fc-portable-monitor-review",
+      "domain": "techaeris.com",
+      "title": "ARZOPA Z3FC Portable Monitor Review",
+      "description": "Dec 24, 2025 \u2014 ARZOPA Z3FC Specifications ; Screen Size: 16.1\u201d ; Panel Type: IPS ; Display Ratio: 16:9 ; Resolution: 2560*1440 ; Display Color: 8-bit\u00a0... Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" specifications manual",
+        "\"Arzopa Z3FC\" review test"
+      ],
+      "best_rank": 5
+    },
+    {
+      "url": "https://device.report/arzopa/z3fc",
+      "domain": "device.report",
+      "title": "ARZOPA Z3FC Manuals, Certifications & Specs",
+      "description": "ARZOPA Z3FC - ARZOPA 16.1'' 180Hz 2.5K Portable Monitor, 2560x1440 QHD 107% sRGB Kickstand Portable Gaming.... Browse 1 specification source. Arzopa Z3FC.",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" specifications manual"
+      ],
+      "best_rank": 6
+    },
+    {
+      "url": "https://fstoppers.com/reviews/review-arzopa-z3fc-161-inch-ultra-portable-monitor-photographers-location-712722",
+      "domain": "fstoppers.com",
+      "title": "Arzopa Z3FC 16.1-Inch Review: Portable Without ...",
+      "description": "Nov 1, 2025 \u2014 In day-to-day use, the Arzopa Z3FC feels quick and responsive \u2014 the startup is fast. It will also automatically power on once connected via USB-\u00a0... Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review test"
+      ],
+      "best_rank": 6
+    },
+    {
+      "url": "https://www.facebook.com/arzopaofficial/videos/z3fc-setup-guide-enabling-180hz-between-laptop-desktoparzopa-productivity-gaming/1069277605223484",
+      "domain": "www.facebook.com",
+      "title": "Z3FC Setup Guide: Enabling 180Hz Between Laptop ...",
+      "description": "The ARZOPA Z3FC combines a stunning 2.5K QHD display with. 00:18. Gaming anywhere. ... May 29, 2026 \u00b7 171K views. Shopee https://s\u00a0...",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" specifications manual"
+      ],
+      "best_rank": 7
+    },
+    {
+      "url": "https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html",
+      "domain": "www.pcworld.com",
+      "title": "Arzopa Z3FC review: A portable monitor with a 180Hz ...",
+      "description": "Sep 29, 2025 \u2014 The Arzopa Z3FC serves up a high-refresh 2560x1440 IPS-LCD in a slim, light package, though it's a tad more expensive than it should be.",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review test"
+      ],
+      "best_rank": 7
+    },
+    {
+      "url": "https://www.reddit.com/r/ARZOPA/comments/1qczr5w/a_simple_test_to_check_power_consumption_z3fcz1fc",
+      "domain": "www.reddit.com",
+      "title": "A simple test to check power consumption Z3FC/Z1FC",
+      "description": "Hello, for anyone looking to buy the arzopa z3fc or z1fc, I did a simple test to determine how much power the monitors were drawing.",
+      "source_type": "community",
+      "queries": [
+        "\"Arzopa Z3FC\" problems limitations"
+      ],
+      "best_rank": 7
+    }
+  ]
+}

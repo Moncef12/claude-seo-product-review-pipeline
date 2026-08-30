@@ -1,0 +1,108 @@
+import unittest
+
+from review_pipeline.stages.render import (
+    _step,
+    document_description,
+    html_document,
+    pipeline_trace,
+    render_body,
+)
+
+
+class RenderTests(unittest.TestCase):
+    def test_description_is_emitted_in_html_head(self):
+        markdown = "# Product Review\n\n**Meta description:** A precise description.\n"
+        description = document_description(markdown)
+        rendered = html_document("Product Review", description, "<h1>Review</h1>")
+        self.assertIn(
+            '<meta name="description" content="A precise description.">',
+            rendered,
+        )
+
+    def test_pros_and_cons_labels_render_following_bullets_as_lists(self):
+        rendered = render_body("**Pros**\n- Clear image\n- Good stand\n\n**Cons**\n- No speakers\n")
+        self.assertIn("<p><strong>Pros</strong></p>", rendered)
+        self.assertIn("<p><strong>Cons</strong></p>", rendered)
+        self.assertEqual(rendered.count("<ul>"), 2)
+        self.assertIn("<li>Clear image</li>", rendered)
+        self.assertIn("<li>No speakers</li>", rendered)
+
+    def test_pros_and_cons_in_fenced_code_are_unchanged(self):
+        rendered = render_body("```markdown\n**Pros**\n- example\n```")
+        self.assertIn("<code class=\"language-markdown\">**Pros**\n- example", rendered)
+
+    def test_raw_candidate_panel_is_escaped_and_collapsed(self):
+        rendered = html_document(
+            "Product Review",
+            "Description",
+            "<h1>Final</h1>",
+            "# Raw <script>alert(1)</script>",
+        )
+        self.assertIn("Initial Sonnet candidate (raw Markdown)", rendered)
+        self.assertNotIn('<details class="raw-draft" open', rendered)
+        self.assertIn("&lt;script&gt;", rendered)
+        self.assertNotIn("<script>alert(1)</script>", rendered)
+
+    def test_pipeline_trace_has_numbered_collapsed_steps_before_review(self):
+        trace = pipeline_trace()
+        rendered = html_document(
+            "Product Review",
+            "Description",
+            "<h1>Final review</h1>",
+            pipeline_html=trace,
+        )
+        self.assertEqual(trace.count('class="pipeline-step"'), 10)
+        self.assertEqual(trace.count('class="pipeline-number"'), 10)
+        self.assertNotIn('<details class="pipeline-step" open', trace)
+        self.assertLess(rendered.index("Pipeline trace"), rendered.index("Final review"))
+        for number in range(1, 11):
+            self.assertIn(f'pipeline-number">{number}</span>', trace)
+        for label in (
+            "Input: DataForSEO request",
+            "System prompt",
+            "User prompt and source input",
+            "Raw Haiku output",
+            "Raw Sonnet output",
+            "Validation rules",
+            "Parsed factual audit",
+            "Raw repair output",
+            "Final Python validation",
+            "Final Haiku factual audit",
+            "Output: cleanup report",
+            "Renderer configuration",
+        ):
+            self.assertIn(label, trace)
+        self.assertIn("<strong>Next:</strong>", trace)
+        self.assertIn("PASS · 53/53 SUPPORTED", trace)
+        self.assertIn("REPAIR SKIPPED · FINAL PASS", trace)
+        self.assertIn("Repair did NOT run", trace)
+        self.assertIn("0 Sonnet repair calls", trace)
+        self.assertIn("Final Python: PASS. Final Haiku: PASS.", trace)
+        self.assertIn("class=\"pipeline-outcome passed\"", trace)
+
+    def test_pipeline_artifacts_are_escaped_and_missing_is_available(self):
+        step = _step(1, "<Discovery>", [("payload <x>", {"html": "<script>alert(1)</script>"})])
+        self.assertIn("&lt;Discovery&gt;", step)
+        self.assertIn("payload &lt;x&gt;", step)
+        self.assertIn("&lt;script&gt;alert(1)&lt;/script&gt;", step)
+        self.assertNotIn("<script>alert(1)</script>", step)
+        missing = _step(2, "Missing", [("none", None)])
+        self.assertIn("UNAVAILABLE", missing)
+        self.assertIn("Unavailable", missing)
+
+    def test_human_result_label_and_outcome_are_escaped(self):
+        step = _step(
+            8,
+            "Repair",
+            [("record", {})],
+            result_label="SKIPPED <safe>",
+            outcome="No repair <script>alert(1)</script>",
+            result_state="passed",
+        )
+        self.assertIn("SKIPPED &lt;safe&gt;", step)
+        self.assertIn("No repair &lt;script&gt;", step)
+        self.assertNotIn("<script>alert(1)</script>", step)
+
+
+if __name__ == "__main__":
+    unittest.main()
