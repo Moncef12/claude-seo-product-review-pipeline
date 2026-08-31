@@ -106,12 +106,22 @@ class RenderTests(unittest.TestCase):
             "estimated_total_usd": 0.012345,
             "validation": {"final_python": "PASS", "final_haiku": "PASS"},
             "repair": {"status": "skipped <safe>"},
+            "initial_failures": [
+                {"validator": "Python", "code": "h1", "message": "Fix <title>"}
+            ],
         }
         rendered = html_document("Product", "Description", "<p>Review</p>", pipeline_html=pipeline_trace(), production_summary=summary)
         self.assertIn('class="production-summary"', rendered)
         self.assertIn("&lt;script&gt;alert(1)&lt;/script&gt;", rendered)
         self.assertNotIn("<script>alert(1)</script>", rendered)
         self.assertLess(rendered.index('class="production-summary"'), rendered.index('class="pipeline-trace"'))
+        self.assertIn("Initial validation failures (repaired)", rendered)
+        self.assertIn("Fix &lt;title&gt;", rendered)
+
+    def test_failure_summary_appears_before_full_validation_artifact(self):
+        trace = pipeline_trace()
+        self.assertIn("Initial failures:", trace)
+        self.assertLess(trace.index("Initial failures:"), trace.index("Validation rules"))
 
 
 if __name__ == "__main__":

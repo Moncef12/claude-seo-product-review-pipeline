@@ -24,6 +24,10 @@
     .production-summary-item span, .production-summary-item strong { display: block; }
     .production-summary-item span { color: var(--muted); font-size: .72rem; text-transform: uppercase; }
     .production-summary-item strong { color: var(--ink); font-size: .95rem; overflow-wrap: anywhere; }
+    .production-failures { margin-top: 10px; padding: 10px 12px; border-left: 4px solid #c47a14; border-radius: 4px; background: #fff8e8; }
+    .production-failures h3 { margin: 0 0 6px; font-size: .92rem; }
+    .production-failures ul { margin: 0; padding-left: 1.2rem; }
+    .production-failures li { margin: .25rem 0; font-size: .86rem; }
     .pipeline-trace { margin-bottom: 2rem; padding: 16px; border: 1px solid var(--line); border-radius: 6px; background: #f8fafb; }
     .pipeline-trace > h2 { margin: 0 0 .35rem; font-size: 1.2rem; }
     .pipeline-intro { margin: 0 0 1rem; color: var(--muted); font-size: .9rem; }
@@ -52,6 +56,7 @@
 <section class="production-summary" aria-label="Production summary">
   <h2>Production summary</h2>
   <div class="production-summary-grid"><div class="production-summary-item"><span>Total API calls</span><strong>7</strong></div><div class="production-summary-item"><span>Page fetches</span><strong>11</strong></div><div class="production-summary-item"><span>Claude tokens</span><strong>98652</strong></div><div class="production-summary-item"><span>Estimated total USD</span><strong>0.290494</strong></div><div class="production-summary-item"><span>Python</span><strong>PASS</strong></div><div class="production-summary-item"><span>Haiku</span><strong>PASS</strong></div><div class="production-summary-item"><span>Repair</span><strong>called</strong></div></div>
+  <div class="production-failures"><h3>Initial validation failures (repaired)</h3><ul><li><strong>Python · h1:</strong> The article must have exactly one H1 containing the brand, model, and the word &#x27;review&#x27;.</li><li><strong>Python · buyer fit guidance:</strong> The article must explain who should buy and who should avoid the product.</li><li><strong>Python · final conversion cue:</strong> Final Verdict must end with a natural next-step or conversion cue.</li></ul></div>
 </section>
     <section class="pipeline-trace" aria-label="Complete pipeline trace">
       <h2>Pipeline trace</h2>
@@ -13632,7 +13637,7 @@ This review is an evidence-based synthesis of published third-party sources. No 
 </details>
 <details class="pipeline-step">
   <summary><span class="pipeline-number">7</span><span>Python validation</span><span class="pipeline-status failed">FAIL · 3 ISSUES</span></summary>
-  <div class="pipeline-step-body"><div class="pipeline-outcome failed"><strong>Result:</strong> Python checked the raw candidate: 1107 words, 3 issues.</div><p class="pipeline-description">Evaluate structure, length, provenance, policy, and plan-aligned commercial decision support without spending model tokens.</p><div class="pipeline-artifact"><h4>Input: raw Sonnet candidate</h4><pre># Arzopa Z3FC Portable Monitor: Specs, Performance, Limits
+  <div class="pipeline-step-body"><div class="pipeline-outcome failed"><strong>Result:</strong> Python checked the raw candidate: 1107 words, 3 issues. Initial failures: Python h1: The article must have exactly one H1 containing the brand, model, and the word &#x27;review&#x27;. | Python buyer fit guidance: The article must explain who should buy and who should avoid the product. | Python final conversion cue: Final Verdict must end with a natural next-step or conversion cue.</div><p class="pipeline-description">Evaluate structure, length, provenance, policy, and plan-aligned commercial decision support without spending model tokens.</p><div class="pipeline-artifact"><h4>Input: raw Sonnet candidate</h4><pre># Arzopa Z3FC Portable Monitor: Specs, Performance, Limits
 
 **Meta description:** Arzopa Z3FC review covering its 2.5K 180Hz screen, portable design, gaming performance, connectivity, measured results, limitations, and ideal users.
 
@@ -16680,7 +16685,7 @@ This review is an evidence-based synthesis of published third-party sources. No 
 </details>
 <details class="pipeline-step">
   <summary><span class="pipeline-number">9</span><span>Conditional repair/final gate</span><span class="pipeline-status passed">REPAIR RAN · FINAL PASS</span></summary>
-  <div class="pipeline-step-body"><div class="pipeline-outcome passed"><strong>Result:</strong> Repair ran once with Sonnet, followed by final Python validation and a Haiku factual re-audit. Final Python: PASS. Final Haiku: PASS.</div><p class="pipeline-description">Make zero calls after a pass, or one surgical Sonnet repair and one Haiku re-audit after a failure. No retry loop.</p><div class="pipeline-artifact"><h4>Run metadata, decision, and token usage</h4><pre>{
+  <div class="pipeline-step-body"><div class="pipeline-outcome passed"><strong>Result:</strong> Repair ran once with Sonnet, followed by final Python validation and a Haiku factual re-audit. Final Python: PASS. Final Haiku: PASS. Initial failures: Python h1: The article must have exactly one H1 containing the brand, model, and the word &#x27;review&#x27;. | Python buyer fit guidance: The article must explain who should buy and who should avoid the product. | Python final conversion cue: Final Verdict must end with a natural next-step or conversion cue.</div><p class="pipeline-description">Make zero calls after a pass, or one surgical Sonnet repair and one Haiku re-audit after a failure. No retry loop.</p><div class="pipeline-artifact"><h4>Run metadata, decision, and token usage</h4><pre>{
   &quot;model&quot;: &quot;claude-sonnet-4-6&quot;,
   &quot;prompt_version&quot;: &quot;z3fc-conditional-repair-v4-dual-validation&quot;,
   &quot;repair_called&quot;: true,
@@ -28196,7 +28201,7 @@ This review is an evidence-based synthesis of published third-party sources. No 
     }
   }
 }</pre></div><div class="pipeline-artifact"><h4>Output: production-summary.json</h4><pre>{
-  &quot;generated_at&quot;: &quot;2026-08-31T16:19:50.496082+00:00&quot;,
+  &quot;generated_at&quot;: &quot;2026-08-31T16:26:14.884148+00:00&quot;,
   &quot;total_calls&quot;: 7,
   &quot;total_external_api_calls&quot;: 7,
   &quot;total_provider_calls&quot;: 7,
@@ -28299,6 +28304,23 @@ This review is an evidence-based synthesis of published third-party sources. No 
     &quot;called&quot;: true,
     &quot;status&quot;: &quot;called&quot;
   },
+  &quot;initial_failures&quot;: [
+    {
+      &quot;validator&quot;: &quot;Python&quot;,
+      &quot;code&quot;: &quot;h1&quot;,
+      &quot;message&quot;: &quot;The article must have exactly one H1 containing the brand, model, and the word &#x27;review&#x27;.&quot;
+    },
+    {
+      &quot;validator&quot;: &quot;Python&quot;,
+      &quot;code&quot;: &quot;buyer_fit_guidance&quot;,
+      &quot;message&quot;: &quot;The article must explain who should buy and who should avoid the product.&quot;
+    },
+    {
+      &quot;validator&quot;: &quot;Python&quot;,
+      &quot;code&quot;: &quot;final_conversion_cue&quot;,
+      &quot;message&quot;: &quot;Final Verdict must end with a natural next-step or conversion cue.&quot;
+    }
+  ],
   &quot;final_word_count&quot;: 1180,
   &quot;cost&quot;: {
     &quot;estimated_claude_standard_api_usd&quot;: 0.286994,

@@ -157,6 +157,23 @@ def _passed_label(passed: Any, issues: int) -> tuple[str, str]:
     return "NOT RUN", "neutral"
 
 
+def _failure_lines(report: Any, validator: str = "") -> list[str]:
+    lines = []
+    for issue in _mapping(report).get("issues") or []:
+        if not isinstance(issue, Mapping):
+            continue
+        code = str(issue.get("code") or issue.get("category") or "validation").replace("_", " ").strip()
+        message = str(issue.get("message") or issue.get("explanation") or "Validation failed.").strip()
+        prefix = f"{validator} " if validator else ""
+        lines.append(f"{prefix}{code}: {message}")
+    return lines
+
+
+def _failure_summary(report: Any, validator: str = "") -> str:
+    lines = _failure_lines(report, validator)
+    return " Initial failures: " + " | ".join(lines) if lines else ""
+
+
 def _repair_artifact() -> Any:
     repair = _read_artifact(REPAIR_PATH)
     if repair is not None:
@@ -192,9 +209,28 @@ def _summary_card(summary: Any) -> str:
         ("Repair", repair_result),
     )
     cells = "".join(f'<div class="production-summary-item"><span>{html.escape(str(label), quote=True)}</span><strong>{html.escape(_display_value(item), quote=True)}</strong></div>' for label, item in fields)
+    failures = value.get("initial_failures") or []
+    failure_items = []
+    for failure in failures:
+        if not isinstance(failure, Mapping):
+            continue
+        validator = str(failure.get("validator") or "Validation")
+        code = str(failure.get("code") or "failure").replace("_", " ")
+        message = str(failure.get("message") or "Validation failed.")
+        failure_items.append(
+            f"<li><strong>{html.escape(validator, quote=True)} · {html.escape(code, quote=True)}:</strong> {html.escape(message, quote=True)}</li>"
+        )
+    failure_block = (
+        '<div class="production-failures"><h3>Initial validation failures (repaired)</h3><ul>'
+        + "".join(failure_items)
+        + "</ul></div>"
+        if failure_items
+        else ""
+    )
     return f'''<section class="production-summary" aria-label="Production summary">
   <h2>Production summary</h2>
   <div class="production-summary-grid">{cells}</div>
+  {failure_block}
 </section>
 '''
 
@@ -253,6 +289,9 @@ def pipeline_trace() -> str:
     audit_label, audit_state = _passed_label(initial_audit.get("passed"), len(initial_audit.get("issues") or []))
     audited_claims = initial_audit.get("audited_claim_count", 0)
     supported_claims = initial_audit.get("supported_claim_count", 0)
+    python_failures = _failure_summary(initial_python, "Python")
+    haiku_failures = _failure_summary(initial_audit, "Haiku")
+    combined_failures = python_failures + haiku_failures
     repair_record = _mapping(repair)
     repair_called = repair_record.get("repair_called")
     final_passed = final_python.get("passed") is True and final_audit.get("passed") is True
@@ -315,7 +354,7 @@ def pipeline_trace() -> str:
                 ("Input: raw Sonnet candidate", _read_artifact(DRAFT_PATH)),
                 ("Validation rules", {"minimum_words": ARTICLE_MIN_WORDS, "maximum_words": ARTICLE_MAX_WORDS, "required_h2_headings": REQUIRED_HEADINGS, "expected_sources": [item for item in manifest if isinstance(item, Mapping)], "editorial_checks": ["quick verdict decision", "Best for/Avoid if/Biggest compromise labels", "buyer-fit guidance", "final conversion cue"]}),
                 ("Output: validation report", validation),
-            ), "Evaluate structure, length, provenance, policy, and plan-aligned commercial decision support without spending model tokens.", "Run the exhaustive Haiku factual audit.", python_label, f"Python checked the raw candidate: {initial_python.get('word_count', 0)} words, {len(initial_python.get('issues') or [])} issues.", python_state),
+            ), "Evaluate structure, length, provenance, policy, and plan-aligned commercial decision support without spending model tokens.", "Run the exhaustive Haiku factual audit.", python_label, f"Python checked the raw candidate: {initial_python.get('word_count', 0)} words, {len(initial_python.get('issues') or [])} issues.{python_failures}", python_state),
             _step(8, "Haiku audit", (
                 ("Input: candidate article and normalized evidence", {"article": _read_artifact(DRAFT_PATH), "evidence": normalized}),
                 ("Run metadata and token usage", _run_metadata(factual_audit, "model", "prompt_version", "evidence_sha256", "final_reused_initial")),
@@ -324,7 +363,7 @@ def pipeline_trace() -> str:
                 ("User prompt and article input", _field(initial_run, "prompt")),
                 ("Raw Haiku output", _field(initial_run, "raw_response")),
                 ("Parsed factual audit", _field(initial_run, "audit")),
-            ), "Audit every factual premise behind verdict, fit, objections, value judgments, comparisons, and CTAs against normalized evidence.", "Repair only combined Python and Haiku failures.", f"{audit_label} · {supported_claims}/{audited_claims} SUPPORTED", f"Haiku checked {audited_claims} factual claims: {supported_claims} supported and {len(initial_audit.get('issues') or [])} issues.", audit_state),
+            ), "Audit every factual premise behind verdict, fit, objections, value judgments, comparisons, and CTAs against normalized evidence.", "Repair only combined Python and Haiku failures.", f"{audit_label} · {supported_claims}/{audited_claims} SUPPORTED", f"Haiku checked {audited_claims} factual claims: {supported_claims} supported and {len(initial_audit.get('issues') or [])} issues.{haiku_failures}", audit_state),
             _step(9, "Conditional repair/final gate", (
                 ("Run metadata, decision, and token usage", _run_metadata(repair, "model", "prompt_version", "repair_called", "plan_sha256", "word_count", "usage")),
                 ("System prompt", _field(repair, "system_prompt")),
@@ -334,7 +373,7 @@ def pipeline_trace() -> str:
                 ("Initial factual audit", _field(repair, "initial_factual_audit")),
                 ("Final Python validation", _field(repair, "final_validation")),
                 ("Final Haiku factual audit", final_audit),
-            ), "Make zero calls after a pass, or one surgical Sonnet repair and one Haiku re-audit after a failure. No retry loop.", "Write the deterministic production summary.", repair_label, repair_outcome, repair_state),
+            ), "Make zero calls after a pass, or one surgical Sonnet repair and one Haiku re-audit after a failure. No retry loop.", "Write the deterministic production summary.", repair_label, repair_outcome + combined_failures, repair_state),
             _step(10, "Production summary", (
                 ("Input: all recorded run artifacts", {"discovery": sources, "authority": authority, "qualification": qualification, "extraction": extraction, "plan": plan, "generation": generation, "validation": validation, "factual_audit": factual_audit, "repair": repair}),
                 ("Output: production-summary.json", summary),
@@ -402,6 +441,10 @@ def html_document(
     .production-summary-item span, .production-summary-item strong {{ display: block; }}
     .production-summary-item span {{ color: var(--muted); font-size: .72rem; text-transform: uppercase; }}
     .production-summary-item strong {{ color: var(--ink); font-size: .95rem; overflow-wrap: anywhere; }}
+    .production-failures {{ margin-top: 10px; padding: 10px 12px; border-left: 4px solid #c47a14; border-radius: 4px; background: #fff8e8; }}
+    .production-failures h3 {{ margin: 0 0 6px; font-size: .92rem; }}
+    .production-failures ul {{ margin: 0; padding-left: 1.2rem; }}
+    .production-failures li {{ margin: .25rem 0; font-size: .86rem; }}
     .pipeline-trace {{ margin-bottom: 2rem; padding: 16px; border: 1px solid var(--line); border-radius: 6px; background: #f8fafb; }}
     .pipeline-trace > h2 {{ margin: 0 0 .35rem; font-size: 1.2rem; }}
     .pipeline-intro {{ margin: 0 0 1rem; color: var(--muted); font-size: .9rem; }}

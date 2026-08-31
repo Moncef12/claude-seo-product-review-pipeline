@@ -49,6 +49,7 @@ class ProductionSummaryTests(unittest.TestCase):
         self.assertTrue(summary["repair_required"])
         self.assertTrue(summary["repair_called"])
         self.assertEqual(summary["validation"]["final_haiku_audited"], 11)
+        self.assertEqual(len(summary["initial_failures"]), 2)
 
     def test_cached_producer_artifacts_retain_calls_and_costs(self):
         artifacts = self.artifacts()

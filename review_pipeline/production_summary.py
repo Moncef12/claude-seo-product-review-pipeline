@@ -269,6 +269,24 @@ def build_production_summary(
     if not final_python:
         final_python = initial_python
     repair_required = not (initial_python.get("passed") is True and initial_audit.get("passed") is True)
+    initial_failures = [
+        {
+            "validator": "Python",
+            "code": issue.get("code") or "validation",
+            "message": issue.get("message") or "Validation failed.",
+        }
+        for issue in initial_python.get("issues") or []
+        if isinstance(issue, Mapping)
+    ]
+    initial_failures.extend(
+        {
+            "validator": "Haiku",
+            "code": issue.get("category") or "factual_grounding",
+            "message": issue.get("explanation") or "Factual grounding failed.",
+        }
+        for issue in initial_audit.get("issues") or []
+        if isinstance(issue, Mapping)
+    )
     # Prefer the deterministic validator's Markdown-aware count. A plain
     # ``split`` count includes link destinations and Markdown syntax, so it can
     # disagree with the publishing gate displayed beside this value.
@@ -322,6 +340,7 @@ def build_production_summary(
             "called": bool(repair_value.get("repair_called")),
             "status": "called" if repair_value.get("repair_called") else "skipped" if repair_value else "not recorded",
         },
+        "initial_failures": initial_failures,
         "final_word_count": final_words,
         "cost": {
             "estimated_claude_standard_api_usd": round(claude_cost, 6),

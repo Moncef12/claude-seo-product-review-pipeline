@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T16:19:50.496082+00:00",
+  "generated_at": "2026-08-31T16:26:14.884148+00:00",
   "total_calls": 7,
   "total_external_api_calls": 7,
   "total_provider_calls": 7,
@@ -102,6 +102,23 @@
     "called": true,
     "status": "called"
   },
+  "initial_failures": [
+    {
+      "validator": "Python",
+      "code": "h1",
+      "message": "The article must have exactly one H1 containing the brand, model, and the word 'review'."
+    },
+    {
+      "validator": "Python",
+      "code": "buyer_fit_guidance",
+      "message": "The article must explain who should buy and who should avoid the product."
+    },
+    {
+      "validator": "Python",
+      "code": "final_conversion_cue",
+      "message": "Final Verdict must end with a natural next-step or conversion cue."
+    }
+  ],
   "final_word_count": 1180,
   "cost": {
     "estimated_claude_standard_api_usd": 0.286994,
