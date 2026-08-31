@@ -13,6 +13,7 @@ from review_pipeline.stages.plan import (
     plan_cache_key,
     plan_prompt,
     planning_evidence,
+    normalize_plan,
     resolve_plan_evidence_ids,
     planning_input_hash,
     validate_plan,
@@ -96,6 +97,13 @@ class PlanningTests(unittest.TestCase):
         self.assertIn("lead with portability", generation_prompt(EVIDENCE, first))
         self.assertNotEqual(plan_hash(first), plan_hash(second))
 
+    def test_generation_prompt_mirrors_deterministic_editorial_contract(self):
+        prompt = generation_prompt(EVIDENCE, {"cta_placement": "before Final Verdict"})
+        self.assertIn("all three literal terms: `Arzopa`, `Z3FC`, and `Review`", prompt)
+        self.assertIn("`**Buy it if:**` and `**Avoid it if:**`", prompt)
+        self.assertIn("last sentence of Final Verdict includes `consider`, `choose`, `check`, or", prompt)
+        self.assertIn("silently perform this literal preflight", prompt)
+
     def test_planning_aliases_resolve_to_normalized_evidence_ids(self):
         compact, aliases = planning_evidence(EVIDENCE)
         self.assertEqual([claim["id"] for claim in compact["claims"]], ["E01", "E02"])
@@ -106,6 +114,19 @@ class PlanningTests(unittest.TestCase):
             resolve_plan_evidence_ids(plan, EVIDENCE)["content_gaps"][0]["evidence_ids"],
             ["claim-screen"],
         )
+
+    def test_planning_normalizes_unsafe_generic_cta_advice(self):
+        plan = normalize_plan({"cta_placement": "Check current price and availability."})
+        self.assertIn("fit-based next step", plan["cta_placement"])
+        self.assertIn("Do not mention price", plan["cta_placement"])
+
+    def test_planning_normalizes_extra_table_and_currency_directions(self):
+        plan = normalize_plan({
+            "editorial_decisions": [{"decision": "Include power consumption table with setup advice."}],
+            "cro_buyer_objections": [{"response_direction": "Position the sub-$150 price as a strength."}],
+        })
+        self.assertNotIn("table", plan["editorial_decisions"][0]["decision"].casefold())
+        self.assertNotIn("$150", plan["cro_buyer_objections"][0]["response_direction"])
 
     def test_prompts_keep_product_facts_in_evidence_and_mark_inputs_untrusted(self):
         prompt = generation_prompt(EVIDENCE, {"article_angle": "evidence-first"})

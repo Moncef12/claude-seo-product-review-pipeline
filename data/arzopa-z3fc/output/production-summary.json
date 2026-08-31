@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-08-31T16:26:14.884148+00:00",
-  "total_calls": 7,
-  "total_external_api_calls": 7,
-  "total_provider_calls": 7,
-  "total_external_operations": 18,
+  "generated_at": "2026-08-31T18:34:31.285488+00:00",
+  "total_calls": 5,
+  "total_external_api_calls": 5,
+  "total_provider_calls": 5,
+  "total_external_operations": 16,
   "calls": {
     "dataforseo": 1,
-    "anthropic": 6,
+    "anthropic": 4,
     "source_fetches": 11
   },
   "calls_by_provider_stage": {
@@ -31,99 +31,85 @@
           "stage": "plan",
           "model": "claude-haiku-4-5-20251001",
           "called": true,
-          "input_tokens": 13380,
-          "output_tokens": 2557,
-          "estimated_cost_usd": 0.026165
+          "input_tokens": 13676,
+          "output_tokens": 2776,
+          "estimated_cost_usd": 0.027556
         },
         {
           "provider": "Anthropic",
           "stage": "generation",
           "model": "claude-sonnet-4-6",
           "called": true,
-          "input_tokens": 12476,
-          "output_tokens": 2122,
-          "estimated_cost_usd": 0.069258
+          "input_tokens": 12661,
+          "output_tokens": 2271,
+          "estimated_cost_usd": 0.072048
         },
         {
           "provider": "Anthropic",
-          "stage": "initial_factual_audit",
+          "stage": "initial_combined_audit",
           "model": "claude-haiku-4-5-20251001",
           "called": true,
-          "input_tokens": 10198,
-          "output_tokens": 5668,
-          "estimated_cost_usd": 0.038538
-        },
-        {
-          "provider": "Anthropic",
-          "stage": "final_factual_audit",
-          "model": "claude-haiku-4-5-20251001",
-          "called": true,
-          "input_tokens": 10295,
-          "output_tokens": 7029,
-          "estimated_cost_usd": 0.04544
-        },
-        {
-          "provider": "Anthropic",
-          "stage": "repair",
-          "model": "claude-sonnet-4-6",
-          "called": true,
-          "input_tokens": 13972,
-          "output_tokens": 2219,
-          "estimated_cost_usd": 0.075201
+          "input_tokens": 15918,
+          "output_tokens": 8110,
+          "estimated_cost_usd": 0.056468
         }
       ],
-      "total": 6
+      "total": 4
     },
     "source_fetches": 11
   },
   "tokens": {
-    "input": 75643,
-    "output": 23009,
-    "total": 98652
+    "input": 57577,
+    "output": 16571,
+    "total": 74148
   },
-  "total_input_tokens": 75643,
-  "total_output_tokens": 23009,
+  "total_input_tokens": 57577,
+  "total_output_tokens": 16571,
   "dataforseo": {
     "calls": 1,
     "recorded_cost_usd": 0.0035
   },
   "validation": {
-    "initial_python": "FAIL",
+    "initial_python": "PASS",
     "final_python": "PASS",
     "initial_haiku": "PASS",
     "final_haiku": "PASS",
+    "initial_haiku_factual": "PASS",
+    "final_haiku_factual": "PASS",
+    "initial_haiku_plan": "PASS",
+    "final_haiku_plan": "PASS",
+    "initial_haiku_buyer_questions": "PASS",
+    "final_haiku_buyer_questions": "PASS",
+    "initial_haiku_decision": "PASS",
+    "final_haiku_decision": "PASS",
     "initial_haiku_supported": 59,
     "initial_haiku_audited": 59,
-    "final_haiku_supported": 56,
-    "final_haiku_audited": 56
+    "final_haiku_supported": 59,
+    "final_haiku_audited": 59,
+    "initial_plan_covered": 13,
+    "initial_plan_checked": 13,
+    "final_plan_covered": 13,
+    "final_plan_checked": 13,
+    "initial_buyer_questions_covered": 4,
+    "initial_buyer_questions_checked": 4,
+    "final_buyer_questions_covered": 4,
+    "final_buyer_questions_checked": 4,
+    "initial_decision_met": 6,
+    "initial_decision_checked": 6,
+    "final_decision_met": 6,
+    "final_decision_checked": 6
   },
   "repair": {
-    "required": true,
-    "called": true,
-    "status": "called"
+    "required": false,
+    "called": false,
+    "status": "skipped"
   },
-  "initial_failures": [
-    {
-      "validator": "Python",
-      "code": "h1",
-      "message": "The article must have exactly one H1 containing the brand, model, and the word 'review'."
-    },
-    {
-      "validator": "Python",
-      "code": "buyer_fit_guidance",
-      "message": "The article must explain who should buy and who should avoid the product."
-    },
-    {
-      "validator": "Python",
-      "code": "final_conversion_cue",
-      "message": "Final Verdict must end with a natural next-step or conversion cue."
-    }
-  ],
-  "final_word_count": 1180,
+  "initial_failures": [],
+  "final_word_count": 1145,
   "cost": {
-    "estimated_claude_standard_api_usd": 0.286994,
+    "estimated_claude_standard_api_usd": 0.188464,
     "recorded_dataforseo_usd": 0.0035,
-    "estimated_total_usd": 0.290494,
+    "estimated_total_usd": 0.191964,
     "pricing_basis": {
       "effective_date": "2026-08-31",
       "rates_usd_per_million_tokens": {
@@ -140,20 +126,32 @@
   },
   "pricing_basis": "Anthropic standard API rates dated 2026-08-31; DataForSEO uses recorded task costs.",
   "exclusions": "No live calls are made by summary generation. Estimates exclude hosting, browser rendering, taxes, discounts, and any provider pricing not recorded in the artifacts.",
-  "estimated_total_usd": 0.290494,
-  "estimated_claude_cost_usd": 0.286994,
-  "estimated_total_cost_usd": 0.290494,
-  "total_api_calls": 7,
-  "total_claude_calls": 6,
+  "estimated_total_usd": 0.191964,
+  "estimated_claude_cost_usd": 0.188464,
+  "estimated_total_cost_usd": 0.191964,
+  "total_api_calls": 5,
+  "total_claude_calls": 4,
   "source_fetch_count": 11,
-  "initial_python_result": "FAIL",
+  "initial_python_result": "PASS",
   "final_python_result": "PASS",
   "initial_haiku_result": "PASS",
   "final_haiku_result": "PASS",
   "initial_haiku_supported_count": 59,
   "initial_haiku_audited_count": 59,
-  "final_haiku_supported_count": 56,
-  "final_haiku_audited_count": 56,
-  "repair_required": true,
-  "repair_called": true
+  "final_haiku_supported_count": 59,
+  "final_haiku_audited_count": 59,
+  "initial_plan_covered_count": 13,
+  "initial_plan_checked_count": 13,
+  "final_plan_covered_count": 13,
+  "final_plan_checked_count": 13,
+  "initial_buyer_questions_covered_count": 4,
+  "initial_buyer_questions_checked_count": 4,
+  "final_buyer_questions_covered_count": 4,
+  "final_buyer_questions_checked_count": 4,
+  "initial_decision_met_count": 6,
+  "initial_decision_checked_count": 6,
+  "final_decision_met_count": 6,
+  "final_decision_checked_count": 6,
+  "repair_required": false,
+  "repair_called": false
 }

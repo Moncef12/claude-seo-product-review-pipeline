@@ -1,21 +1,21 @@
 {
-  "validated_at": "2026-08-31T16:19:49.929379+00:00",
-  "candidate_sha256": "662ce9c1991d241a28561b882a87649a0357a530c27c1216a746d730412a7850",
-  "repair_called": true,
+  "validated_at": "2026-08-31T18:34:29.266527+00:00",
+  "candidate_sha256": "89c2e7c274b51f2888c4b29b921c07414a19619d5470aa24a3613f29d63f6e71",
+  "repair_called": false,
   "initial": {
-    "passed": false,
-    "word_count": 1107,
+    "passed": true,
+    "word_count": 1145,
     "checks": {
       "word_count": {
         "passed": true,
-        "value": 1107,
+        "value": 1145,
         "minimum": 800,
         "maximum": 1200
       },
       "h1": {
-        "passed": false,
+        "passed": true,
         "count": 1,
-        "title": "Arzopa Z3FC Portable Monitor: Specs, Performance, Limits"
+        "title": "Arzopa Z3FC Portable Monitor: A Comprehensive Review"
       },
       "h1_tested": {
         "passed": true
@@ -112,6 +112,7 @@
           "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
           "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
           "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
+          "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
           "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
           "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
           "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
@@ -143,46 +144,31 @@
         "section_present": true
       },
       "buyer_fit_guidance": {
-        "passed": false,
+        "passed": true,
         "section_present": true
       },
       "final_conversion_cue": {
-        "passed": false,
-        "section_present": true
+        "passed": true,
+        "section_present": true,
+        "final_sentence": "If the use case fits, check the current display mode settings and Mac standby behavior before committing, then choose accordingly."
       }
     },
-    "issues": [
-      {
-        "code": "h1",
-        "message": "The article must have exactly one H1 containing the brand, model, and the word 'review'.",
-        "details": {
-          "count": 1
-        }
-      },
-      {
-        "code": "buyer_fit_guidance",
-        "message": "The article must explain who should buy and who should avoid the product."
-      },
-      {
-        "code": "final_conversion_cue",
-        "message": "Final Verdict must end with a natural next-step or conversion cue."
-      }
-    ]
+    "issues": []
   },
   "final": {
     "passed": true,
-    "word_count": 1180,
+    "word_count": 1145,
     "checks": {
       "word_count": {
         "passed": true,
-        "value": 1180,
+        "value": 1145,
         "minimum": 800,
         "maximum": 1200
       },
       "h1": {
         "passed": true,
         "count": 1,
-        "title": "Arzopa Z3FC Portable Monitor Review: Specs, Performance, and Limits"
+        "title": "Arzopa Z3FC Portable Monitor: A Comprehensive Review"
       },
       "h1_tested": {
         "passed": true
@@ -279,6 +265,7 @@
           "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
           "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
           "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
+          "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
           "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
           "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
           "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
@@ -315,7 +302,8 @@
       },
       "final_conversion_cue": {
         "passed": true,
-        "section_present": true
+        "section_present": true,
+        "final_sentence": "If the use case fits, check the current display mode settings and Mac standby behavior before committing, then choose accordingly."
       }
     },
     "issues": []

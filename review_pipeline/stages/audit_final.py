@@ -1,4 +1,4 @@
-"""Re-audit a repaired article and enforce the final dual-validation gate."""
+"""Re-audit a repaired article and enforce the final combined validation gate."""
 
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ from review_pipeline.config import (
     FACTUAL_AUDIT_PATH,
     NORMALIZED_EVIDENCE_PATH,
     OUTPUT_DIR,
+    PLAN_PATH,
     PROJECT_ROOT,
     REPAIR_PATH,
     VALIDATION_PATH,
@@ -45,11 +46,12 @@ def load_json(path) -> dict:
     return value
 
 
-def matching_record(record: dict, evidence: dict) -> bool:
+def matching_record(record: dict, evidence: dict, plan: dict) -> bool:
     return (
         record.get("model") == MODEL
         and record.get("prompt_version") == PROMPT_VERSION
         and record.get("evidence_sha256") == stable_hash(evidence)
+        and record.get("plan_sha256") == stable_hash(plan)
     )
 
 
@@ -77,7 +79,7 @@ def enforce_final_gate(
     if not factual_report.get("passed"):
         failures.append(f"Haiku={len(factual_report.get('issues') or [])} issues")
     raise SystemExit(
-        "Final article failed the dual-validation gate ("
+        "Final article failed the combined validation gate ("
         + ", ".join(failures)
         + f"); see {FAILED_REPAIR_PATH}, {VALIDATION_PATH}, and {FACTUAL_AUDIT_PATH}"
     )
@@ -89,11 +91,15 @@ def main() -> None:
     ensure_data_directories()
     article = FINAL_CANDIDATE_PATH.read_text(encoding="utf-8").strip()
     evidence = load_json(NORMALIZED_EVIDENCE_PATH)
+    plan_record = load_json(PLAN_PATH)
+    plan = plan_record.get("plan", plan_record)
+    if not isinstance(plan, dict) or not plan:
+        raise SystemExit("SEO/AIO/CRO plan is missing; run the plan stage first")
     validation = load_json(VALIDATION_PATH)
     repair = load_json(REPAIR_PATH)
     record = load_json(FACTUAL_AUDIT_PATH)
-    if not matching_record(record, evidence) or not record.get("initial"):
-        raise SystemExit("Initial factual audit is missing or stale")
+    if not matching_record(record, evidence, plan) or not record.get("initial"):
+        raise SystemExit("Initial combined Haiku audit is missing or stale")
 
     if not repair.get("repair_called"):
         final_run = record["initial"]
@@ -102,28 +108,34 @@ def main() -> None:
         save_factual_record(record)
         update_repair_record(repair, final_run["audit"])
         enforce_final_gate(article, validation["final"], final_run["audit"])
-        print("FINAL factual audit reused initial pass: 0 Haiku calls")
+        print("FINAL combined Haiku audit reused initial pass: 0 Haiku calls")
         return
 
     if (
         not args.refresh
-        and cached_run_matches(record.get("final"), article)
+        and cached_run_matches(record.get("final"), article, plan)
     ):
         final_run = record["final"]
         print(
-            f"CACHED final Haiku factual audit: "
+            f"CACHED final Haiku combined audit: "
             f"{'PASSED' if final_run['audit']['passed'] else 'FAILED'}, "
-            f"{final_run['audit']['audited_claim_count']} claims, "
+            f"{final_run['audit']['supported_claim_count']}/{final_run['audit']['audited_claim_count']} claims, "
+            f"{final_run['audit']['plan_covered_count']}/{final_run['audit']['plan_checked_count']} plan items, "
+            f"{final_run['audit']['buyer_question_covered_count']}/{final_run['audit']['buyer_question_checked_count']} buyer questions, "
+            f"{final_run['audit']['decision_met_count']}/{final_run['audit']['decision_checked_count']} decision standards, "
             f"{len(final_run['audit']['issues'])} issues"
         )
     else:
-        final_run = audit_article(anthropic.Anthropic(), article, evidence)
+        final_run = audit_article(anthropic.Anthropic(), article, evidence, plan)
         record["final"] = final_run
         record["final_reused_initial"] = False
         save_factual_record(record)
         print(
-            f"{'PASSED' if final_run['audit']['passed'] else 'FAILED'} final Haiku factual audit: "
-            f"{final_run['audit']['audited_claim_count']} claims, "
+            f"{'PASSED' if final_run['audit']['passed'] else 'FAILED'} final Haiku combined audit: "
+            f"{final_run['audit']['supported_claim_count']}/{final_run['audit']['audited_claim_count']} claims, "
+            f"{final_run['audit']['plan_covered_count']}/{final_run['audit']['plan_checked_count']} plan items, "
+            f"{final_run['audit']['buyer_question_covered_count']}/{final_run['audit']['buyer_question_checked_count']} buyer questions, "
+            f"{final_run['audit']['decision_met_count']}/{final_run['audit']['decision_checked_count']} decision standards, "
             f"{len(final_run['audit']['issues'])} issues, "
             f"{final_run['usage']['input_tokens']} input / "
             f"{final_run['usage']['output_tokens']} output tokens"

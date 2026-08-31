@@ -11,8 +11,8 @@ def usage(input_tokens, output_tokens):
 
 class ProductionSummaryTests(unittest.TestCase):
     def artifacts(self, repaired=False):
-        initial_audit = {"passed": not repaired, "audited_claim_count": 10, "supported_claim_count": 10 if not repaired else 8, "issues": [] if not repaired else [{"category": "unsupported_claim"}, {"category": "contradiction"}]}
-        final_audit = {"passed": True, "audited_claim_count": 11, "supported_claim_count": 11, "issues": []}
+        initial_audit = {"passed": not repaired, "factual_passed": not repaired, "plan_passed": True, "buyer_question_passed": True, "decision_passed": True, "audited_claim_count": 10, "supported_claim_count": 10 if not repaired else 8, "plan_checked_count": 13, "plan_covered_count": 13, "buyer_question_checked_count": 4, "buyer_question_covered_count": 4, "decision_checked_count": 6, "decision_met_count": 6, "issues": [] if not repaired else [{"category": "unsupported_claim"}, {"category": "contradiction"}]}
+        final_audit = {"passed": True, "factual_passed": True, "plan_passed": True, "buyer_question_passed": True, "decision_passed": True, "audited_claim_count": 11, "supported_claim_count": 11, "plan_checked_count": 13, "plan_covered_count": 13, "buyer_question_checked_count": 4, "buyer_question_covered_count": 4, "decision_checked_count": 6, "decision_met_count": 6, "issues": []}
         return {
             "discovery": {"collection": {"tasks": [{"cost": 0.11}, {"cost": 0.12}], "call_count": 2}},
             "authority": {"cost": 0.13, "call_count": 1},
@@ -49,6 +49,12 @@ class ProductionSummaryTests(unittest.TestCase):
         self.assertTrue(summary["repair_required"])
         self.assertTrue(summary["repair_called"])
         self.assertEqual(summary["validation"]["final_haiku_audited"], 11)
+        self.assertEqual(summary["validation"]["final_plan_covered"], 13)
+        self.assertEqual(summary["validation"]["final_plan_checked"], 13)
+        self.assertEqual(summary["validation"]["final_buyer_questions_covered"], 4)
+        self.assertEqual(summary["validation"]["final_buyer_questions_checked"], 4)
+        self.assertEqual(summary["validation"]["final_decision_met"], 6)
+        self.assertEqual(summary["validation"]["final_decision_checked"], 6)
         self.assertEqual(len(summary["initial_failures"]), 2)
 
     def test_cached_producer_artifacts_retain_calls_and_costs(self):

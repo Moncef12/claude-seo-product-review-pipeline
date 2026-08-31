@@ -97,8 +97,8 @@ DATAFORSEO_AUTHORITY_ENDPOINT = DATAFORSEO_BULK_RANKS_ENDPOINT
 HAIKU_MODEL = "claude-haiku-4-5-20251001"
 SONNET_MODEL = "claude-sonnet-4-6"
 EXTRACTION_PROMPT_VERSION = "z3fc-compact-evidence-v3-structured"
-PLAN_PROMPT_VERSION = "z3fc-seo-aio-cro-plan-v1"
-GENERATION_PROMPT_VERSION = "z3fc-final-review-v4-plan-grounded"
+PLAN_PROMPT_VERSION = "z3fc-seo-aio-cro-plan-v6-layout-aware"
+GENERATION_PROMPT_VERSION = "z3fc-final-review-v9-section-budgets"
 
 # Standard Anthropic API rates used only for transparent estimates in the
 # production summary.  They are intentionally dated and represented per

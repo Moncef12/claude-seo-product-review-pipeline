@@ -1,4 +1,4 @@
-"""Run or reuse the initial Haiku factual-grounding audit."""
+"""Run or reuse the combined Haiku grounding, plan, and decision audit."""
 
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ from review_pipeline.config import (
     FACTUAL_AUDIT_PATH,
     NORMALIZED_EVIDENCE_PATH,
     OUTPUT_DIR,
+    PLAN_PATH,
     PROJECT_ROOT,
     ensure_data_directories,
 )
@@ -42,19 +43,21 @@ def load_record() -> dict:
     return value if isinstance(value, dict) else {}
 
 
-def record_matches(record: dict, evidence: dict) -> bool:
+def record_matches(record: dict, evidence: dict, plan: dict) -> bool:
     return (
         record.get("model") == MODEL
         and record.get("prompt_version") == PROMPT_VERSION
         and record.get("evidence_sha256") == stable_hash(evidence)
+        and record.get("plan_sha256") == stable_hash(plan)
     )
 
 
-def save_initial(record: dict, run: dict, evidence: dict) -> dict:
+def save_initial(record: dict, run: dict, evidence: dict, plan: dict) -> dict:
     output = {
         "model": MODEL,
         "prompt_version": PROMPT_VERSION,
         "evidence_sha256": stable_hash(evidence),
+        "plan_sha256": stable_hash(plan),
         "initial": run,
         "final": None,
         "final_reused_initial": False,
@@ -69,26 +72,37 @@ def main() -> None:
     ensure_data_directories()
     article = DRAFT_PATH.read_text(encoding="utf-8").strip()
     evidence = json.loads(NORMALIZED_EVIDENCE_PATH.read_text(encoding="utf-8"))
+    plan_record = json.loads(PLAN_PATH.read_text(encoding="utf-8"))
+    plan = plan_record.get("plan", plan_record) if isinstance(plan_record, dict) else {}
+    if not isinstance(plan, dict) or not plan:
+        raise SystemExit("SEO/AIO/CRO plan is missing; run the plan stage first")
     record = load_record()
     if (
         not args.refresh
-        and record_matches(record, evidence)
-        and cached_run_matches(record.get("initial"), article)
+        and record_matches(record, evidence, plan)
+        and cached_run_matches(record.get("initial"), article, plan)
     ):
         audit = record["initial"]["audit"]
         print(
-            f"CACHED initial Haiku factual audit: "
+            f"CACHED initial Haiku combined audit: "
             f"{'PASSED' if audit['passed'] else 'FAILED'}, "
-            f"{audit['audited_claim_count']} claims, {len(audit['issues'])} issues"
+            f"{audit['supported_claim_count']}/{audit['audited_claim_count']} claims, "
+            f"{audit['plan_covered_count']}/{audit['plan_checked_count']} plan items, "
+            f"{audit['buyer_question_covered_count']}/{audit['buyer_question_checked_count']} buyer questions, "
+            f"{audit['decision_met_count']}/{audit['decision_checked_count']} decision standards"
         )
         return
 
-    run = audit_article(anthropic.Anthropic(), article, evidence)
-    save_initial(record, run, evidence)
+    run = audit_article(anthropic.Anthropic(), article, evidence, plan)
+    save_initial(record, run, evidence, plan)
     audit = run["audit"]
     print(
-        f"{'PASSED' if audit['passed'] else 'FAILED'} initial Haiku factual audit: "
-        f"{audit['audited_claim_count']} claims, {len(audit['issues'])} issues, "
+        f"{'PASSED' if audit['passed'] else 'FAILED'} initial Haiku combined audit: "
+        f"{audit['supported_claim_count']}/{audit['audited_claim_count']} claims, "
+        f"{audit['plan_covered_count']}/{audit['plan_checked_count']} plan items, "
+        f"{audit['buyer_question_covered_count']}/{audit['buyer_question_checked_count']} buyer questions, "
+        f"{audit['decision_met_count']}/{audit['decision_checked_count']} decision standards, "
+        f"{len(audit['issues'])} issues, "
         f"{run['usage']['input_tokens']} input / "
         f"{run['usage']['output_tokens']} output tokens"
     )

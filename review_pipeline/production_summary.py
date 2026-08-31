@@ -98,6 +98,15 @@ def _result(audit: Mapping[str, Any]) -> str:
     return "NOT RUN"
 
 
+def _named_result(audit: Mapping[str, Any], field: str) -> str:
+    passed = audit.get(field)
+    if passed is True:
+        return "PASS"
+    if passed is False:
+        return "FAIL"
+    return "NOT RUN"
+
+
 def _call_cost(model: str, usage: Mapping[str, Any]) -> float:
     rates = CLAUDE_PRICING_USD_PER_MILLION.get(model)
     if rates is None:
@@ -244,10 +253,10 @@ def build_production_summary(
     final_run = _mapping(_mapping(factual_audit).get("final"))
     if not initial_run and isinstance(_mapping(factual_audit).get("audit"), Mapping):
         initial_run = _mapping(factual_audit)
-    _claude_call(claude_calls, "initial_factual_audit", initial_run, HAIKU_MODEL)
+    _claude_call(claude_calls, "initial_combined_audit", initial_run, HAIKU_MODEL)
     final_reused = bool(_mapping(factual_audit).get("final_reused_initial") or _mapping(final_run).get("reused_initial"))
     if final_run and not final_reused:
-        _claude_call(claude_calls, "final_factual_audit", final_run, HAIKU_MODEL)
+        _claude_call(claude_calls, "final_combined_audit", final_run, HAIKU_MODEL)
     repair_value = _mapping(repair)
     if repair_value.get("repair_called"):
         _claude_call(claude_calls, "repair", repair_value, SONNET_MODEL)
@@ -280,9 +289,17 @@ def build_production_summary(
     ]
     initial_failures.extend(
         {
-            "validator": "Haiku",
+            "validator": (
+                "Haiku plan"
+                if str(issue.get("category") or "").startswith("plan_")
+                else "Haiku buyer questions"
+                if str(issue.get("category") or "").startswith("buyer_question_")
+                else "Haiku editorial/commercial"
+                if str(issue.get("category") or "").startswith("decision_")
+                else "Haiku factual"
+            ),
             "code": issue.get("category") or "factual_grounding",
-            "message": issue.get("explanation") or "Factual grounding failed.",
+            "message": issue.get("explanation") or "Haiku validation failed.",
         }
         for issue in initial_audit.get("issues") or []
         if isinstance(issue, Mapping)
@@ -330,10 +347,30 @@ def build_production_summary(
             "final_python": _result(final_python),
             "initial_haiku": _result(initial_audit),
             "final_haiku": _result(final_audit),
+            "initial_haiku_factual": _named_result(initial_audit, "factual_passed"),
+            "final_haiku_factual": _named_result(final_audit, "factual_passed"),
+            "initial_haiku_plan": _named_result(initial_audit, "plan_passed"),
+            "final_haiku_plan": _named_result(final_audit, "plan_passed"),
+            "initial_haiku_buyer_questions": _named_result(initial_audit, "buyer_question_passed"),
+            "final_haiku_buyer_questions": _named_result(final_audit, "buyer_question_passed"),
+            "initial_haiku_decision": _named_result(initial_audit, "decision_passed"),
+            "final_haiku_decision": _named_result(final_audit, "decision_passed"),
             "initial_haiku_supported": _integer(initial_audit.get("supported_claim_count")),
             "initial_haiku_audited": _integer(initial_audit.get("audited_claim_count")),
             "final_haiku_supported": _integer(final_audit.get("supported_claim_count")),
             "final_haiku_audited": _integer(final_audit.get("audited_claim_count")),
+            "initial_plan_covered": _integer(initial_audit.get("plan_covered_count")),
+            "initial_plan_checked": _integer(initial_audit.get("plan_checked_count")),
+            "final_plan_covered": _integer(final_audit.get("plan_covered_count")),
+            "final_plan_checked": _integer(final_audit.get("plan_checked_count")),
+            "initial_buyer_questions_covered": _integer(initial_audit.get("buyer_question_covered_count")),
+            "initial_buyer_questions_checked": _integer(initial_audit.get("buyer_question_checked_count")),
+            "final_buyer_questions_covered": _integer(final_audit.get("buyer_question_covered_count")),
+            "final_buyer_questions_checked": _integer(final_audit.get("buyer_question_checked_count")),
+            "initial_decision_met": _integer(initial_audit.get("decision_met_count")),
+            "initial_decision_checked": _integer(initial_audit.get("decision_checked_count")),
+            "final_decision_met": _integer(final_audit.get("decision_met_count")),
+            "final_decision_checked": _integer(final_audit.get("decision_checked_count")),
         },
         "repair": {
             "required": repair_required,
@@ -370,6 +407,18 @@ def build_production_summary(
     summary["initial_haiku_audited_count"] = summary["validation"]["initial_haiku_audited"]
     summary["final_haiku_supported_count"] = summary["validation"]["final_haiku_supported"]
     summary["final_haiku_audited_count"] = summary["validation"]["final_haiku_audited"]
+    summary["initial_plan_covered_count"] = summary["validation"]["initial_plan_covered"]
+    summary["initial_plan_checked_count"] = summary["validation"]["initial_plan_checked"]
+    summary["final_plan_covered_count"] = summary["validation"]["final_plan_covered"]
+    summary["final_plan_checked_count"] = summary["validation"]["final_plan_checked"]
+    summary["initial_buyer_questions_covered_count"] = summary["validation"]["initial_buyer_questions_covered"]
+    summary["initial_buyer_questions_checked_count"] = summary["validation"]["initial_buyer_questions_checked"]
+    summary["final_buyer_questions_covered_count"] = summary["validation"]["final_buyer_questions_covered"]
+    summary["final_buyer_questions_checked_count"] = summary["validation"]["final_buyer_questions_checked"]
+    summary["initial_decision_met_count"] = summary["validation"]["initial_decision_met"]
+    summary["initial_decision_checked_count"] = summary["validation"]["initial_decision_checked"]
+    summary["final_decision_met_count"] = summary["validation"]["final_decision_met"]
+    summary["final_decision_checked_count"] = summary["validation"]["final_decision_checked"]
     summary["repair_required"] = repair_required
     summary["repair_called"] = bool(repair_value.get("repair_called"))
     return summary

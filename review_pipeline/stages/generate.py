@@ -55,13 +55,13 @@ def generation_prompt(evidence: dict, plan: dict | None = None) -> str:
 {json.dumps(PRODUCT, indent=2)}
 
 Hard requirements:
-- Write 950 to 1,050 visible words. This is a strict limit, not a suggestion.
+- Write 850 to 950 visible words. This is a strict limit, not a suggestion.
 - Be selective. Do not repeat every evidence claim or restate the same fact in
   tables, bullets, and prose.
 - Return Markdown only, with no horizontal rules.
-- Use "Arzopa Z3FC review" naturally in the H1 and Final Verdict.
-- Start with one H1 of about 50 to 60 characters. Never put "Tested" or a
-  first-hand claim in the title.
+- Start with exactly one H1 of about 50 to 60 characters. The H1 must visibly
+  contain all three literal terms: `Arzopa`, `Z3FC`, and `Review`. Never put
+  "Tested" or another first-hand claim in the title.
 - Follow the H1 with this exact 149-character line:
   `**Meta description:** Arzopa Z3FC review covering its 2.5K 180Hz screen, portable design, gaming performance, connectivity, measured results, limitations, and ideal users.`
 - Use these H2 headings exactly once and in this exact order:
@@ -78,21 +78,29 @@ Hard requirements:
   11. Final Verdict
   12. Frequently Asked Questions
   13. How We Researched This Review
-- Quick Verdict: 45 to 60 words answering whether it is worth buying, for whom,
-  and the largest compromise.
+- Quick Verdict: 40 to 50 words answering whether it is worth buying, for whom,
+  and the largest compromise. It must explicitly use `recommend`, `recommended`,
+  `worth`, `buy`, or `avoid`; a specification summary alone does not pass.
 - Review Snapshot: a five-row table for Overall assessment, Best for, Avoid if,
-  Standout feature, and Biggest compromise. Use no invented numeric rating.
-- Pros and Cons: exactly three concise bullets in each list.
+  Standout feature, and Biggest compromise. Keep each value under 12 words. Use no
+  invented numeric rating.
+- Pros and Cons: exactly three bullets in each list, no more than 14 words per bullet.
 - Specifications: no more than eight rows. Label manufacturer claims and link the
   measuring publisher beside important independent results.
-- Keep each prose H2 section to one compact paragraph of 55 to 85 words, except
+- Keep each prose H2 section to one compact paragraph of 45 to 65 words, except
   Frequently Asked Questions and How We Researched This Review.
 - Body sections: prioritize decision-useful evidence and avoid repeating bullets.
 - How It Compares: use only supported category-level comparisons, no invented rival.
+- Who Should Buy It and Who Should Not: include two separate paragraphs beginning
+  with the exact bold labels `**Buy it if:**` and `**Avoid it if:**`. Give concrete,
+  evidence-supported reader guidance after both labels.
+- Final Verdict: end the section with one natural next-step sentence containing a
+  clear action such as `consider`, `choose`, `check`, or `buy`. Do not add a price,
+  affiliate link, urgency, or unsupported product claim.
 - Frequently Asked Questions: exactly three bold questions ending in `?`, followed
-  by direct, self-contained answers of no more than 35 words each.
+  by direct, self-contained answers of no more than 25 words each.
 - How We Researched This Review: explicitly say this is an evidence-based synthesis,
-  not a hands-on test, then list all five supplied publishers as Markdown links.
+  not an original product test, then list all five supplied publishers as Markdown links.
   Keep the disclosure before the source list to no more than 35 words.
 - Use no more than seven inline source links before the methodology list. Every link
   must use one of the supplied source URLs.
@@ -110,14 +118,23 @@ Hard requirements:
   compatibility. Preserve each claim's manufacturer/observed/measured status and
   conditions, and state conflicts instead of resolving them from memory.
 - Resolve nothing beyond the evidence. If evidence conflicts, state the conflict.
-- Before returning, remove repetition and ensure the complete article remains
-  inside 950 to 1,050 visible words while retaining all 13 required H2 headings.
+- Before returning, silently perform this literal preflight; do not print the
+  checklist:
+  1. Exactly one H1, containing `Arzopa`, `Z3FC`, and `Review`.
+  2. The buyer-fit section contains both `**Buy it if:**` and `**Avoid it if:**`.
+  3. The last sentence of Final Verdict includes `consider`, `choose`, `check`, or
+     `buy`, but never price/pricing, stock, availability, urgency, or an external link.
+  4. The complete article remains inside 850 to 950 visible words and retains
+     all 13 required H2 headings.
 
 EDITORIAL / SEO / AIO / CRO PLANNING BRIEF
 {json.dumps(plan, indent=2)}
 
 Use the planning brief to choose intent, section emphasis, direct-answer targets,
-buyer-objection responses, and CTA placement. It is a planning brief, not a source of product facts.
+buyer-objection responses, and CTA placement. Substantively cover its primary
+intent, article angle, every editorial decision, every AIO direct-answer target,
+every CRO objection response, and the conversion cue. These are audited after
+generation, so do not merely repeat their keywords. The plan is not a source of product facts.
 Every factual premise behind a verdict, best-for or avoid-if
 recommendation, objection response, value judgment, or CTA must be supported by
 the evidence below. Evidence overrides any plan wording that conflicts with it.

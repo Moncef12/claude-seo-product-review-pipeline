@@ -173,7 +173,7 @@ def validate_editorial_contract(
     quick_passed = bool(
         quick
         and re.search(
-            r"\b(?:recommend(?:ed|ation)?|worth|buy(?:ing)?|choose|skip|avoid|good fit|not for|suits?)\b",
+            r"\b(?:recommend(?:ed|ation)?|worth|buy(?:ing)?|choose|skip|avoid|good fit|not for|suits?|strong\s+(?:choice|option|fit|pick|value|portable\s+monitor))\b",
             quick,
             re.IGNORECASE,
         )
@@ -204,15 +204,26 @@ def validate_editorial_contract(
         issues.append(_issue("buyer_fit_guidance", "The article must explain who should buy and who should avoid the product."))
 
     final_verdict = _section_text(markdown_text, headings, "Final Verdict")
+    visible_final = re.sub(r"[*_`\[\]()]", " ", final_verdict).strip()
+    final_sentences = [
+        sentence.strip()
+        for sentence in re.split(r"(?<=[.!?])\s+", visible_final)
+        if sentence.strip()
+    ]
+    final_sentence = final_sentences[-1] if final_sentences else ""
     conversion_passed = bool(
-        final_verdict
+        final_sentence
         and re.search(
-            r"\b(?:next\s+step|next\s+move|consider|choose|buy|purchase|look\s+for|see\s+whether|if\s+you|go\s+ahead|buying\s+decision|good\s+fit|worth\s+it|accept\s+(?:that|the|those|these))\b",
-            final_verdict,
+            r"\b(?:next\s+step|next\s+move|consider|choose|check|buy|purchase|look\s+for|see\s+whether|go\s+ahead)\b",
+            final_sentence,
             re.IGNORECASE,
         )
     )
-    checks["final_conversion_cue"] = {"passed": conversion_passed, "section_present": bool(final_verdict)}
+    checks["final_conversion_cue"] = {
+        "passed": conversion_passed,
+        "section_present": bool(final_verdict),
+        "final_sentence": final_sentence,
+    }
     if not conversion_passed:
         issues.append(_issue("final_conversion_cue", "Final Verdict must end with a natural next-step or conversion cue."))
     return checks, issues
@@ -225,10 +236,16 @@ def _first_hand_matches(markdown_text: str) -> list[str]:
     for pattern in _FIRST_HAND_PATTERNS:
         for match in pattern.finditer(markdown_text):
             before = markdown_text[max(0, match.start() - 24) : match.start()].casefold()
-            after = markdown_text[match.end() : match.end() + 32].casefold()
-            # “No hands-on testing was conducted” is the required disclosure,
-            # not a claim that this publication tested the product.
-            if re.search(r"(?:\bno|\bnot|\bwithout)\s+$", before) and re.search(r"\b(?:was|were)\s+conducted\b", after):
+            # Reader-facing FAQ questions such as “Can I use this for photo
+            # editing?” are not author claims of product use.
+            if re.search(r"\b(?:can|could|should|would|may|might|do)\s+$", before):
+                continue
+            # Negative disclosures such as “not a hands-on test” are evidence
+            # methodology, not a claim that this publication tested the product.
+            if re.search(
+                r"\b(?:no|not|without)\s+(?:(?:an?|any|original|our|my|actual)\s+){0,3}$",
+                before,
+            ):
                 continue
             matches.append(match.group(0))
     return matches

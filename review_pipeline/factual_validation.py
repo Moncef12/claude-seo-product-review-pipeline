@@ -1,4 +1,4 @@
-"""Structured Haiku audit for factual grounding against normalized evidence."""
+"""Structured Haiku audit for grounding, plan adherence, and decision quality."""
 
 from __future__ import annotations
 
@@ -14,15 +14,16 @@ from review_pipeline.config import HAIKU_MODEL
 
 
 MODEL = HAIKU_MODEL
-PROMPT_VERSION = "z3fc-factual-audit-v7-compact-claim-matrix"
+PROMPT_VERSION = "z3fc-evidence-plan-buyer-decision-audit-v10"
 
-SYSTEM_PROMPT = """You are a strict factual-grounding auditor.
-Audit an article only against the supplied normalized evidence. Do not use outside
-knowledge. Check every factual assertion, number, product specification, source
-attribution, treatment of conflicting evidence, and the factual premises behind
-recommendations, buyer fit, objections, value judgments, and commercial calls to
-action. Report only factual-grounding problems, not style preferences. Return
-valid JSON matching the supplied schema."""
+SYSTEM_PROMPT = """You are a strict factual-grounding and content-brief auditor.
+Audit factual claims only against the supplied normalized evidence; never use
+outside knowledge. Separately check whether the article executes each supplied
+essential SEO/AIO/CRO plan requirement. Also assess whether it makes useful,
+evidence-constrained editorial and commercial decisions instead of merely listing
+features. The plan is editorial direction, never a source of product facts. Report
+substantive grounding, brief-adherence, or decision-quality failures, not style
+preferences. Return valid JSON matching the supplied schema."""
 
 AUDIT_SCHEMA = {
     "type": "object",
@@ -69,8 +70,90 @@ AUDIT_SCHEMA = {
                 "additionalProperties": False,
             },
         },
+        "plan_checks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"},
+                    "status": {
+                        "type": "string",
+                        "enum": ["covered", "partially_covered", "missing"],
+                    },
+                    "article_quote": {"type": "string"},
+                    "explanation": {"type": "string"},
+                    "suggested_correction": {"type": "string"},
+                },
+                "required": [
+                    "id",
+                    "status",
+                    "article_quote",
+                    "explanation",
+                    "suggested_correction",
+                ],
+                "additionalProperties": False,
+            },
+        },
+        "buyer_question_checks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"},
+                    "status": {
+                        "type": "string",
+                        "enum": ["covered", "partially_covered", "missing"],
+                    },
+                    "article_quote": {"type": "string"},
+                    "explanation": {"type": "string"},
+                    "suggested_correction": {"type": "string"},
+                },
+                "required": [
+                    "id",
+                    "status",
+                    "article_quote",
+                    "explanation",
+                    "suggested_correction",
+                ],
+                "additionalProperties": False,
+            },
+        },
+        "decision_checks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"},
+                    "status": {
+                        "type": "string",
+                        "enum": ["met", "partially_met", "missing"],
+                    },
+                    "article_quote": {"type": "string"},
+                    "explanation": {"type": "string"},
+                    "evidence_ids": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "suggested_correction": {"type": "string"},
+                },
+                "required": [
+                    "id",
+                    "status",
+                    "article_quote",
+                    "explanation",
+                    "evidence_ids",
+                    "suggested_correction",
+                ],
+                "additionalProperties": False,
+            },
+        },
     },
-    "required": ["claim_checks"],
+    "required": [
+        "claim_checks",
+        "plan_checks",
+        "buyer_question_checks",
+        "decision_checks",
+    ],
     "additionalProperties": False,
 }
 
@@ -83,6 +166,183 @@ ISSUE_CATEGORIES = {
     "missing_conflict_disclosure",
 }
 ISSUE_SEVERITIES = {"critical", "major"}
+PLAN_FAILURE_STATUSES = {"partially_covered", "missing"}
+DECISION_FAILURE_STATUSES = {"partially_met", "missing"}
+
+
+def essential_plan_requirements(plan: dict | None) -> list[dict]:
+    """Create a stable checklist from the plan's executable recommendations.
+
+    SERP observations, content-gap ideas, and the ordered outline are useful
+    planning inputs but are not all mandatory article requirements. The outline
+    is already checked deterministically. This checklist focuses the model audit
+    on intent, editorial decisions, direct answers, objections, and conversion.
+    """
+
+    value = plan if isinstance(plan, dict) else {}
+    if isinstance(value.get("plan"), dict):
+        value = value["plan"]
+    requirements: list[dict] = []
+
+    def add(area: str, recommendation: Any, evidence_ids: Any = None) -> None:
+        text = str(recommendation or "").strip()
+        if not text:
+            return
+        requirements.append(
+            {
+                "id": f"P{len(requirements) + 1:02d}",
+                "area": area,
+                "recommendation": text,
+                "evidence_ids": [str(item) for item in (evidence_ids or []) if item],
+            }
+        )
+
+    add("search_intent", value.get("primary_intent"))
+    add("article_angle", value.get("article_angle"))
+    for item in value.get("editorial_decisions") or []:
+        if isinstance(item, dict):
+            add("editorial_decision", item.get("decision"), item.get("evidence_ids"))
+    for item in value.get("aio_direct_answer_targets") or []:
+        if isinstance(item, dict):
+            question = str(item.get("question") or "").strip()
+            direction = str(item.get("answer_direction") or "").strip()
+            add(
+                "aio_direct_answer",
+                f"Answer '{question}' with this direction: {direction}",
+                item.get("evidence_ids"),
+            )
+    for item in value.get("cro_buyer_objections") or []:
+        if isinstance(item, dict):
+            objection = str(item.get("objection") or "").strip()
+            response = str(item.get("response_direction") or "").strip()
+            add(
+                "cro_objection",
+                f"Address '{objection}' with this direction: {response}",
+                item.get("evidence_ids"),
+            )
+    if str(value.get("cta_placement") or "").strip():
+        add(
+            "cro_conversion_cue",
+            "End Final Verdict with a natural next-step cue for readers whose needs "
+            "fit the product. Judge purpose and placement semantically; equivalent "
+            "wording is covered and exact plan phrasing is never required.",
+        )
+    return requirements
+
+
+def buyer_question_requirements(plan: dict | None) -> list[dict]:
+    """Return every explicit buyer question as its own dynamic coverage check."""
+
+    value = plan if isinstance(plan, dict) else {}
+    if isinstance(value.get("plan"), dict):
+        value = value["plan"]
+    requirements: list[dict] = []
+    for item in value.get("buyer_questions") or []:
+        if not isinstance(item, dict):
+            continue
+        question = str(item.get("question") or "").strip()
+        if not question:
+            continue
+        requirements.append(
+            {
+                "id": f"B{len(requirements) + 1:02d}",
+                "area": "buyer_question",
+                "question": question,
+                "recommendation": f"Answer this buyer question directly: {question}",
+                "evidence_ids": [
+                    str(identifier)
+                    for identifier in item.get("evidence_ids") or []
+                    if identifier
+                ],
+            }
+        )
+    return requirements
+
+
+def editorial_commercial_requirements(plan: dict | None) -> list[dict]:
+    """Return a stable, product-agnostic test for client-facing decision quality.
+
+    These requirements deliberately test the quality of the article's decisions,
+    rather than repeating the SEO/AIO/CRO checklist. Factual grounding remains a
+    separate hard gate, so commercial usefulness can never excuse invented facts.
+    """
+
+    value = plan if isinstance(plan, dict) else {}
+    if isinstance(value.get("plan"), dict):
+        value = value["plan"]
+
+    def ids_from(key: str) -> list[str]:
+        identifiers: list[str] = []
+        for item in value.get(key) or []:
+            if not isinstance(item, dict):
+                continue
+            for identifier in item.get("evidence_ids") or []:
+                text = str(identifier or "").strip()
+                if text and text not in identifiers:
+                    identifiers.append(text)
+        return identifiers
+
+    editorial_ids = ids_from("editorial_decisions")
+    objection_ids = ids_from("cro_buyer_objections")
+    direct_answer_ids = ids_from("aio_direct_answer_targets")
+    broad_ids = list(dict.fromkeys([*editorial_ids, *objection_ids, *direct_answer_ids]))
+
+    return [
+        {
+            "id": "D01",
+            "area": "purchase_recommendation",
+            "requirement": (
+                "Give a clear conditional purchase recommendation that identifies "
+                "the best-fit buyer and the most important compromise."
+            ),
+            "evidence_ids": broad_ids,
+        },
+        {
+            "id": "D02",
+            "area": "buyer_segmentation",
+            "requirement": (
+                "Distinguish who should buy from who should avoid the product using "
+                "concrete needs, workflows, or constraints rather than generic labels."
+            ),
+            "evidence_ids": broad_ids,
+        },
+        {
+            "id": "D03",
+            "area": "tradeoff_prioritization",
+            "requirement": (
+                "Prioritize the decision-critical strengths and limitations, explain "
+                "their buyer impact, and avoid treating the article as a feature dump."
+            ),
+            "evidence_ids": editorial_ids or broad_ids,
+        },
+        {
+            "id": "D04",
+            "area": "objection_handling",
+            "requirement": (
+                "Address the material buyer objections honestly and preserve important "
+                "limitations instead of minimizing them to increase conversion."
+            ),
+            "evidence_ids": objection_ids or broad_ids,
+        },
+        {
+            "id": "D05",
+            "area": "commercial_value_framing",
+            "requirement": (
+                "Frame value or relative merit from supported performance and use-case "
+                "fit, without invented pricing, availability, urgency, or competitor claims."
+            ),
+            "evidence_ids": broad_ids,
+        },
+        {
+            "id": "D06",
+            "area": "fit_based_next_step",
+            "requirement": (
+                "End with a natural, non-manipulative next step tied to reader fit after "
+                "presenting both reasons to buy and reasons to avoid."
+            ),
+            "evidence_ids": broad_ids,
+        },
+    ]
 
 
 def stable_hash(value: Any) -> str:
@@ -93,9 +353,20 @@ def stable_hash(value: Any) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
-def audit_prompt(article: str, evidence: dict) -> str:
+def audit_prompt(
+    article: str,
+    evidence: dict,
+    plan_requirements: list[dict] | None = None,
+    buyer_questions: list[dict] | None = None,
+    decision_requirements: list[dict] | None = None,
+) -> str:
+    requirements = plan_requirements or []
+    questions = buyer_questions or []
+    decisions = decision_requirements or []
     return f"""Audit every factual assertion in the article against the normalized
-evidence. Return exactly one JSON object matching the structured-output schema.
+evidence, then audit its execution of every essential plan requirement and every
+editorial/commercial decision requirement. Return exactly one JSON object matching
+the structured-output schema.
 
 Coverage contract:
 - Return one claim_checks row for every distinct factual assertion in the title,
@@ -159,6 +430,65 @@ Grounding rules:
 - Do not return aggregate pass or count fields. Python derives them from the complete
   claim_checks matrix.
 
+Plan-adherence contract:
+- Return exactly one plan_checks row for each supplied requirement, in the same
+  order, copying its P01/P02/... ID exactly.
+- Use `covered` only when the article substantively executes the full requirement.
+- Use `partially_covered` when the article executes only part of the requirement,
+  and `missing` when it does not execute it.
+- For covered or partial rows, quote the smallest exact visible article span that
+  demonstrates the coverage. Keep the quote to 25 words or fewer.
+- For missing rows, use an empty article_quote. For every partial or missing row,
+  give one specific correction that would satisfy the plan without adding facts.
+- Plan wording is not evidence. Any suggested addition must remain supportable by
+  normalized evidence. Evidence constraints override plan wording.
+- Judge semantic coverage, not keyword repetition, heading names, or stylistic
+  similarity. A requirement may be covered across nearby sentences.
+- Do not fail optional SERP observations, content-gap brainstorming, or outline
+  ordering: they were deliberately excluded from the essential checklist.
+- Do not return aggregate pass or count fields. Python derives them from plan_checks.
+
+Buyer-question coverage contract:
+- Return exactly one buyer_question_checks row for every supplied B01/B02/...
+  question, in the same order and copying its ID exactly.
+- Judge whether the full article gives a direct, useful, evidence-constrained answer.
+  The answer may appear in the FAQ, a body section, or both; do not require a
+  particular heading or duplicate an answer merely to place it in the FAQ.
+- Use `covered` only when the question is substantively answered,
+  `partially_covered` when the answer omits a decision-important part, and
+  `missing` when no useful answer appears.
+- For covered or partial rows, quote the smallest exact visible article span that
+  demonstrates the answer, no more than 35 words. Use an empty quote when missing.
+- Question wording and SERP context are not product evidence. The supplied evidence
+  IDs identify the allowed factual basis, and the factual gate remains authoritative.
+- For partial or missing rows, give one precise correction grounded in the supplied
+  evidence. Leave suggested_correction empty for covered rows.
+- Do not return aggregate fields. Python derives them from buyer_question_checks.
+
+Editorial/commercial decision contract:
+- Return exactly one decision_checks row for each supplied D01/D02/... requirement,
+  in the same order and copying its ID exactly.
+- This is a decision-usefulness test, not a prose-style score. Judge whether the
+  article helps a real buyer choose, avoid, or qualify the product using supported
+  trade-offs, objections, value framing, and a proportionate next step.
+- Use `met` only when the full requirement is substantively satisfied,
+  `partially_met` when only part is satisfied, and `missing` when it is absent.
+- Quote the smallest exact visible article span demonstrating the decision, no more
+  than 35 words. A requirement may be satisfied across adjacent sentences.
+- Return the normalized evidence IDs supporting the factual premises of the
+  decision. Every returned ID must exist in the supplied evidence.
+- An opinion or recommendation may synthesize evidence, but it cannot introduce a
+  new specification, measurement, price, availability claim, competitor fact, or
+  first-hand experience.
+- Never reward aggressive conversion language. Honest limitations, conditional
+  recommendations, and clear avoid guidance are positive commercial decisions.
+- For partial or missing rows, give one surgical correction that improves the
+  decision without adding facts. Leave suggested_correction empty for met rows.
+- The decision gate cannot override the factual gate. A useful recommendation built
+  on an unsupported premise still fails publication.
+- Do not return aggregate pass or count fields. Python derives them from
+  decision_checks.
+
 Calibration examples for this evidence format:
 - PASS: "AMD FreeSync is supported, though no verified tier or connection-specific
   guarantee is available from the evidence" when FreeSync is only a
@@ -177,18 +507,45 @@ Calibration examples for this evidence format:
 NORMALIZED EVIDENCE
 {json.dumps(evidence, indent=2)}
 
+ESSENTIAL SEO/AIO/CRO PLAN REQUIREMENTS
+{json.dumps(requirements, indent=2)}
+
+EXPLICIT BUYER QUESTIONS TO ANSWER
+{json.dumps(questions, indent=2)}
+
+EDITORIAL/COMMERCIAL DECISION REQUIREMENTS
+{json.dumps(decisions, indent=2)}
+
 ARTICLE TO AUDIT
 {article}
 """
 
 
-def call_haiku(client: anthropic.Anthropic, article: str, evidence: dict):
+def call_haiku(
+    client: anthropic.Anthropic,
+    article: str,
+    evidence: dict,
+    plan_requirements: list[dict],
+    buyer_questions: list[dict],
+    decision_requirements: list[dict],
+):
     return client.messages.create(
         model=MODEL,
-        max_tokens=10000,
+        max_tokens=11000,
         temperature=0,
         system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": audit_prompt(article, evidence)}],
+        messages=[
+            {
+                "role": "user",
+                "content": audit_prompt(
+                    article,
+                    evidence,
+                    plan_requirements,
+                    buyer_questions,
+                    decision_requirements,
+                ),
+            }
+        ],
         extra_body={
             "output_config": {
                 "format": {
@@ -366,6 +723,295 @@ def summarize_claim_checks(payload: dict, evidence: dict, article: str) -> dict:
     return validate_audit(output, evidence, article)
 
 
+def summarize_plan_checks(
+    payload: dict,
+    requirements: list[dict],
+    article: str,
+) -> dict:
+    """Validate Haiku's plan matrix and derive its blocking report."""
+
+    checks = payload.get("plan_checks")
+    if not isinstance(checks, list):
+        raise ValueError("Haiku plan audit returned no plan checks")
+    if len(checks) != len(requirements):
+        raise ValueError(
+            "Haiku plan audit must return exactly one row per essential requirement"
+        )
+
+    normalized_checks = []
+    issues = []
+    for requirement, raw_check in zip(requirements, checks):
+        if not isinstance(raw_check, dict):
+            raise ValueError("Haiku plan check must be an object")
+        check = dict(raw_check)
+        if check.get("id") != requirement.get("id"):
+            raise ValueError("Haiku plan-check IDs must match the supplied order")
+        status = check.get("status")
+        if status not in {"covered", *PLAN_FAILURE_STATUSES}:
+            raise ValueError("Haiku plan check used an invalid status")
+        explanation = str(check.get("explanation") or "").strip()
+        if not explanation:
+            raise ValueError("Haiku plan check is missing its explanation")
+        quote = str(check.get("article_quote") or "").strip()
+        check["quote_verified"] = quote_matches_article(quote, article) if quote else False
+        # Unlike a blocking factual correction, plan coverage is a semantic
+        # judgment and may cite a compressed visible span. Preserve whether the
+        # quote matched exactly, but do not turn a harmless paraphrase into a
+        # pipeline parser failure.
+        correction = str(check.get("suggested_correction") or "").strip()
+        if status == "covered" and correction:
+            # Structured models occasionally leave an optional improvement in a
+            # passing row. It is nonblocking metadata, not a plan failure.
+            check["discarded_optional_correction"] = correction
+            check["suggested_correction"] = ""
+            correction = ""
+        if status in PLAN_FAILURE_STATUSES and not correction:
+            raise ValueError("Unmet plan requirement is missing a correction")
+        check["area"] = requirement.get("area")
+        check["recommendation"] = requirement.get("recommendation")
+        check["evidence_ids"] = requirement.get("evidence_ids") or []
+        normalized_checks.append(check)
+        if status in PLAN_FAILURE_STATUSES:
+            issues.append(
+                {
+                    "category": f"plan_{status}",
+                    "severity": "major",
+                    "plan_requirement_id": requirement.get("id"),
+                    "plan_area": requirement.get("area"),
+                    "recommendation": requirement.get("recommendation"),
+                    "article_quote": quote,
+                    "explanation": explanation,
+                    "evidence_ids": requirement.get("evidence_ids") or [],
+                    "suggested_correction": correction,
+                    "quote_verified": check["quote_verified"],
+                }
+            )
+    return {
+        "passed": not issues,
+        "checked_count": len(normalized_checks),
+        "covered_count": sum(
+            check["status"] == "covered" for check in normalized_checks
+        ),
+        "issues": issues,
+        "checks": normalized_checks,
+    }
+
+
+def summarize_buyer_question_checks(
+    payload: dict,
+    requirements: list[dict],
+    article: str,
+) -> dict:
+    """Validate coverage of every explicit buyer question from the plan."""
+
+    checks = payload.get("buyer_question_checks")
+    if not requirements and checks is None:
+        return {
+            "passed": True,
+            "checked_count": 0,
+            "covered_count": 0,
+            "issues": [],
+            "checks": [],
+        }
+    if not isinstance(checks, list):
+        raise ValueError("Haiku buyer-question audit returned no checks")
+    if len(checks) != len(requirements):
+        raise ValueError(
+            "Haiku buyer-question audit must return exactly one row per question"
+        )
+
+    normalized_checks = []
+    issues = []
+    for requirement, raw_check in zip(requirements, checks):
+        if not isinstance(raw_check, dict):
+            raise ValueError("Haiku buyer-question check must be an object")
+        check = dict(raw_check)
+        if check.get("id") != requirement.get("id"):
+            raise ValueError("Haiku buyer-question IDs must match the supplied order")
+        status = check.get("status")
+        if status not in {"covered", *PLAN_FAILURE_STATUSES}:
+            raise ValueError("Haiku buyer-question check used an invalid status")
+        explanation = str(check.get("explanation") or "").strip()
+        if not explanation:
+            raise ValueError("Haiku buyer-question check is missing its explanation")
+        quote = str(check.get("article_quote") or "").strip()
+        check["quote_verified"] = quote_matches_article(quote, article) if quote else False
+        correction = str(check.get("suggested_correction") or "").strip()
+        if status == "covered" and correction:
+            check["discarded_optional_correction"] = correction
+            check["suggested_correction"] = ""
+            correction = ""
+        if status in PLAN_FAILURE_STATUSES and not correction:
+            raise ValueError("Unanswered buyer question is missing a correction")
+        check["area"] = requirement.get("area")
+        check["question"] = requirement.get("question")
+        check["recommendation"] = requirement.get("recommendation")
+        check["evidence_ids"] = requirement.get("evidence_ids") or []
+        normalized_checks.append(check)
+        if status in PLAN_FAILURE_STATUSES:
+            issues.append(
+                {
+                    "category": f"buyer_question_{status}",
+                    "severity": "major",
+                    "buyer_question_id": requirement.get("id"),
+                    "question": requirement.get("question"),
+                    "article_quote": quote,
+                    "explanation": explanation,
+                    "evidence_ids": requirement.get("evidence_ids") or [],
+                    "suggested_correction": correction,
+                    "quote_verified": check["quote_verified"],
+                }
+            )
+    return {
+        "passed": not issues,
+        "checked_count": len(normalized_checks),
+        "covered_count": sum(
+            check["status"] == "covered" for check in normalized_checks
+        ),
+        "issues": issues,
+        "checks": normalized_checks,
+    }
+
+
+def summarize_decision_checks(
+    payload: dict,
+    requirements: list[dict],
+    evidence: dict,
+    article: str,
+) -> dict:
+    """Validate the editorial/commercial matrix and derive its blocking report."""
+
+    checks = payload.get("decision_checks")
+    if not isinstance(checks, list):
+        raise ValueError("Haiku decision-quality audit returned no decision checks")
+    if len(checks) != len(requirements):
+        raise ValueError(
+            "Haiku decision-quality audit must return exactly one row per requirement"
+        )
+
+    known_ids = evidence_claim_ids(evidence)
+    normalized_checks = []
+    issues = []
+    for requirement, raw_check in zip(requirements, checks):
+        if not isinstance(raw_check, dict):
+            raise ValueError("Haiku decision-quality check must be an object")
+        check = dict(raw_check)
+        if check.get("id") != requirement.get("id"):
+            raise ValueError("Haiku decision-quality IDs must match the supplied order")
+        status = check.get("status")
+        if status not in {"met", *DECISION_FAILURE_STATUSES}:
+            raise ValueError("Haiku decision-quality check used an invalid status")
+        explanation = str(check.get("explanation") or "").strip()
+        if not explanation:
+            raise ValueError("Haiku decision-quality check is missing its explanation")
+        quote = str(check.get("article_quote") or "").strip()
+        check["quote_verified"] = quote_matches_article(quote, article) if quote else False
+        evidence_ids = [str(item) for item in check.get("evidence_ids") or []]
+        unknown = set(evidence_ids) - known_ids
+        if unknown:
+            raise ValueError(
+                f"Haiku decision-quality audit used unknown evidence IDs: {unknown}"
+            )
+        correction = str(check.get("suggested_correction") or "").strip()
+        if status == "met" and correction:
+            check["discarded_optional_correction"] = correction
+            check["suggested_correction"] = ""
+            correction = ""
+        if status in DECISION_FAILURE_STATUSES and not correction:
+            raise ValueError("Unmet decision-quality requirement is missing a correction")
+        check["area"] = requirement.get("area")
+        check["requirement"] = requirement.get("requirement")
+        check["expected_evidence_ids"] = requirement.get("evidence_ids") or []
+        check["evidence_ids"] = evidence_ids
+        normalized_checks.append(check)
+        if status in DECISION_FAILURE_STATUSES:
+            issues.append(
+                {
+                    "category": f"decision_{status}",
+                    "severity": "major",
+                    "decision_requirement_id": requirement.get("id"),
+                    "decision_area": requirement.get("area"),
+                    "requirement": requirement.get("requirement"),
+                    "article_quote": quote,
+                    "explanation": explanation,
+                    "evidence_ids": evidence_ids,
+                    "suggested_correction": correction,
+                    "quote_verified": check["quote_verified"],
+                }
+            )
+    return {
+        "passed": not issues,
+        "checked_count": len(normalized_checks),
+        "met_count": sum(check["status"] == "met" for check in normalized_checks),
+        "issues": issues,
+        "checks": normalized_checks,
+    }
+
+
+def summarize_audit(
+    payload: dict,
+    evidence: dict,
+    article: str,
+    requirements: list[dict],
+    buyer_questions: list[dict] | None = None,
+    decision_requirements: list[dict] | None = None,
+) -> dict:
+    """Derive four independent Haiku results plus one strict publication gate."""
+
+    factual = summarize_claim_checks(payload, evidence, article)
+    plan = summarize_plan_checks(payload, requirements, article)
+    buyer_question_result = summarize_buyer_question_checks(
+        payload,
+        buyer_questions or [],
+        article,
+    )
+    decisions = summarize_decision_checks(
+        payload,
+        decision_requirements or editorial_commercial_requirements({}),
+        evidence,
+        article,
+    )
+    return {
+        "passed": (
+            factual["passed"]
+            and plan["passed"]
+            and buyer_question_result["passed"]
+            and decisions["passed"]
+        ),
+        "factual_passed": factual["passed"],
+        "plan_passed": plan["passed"],
+        "buyer_question_passed": buyer_question_result["passed"],
+        "decision_passed": decisions["passed"],
+        "audited_claim_count": factual["audited_claim_count"],
+        "supported_claim_count": factual["supported_claim_count"],
+        "plan_checked_count": plan["checked_count"],
+        "plan_covered_count": plan["covered_count"],
+        "buyer_question_checked_count": buyer_question_result["checked_count"],
+        "buyer_question_covered_count": buyer_question_result["covered_count"],
+        "decision_checked_count": decisions["checked_count"],
+        "decision_met_count": decisions["met_count"],
+        "factual_issues": factual["issues"],
+        "plan_issues": plan["issues"],
+        "buyer_question_issues": buyer_question_result["issues"],
+        "decision_issues": decisions["issues"],
+        "issues": [
+            *factual["issues"],
+            *plan["issues"],
+            *buyer_question_result["issues"],
+            *decisions["issues"],
+        ],
+        "claim_checks": factual["claim_checks"],
+        "plan_checks": plan["checks"],
+        "buyer_question_checks": buyer_question_result["checks"],
+        "decision_checks": decisions["checks"],
+        **(
+            {"discarded_self_exonerating_checks": factual["discarded_self_exonerating_checks"]}
+            if factual.get("discarded_self_exonerating_checks")
+            else {}
+        ),
+    }
+
+
 def validate_audit(
     audit: dict,
     evidence: dict,
@@ -408,15 +1054,51 @@ def validate_audit(
     return audit
 
 
-def audit_article(client: anthropic.Anthropic, article: str, evidence: dict) -> dict:
-    prompt = audit_prompt(article, evidence)
-    message = call_haiku(client, article, evidence)
+def audit_article(
+    client: anthropic.Anthropic,
+    article: str,
+    evidence: dict,
+    plan: dict | None = None,
+) -> dict:
+    requirements = essential_plan_requirements(plan)
+    buyer_questions = buyer_question_requirements(plan)
+    decision_requirements = editorial_commercial_requirements(plan)
+    if not requirements:
+        raise ValueError("Haiku audit requires an SEO/AIO/CRO plan")
+    prompt = audit_prompt(
+        article,
+        evidence,
+        requirements,
+        buyer_questions,
+        decision_requirements,
+    )
+    message = call_haiku(
+        client,
+        article,
+        evidence,
+        requirements,
+        buyer_questions,
+        decision_requirements,
+    )
     if message.stop_reason != "end_turn":
         raise RuntimeError(f"Haiku factual audit stopped early: {message.stop_reason}")
     raw_response = message_text(message)
-    audit = summarize_claim_checks(parse_json(raw_response), evidence, article)
+    audit = summarize_audit(
+        parse_json(raw_response),
+        evidence,
+        article,
+        requirements,
+        buyer_questions,
+        decision_requirements,
+    )
     return {
         "article_sha256": stable_hash(article),
+        "plan_requirements_sha256": stable_hash(requirements),
+        "plan_requirements": requirements,
+        "buyer_question_requirements_sha256": stable_hash(buyer_questions),
+        "buyer_question_requirements": buyer_questions,
+        "decision_requirements_sha256": stable_hash(decision_requirements),
+        "decision_requirements": decision_requirements,
         "audited_at": datetime.now(timezone.utc).isoformat(),
         "usage": {
             "input_tokens": message.usage.input_tokens,
@@ -429,8 +1111,25 @@ def audit_article(client: anthropic.Anthropic, article: str, evidence: dict) -> 
     }
 
 
-def cached_run_matches(run: Any, article: str) -> bool:
-    return isinstance(run, dict) and run.get("article_sha256") == stable_hash(article)
+def cached_run_matches(
+    run: Any,
+    article: str,
+    plan: dict | None = None,
+) -> bool:
+    if not isinstance(run, dict) or run.get("article_sha256") != stable_hash(article):
+        return False
+    if plan is None:
+        return True
+    requirements = essential_plan_requirements(plan)
+    buyer_questions = buyer_question_requirements(plan)
+    decision_requirements = editorial_commercial_requirements(plan)
+    return (
+        run.get("plan_requirements_sha256") == stable_hash(requirements)
+        and run.get("buyer_question_requirements_sha256")
+        == stable_hash(buyer_questions)
+        and run.get("decision_requirements_sha256")
+        == stable_hash(decision_requirements)
+    )
 
 
 __all__ = [
@@ -440,11 +1139,18 @@ __all__ = [
     "AUDIT_SCHEMA",
     "audit_article",
     "audit_prompt",
+    "buyer_question_requirements",
     "cached_run_matches",
     "discard_self_exonerating_issues",
+    "editorial_commercial_requirements",
     "evidence_claim_ids",
+    "essential_plan_requirements",
     "stable_hash",
     "summarize_claim_checks",
+    "summarize_buyer_question_checks",
+    "summarize_decision_checks",
+    "summarize_plan_checks",
+    "summarize_audit",
     "validate_audit",
     "visible_text",
     "quote_matches_article",

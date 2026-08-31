@@ -21,7 +21,7 @@ from review_pipeline.stages.validate import content_hash, validate_article
 
 
 MODEL = "claude-sonnet-4-6"
-PROMPT_VERSION = "z3fc-conditional-repair-v4-dual-validation"
+PROMPT_VERSION = "z3fc-conditional-repair-v7-section-budgets"
 DRAFT_PATH = OUTPUT_DIR / "draft.md"
 FINAL_CANDIDATE_PATH = OUTPUT_DIR / "polished.md"
 
@@ -50,7 +50,8 @@ def plan_hash(plan: dict) -> str:
 
 
 def repair_prompt(article: str, issues: list[dict], evidence: dict, plan: dict | None = None) -> str:
-    return f"""Repair the article so every listed Python or factual-audit issue is resolved.
+    return f"""Repair the article so every listed Python, factual-audit, or
+plan-adherence issue is resolved.
 
 VALIDATION ISSUES
 {json.dumps(issues, indent=2)}
@@ -61,14 +62,36 @@ Rules:
 - Keep every existing required H2 heading exactly as supplied and in the same order.
   Never merge, rename, or remove a required heading.
 - Keep exactly three FAQs.
-- The finished article must contain 950 to 1,050 visible words. This is a strict
-  limit. Compress repeated claims and examples before removing useful evidence.
+- The finished article must contain 850 to 950 visible words. This is a strict
+  limit. If the supplied validation reports excess words, delete at least the
+  reported excess plus 150 visible words. Remove repeated facts, examples, and
+  modifiers; never expand another section to compensate.
+- Quick Verdict: 40-50 words. Five-row snapshot values: under 12 words. Pros and
+  Cons: six total bullets, each under 14 words. Prose sections: 45-65 words each.
+  FAQ answers: at most 25 words. These compact budgets take priority over preserving
+  repeated detail.
 - Use this exact meta-description line:
   `**Meta description:** Arzopa Z3FC review covering its 2.5K 180Hz screen, portable design, gaming performance, connectivity, measured results, limitations, and ideal users.`
 - Preserve source provenance and disclose evidence conflicts conservatively.
 - Use only URLs and factual claims present in the normalized evidence.
+- Remove all first-hand testing language, including positive or negative uses of
+  `hands-on`. Describe the methodology as an evidence synthesis, not an original
+  product test.
+- Quick Verdict must explicitly contain `recommend`, `recommended`, `worth`,
+  `buy`, or `avoid` as part of a supported conditional decision.
+- The last sentence of Final Verdict must contain `consider`, `choose`, `check`,
+  or `buy`. Never mention current price/pricing, stock, availability, urgency, or
+  an external/retailer link in that sentence.
 - When a Haiku factual issue includes an exact article quote, correct or remove that
   specific claim using its explanation and evidence IDs.
+- When a Haiku plan issue is partial or missing, add only the requested essential
+  coverage and keep it grounded in the supplied evidence.
+- When a Haiku buyer-question issue is partial or missing, answer that specific
+  question somewhere natural in the article. Do not duplicate an existing answer
+  merely to force it into the FAQ.
+- When a Haiku editorial/commercial issue fails, improve only the requested buyer
+  decision, trade-off, objection, value framing, or next step. Never weaken a
+  limitation or invent a commercial fact to make the article more persuasive.
 - Do not make unrelated stylistic rewrites.
 
 EDITORIAL / SEO / AIO / CRO PLANNING BRIEF
@@ -112,10 +135,18 @@ def repair_issues(mechanical: dict, factual: dict) -> list[dict]:
         {"validator": "python", **issue}
         for issue in mechanical.get("issues") or []
     ]
-    output.extend(
-        {"validator": "haiku_factual_audit", **issue}
-        for issue in factual.get("issues") or []
-    )
+    for issue in factual.get("issues") or []:
+        category = str(issue.get("category") or "") if isinstance(issue, dict) else ""
+        validator = (
+            "haiku_buyer_question_audit"
+            if category.startswith("buyer_question_")
+            else "haiku_plan_audit"
+            if category.startswith("plan_")
+            else "haiku_editorial_commercial_audit"
+            if category.startswith("decision_")
+            else "haiku_factual_audit"
+        )
+        output.append({"validator": validator, **issue})
     return output
 
 
@@ -243,6 +274,8 @@ def main() -> None:
         raise SystemExit("Initial factual audit is stale for the current draft")
     if factual_record.get("evidence_sha256") != stable_hash(evidence):
         raise SystemExit("Initial factual audit is stale for the current evidence")
+    if factual_record.get("plan_sha256") != stable_hash(plan):
+        raise SystemExit("Initial plan audit is stale for the current plan")
     combined_issues = repair_issues(initial, initial_factual)
     combined_issues_hash = issues_hash(combined_issues)
 
@@ -254,6 +287,10 @@ def main() -> None:
     if cached:
         cached["cached"] = True
         cached["last_run_cache_hit"] = True
+        # The repair decision can remain cached when the issue list is unchanged,
+        # but the trace must always show the current combined Haiku audit. This is
+        # especially important when an audit prompt adds a new passing rubric.
+        cached["initial_factual_audit"] = initial_factual
         if "call_count" not in cached or int(cached.get("call_count") or 0) == 0:
             usage = cached.get("usage") or {}
             if cached.get("repair_called") or int(usage.get("input_tokens") or 0) or int(usage.get("output_tokens") or 0):

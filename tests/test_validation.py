@@ -87,6 +87,21 @@ class ValidationTests(unittest.TestCase):
         self.assertIn("h1_tested", codes)
         self.assertIn("first_hand_testing", codes)
 
+    def test_negative_hands_on_disclaimer_is_not_first_hand_claim(self):
+        article = valid_article().replace(
+            "## Methodology",
+            "## Methodology\n\nThis is not a hands-on test.",
+        )
+        report = self.validate(article)
+        self.assertTrue(report["checks"]["first_hand_testing"]["passed"], report["issues"])
+
+    def test_reader_faq_can_i_use_is_not_first_hand_claim(self):
+        report = self.validate(valid_article().replace(
+            "**Who is the Alpha for?**",
+            "**Can I use the Alpha for photo editing?**",
+        ))
+        self.assertTrue(report["checks"]["first_hand_testing"]["passed"], report["issues"])
+
     def test_required_order_duplicate_and_faq_count(self):
         article = valid_article().replace("## Specifications", "## Quick Verdict\n\n## Specifications", 1)
         article = article.replace("**Who is the Alpha for?**", "**Who is the Alpha for?**\n\n**What is the warranty?**")
@@ -137,6 +152,14 @@ class ValidationTests(unittest.TestCase):
         self.assertTrue(report["checks"]["review_snapshot_decision_labels"]["passed"])
         self.assertTrue(report["checks"]["buyer_fit_guidance"]["passed"])
         self.assertTrue(report["checks"]["final_conversion_cue"]["passed"])
+
+    def test_quick_verdict_accepts_clear_strong_product_recommendation(self):
+        article = valid_article().replace(
+            "The Alpha is an easy recommendation for readers who value a sharp secondary display and simple setup.",
+            "The Alpha is a strong portable monitor for travelers who value a sharp secondary display and simple setup.",
+        )
+        report = self.validate(article, editorial_plan={"article_angle": "decision support"})
+        self.assertTrue(report["checks"]["quick_verdict_decision"]["passed"], report["issues"])
 
     def test_dynamic_runtime_sources_fail_closed_when_missing_or_partial(self):
         with self.assertRaisesRegex(ValueError, "exactly 5"):
