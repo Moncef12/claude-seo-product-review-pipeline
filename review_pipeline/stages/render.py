@@ -234,6 +234,53 @@ def _cost_display(value: Any) -> str:
     return f"${value:.2f}"
 
 
+def _validation_summary_block(summary: Mapping[str, Any]) -> str:
+    validation = _mapping(summary.get("validation"))
+    python_result = str(validation.get("final_python", summary.get("final_python_result", "NOT RUN"))).upper()
+    haiku_result = str(validation.get("final_haiku", summary.get("final_haiku_result", "NOT RUN"))).upper()
+    failures = summary.get("initial_failures") or []
+    python_failure_count = sum(
+        1
+        for failure in failures
+        if isinstance(failure, Mapping) and str(failure.get("validator") or "").lower() == "python"
+    )
+    python_detail = "Final article passed deterministic structure, policy, provenance, and decision checks."
+    if python_result != "PASS":
+        python_detail = "Final deterministic checks did not pass."
+    if python_failure_count:
+        suffix = f"{python_failure_count} initial issue{'s' if python_failure_count != 1 else ''} repaired."
+        if python_result != "PASS":
+            suffix = f"{python_failure_count} initial issue{'s' if python_failure_count != 1 else ''}; final validation still failed."
+        python_detail = f"{python_detail} {suffix}"
+
+    supported = validation.get("final_haiku_supported", summary.get("final_haiku_supported_count"))
+    audited = validation.get("final_haiku_audited", summary.get("final_haiku_audited_count"))
+    if supported is not None and audited is not None:
+        haiku_detail = f"{supported}/{audited} final claims supported by normalized evidence."
+    else:
+        haiku_detail = "Final evidence-grounding audit completed."
+    if haiku_result != "PASS":
+        haiku_detail = f"{haiku_detail} The final claim audit did not pass."
+
+    def row(label: str, result: str, detail: str) -> str:
+        state = "passed" if result == "PASS" else "failed" if result == "FAIL" else "neutral"
+        return (
+            '<div class="validation-summary-row">'
+            f'<span class="validation-summary-label">{html.escape(label, quote=True)}</span>'
+            f'<strong class="validation-badge {state}">{html.escape(result, quote=True)}</strong>'
+            f'<span class="validation-summary-detail">{html.escape(detail, quote=True)}</span>'
+            "</div>"
+        )
+
+    return (
+        '<section class="validation-summary" aria-label="Validation results">'
+        "<h3>Validation results</h3>"
+        + row("Python rules", python_result, python_detail)
+        + row("Haiku claim audit", haiku_result, haiku_detail)
+        + "</section>"
+    )
+
+
 def _repair_artifact() -> Any:
     repair = _read_artifact(REPAIR_PATH)
     if repair is not None:
@@ -253,9 +300,6 @@ def _summary_card(summary: Any) -> str:
     tokens = _mapping(value.get("tokens"))
     token_value = tokens.get("total", value.get("total_tokens", "Unavailable"))
     cost = value.get("estimated_total_usd", _mapping(value.get("cost")).get("estimated_total_usd", "Unavailable"))
-    validation = _mapping(value.get("validation"))
-    python_result = validation.get("final_python", validation.get("python_result", "NOT RUN"))
-    haiku_result = validation.get("final_haiku", validation.get("haiku_result", "NOT RUN"))
     repair = value.get("repair")
     repair_map = _mapping(repair)
     repair_result = repair_map.get("status") or ("called" if value.get("repair_called") else "skipped" if repair is not None else "NOT RUN")
@@ -264,15 +308,15 @@ def _summary_card(summary: Any) -> str:
         ("Page fetches", fetches),
         ("Claude tokens", _tokens_display(tokens, token_value)),
         ("Estimated cost", _cost_display(cost)),
-        ("Python", python_result),
-        ("Haiku", haiku_result),
         ("Repair", repair_result),
     )
     cells = "".join(f'<div class="production-summary-item"><span>{html.escape(str(label), quote=True)}</span><strong>{html.escape(_display_value(item), quote=True)}</strong></div>' for label, item in fields)
+    validation_block = _validation_summary_block(value)
     failure_block = _failure_block(value.get("initial_failures") or [])
     return f'''<section class="production-summary" aria-label="Production summary">
   <h2>Production summary</h2>
   <div class="production-summary-grid">{cells}</div>
+  {validation_block}
   {failure_block}
 </section>
 '''
@@ -484,6 +528,16 @@ def html_document(
     .production-summary-item span, .production-summary-item strong {{ display: block; }}
     .production-summary-item span {{ color: var(--muted); font-size: .72rem; text-transform: uppercase; }}
     .production-summary-item strong {{ color: var(--ink); font-size: .95rem; overflow-wrap: anywhere; }}
+    .validation-summary {{ margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px; background: white; }}
+    .validation-summary h3 {{ margin: 0 0 6px; font-size: .92rem; }}
+    .validation-summary-row {{ display: grid; grid-template-columns: 130px 48px minmax(0, 1fr); align-items: center; gap: 8px; padding: 5px 0; }}
+    .validation-summary-row + .validation-summary-row {{ border-top: 1px solid var(--line); }}
+    .validation-summary-label {{ font-size: .86rem; font-weight: 650; }}
+    .validation-badge {{ padding: 2px 6px; border-radius: 999px; text-align: center; font-size: .68rem; }}
+    .validation-badge.passed {{ color: #176638; background: #e6f5eb; }}
+    .validation-badge.failed {{ color: #9b2c2c; background: #fdeaea; }}
+    .validation-badge.neutral {{ color: var(--muted); background: #edf1f4; }}
+    .validation-summary-detail {{ color: var(--muted); font-size: .8rem; }}
     .production-failures {{ margin-top: 10px; padding: 10px 12px; border-left: 4px solid #c47a14; border-radius: 4px; background: #fff8e8; }}
     .production-failures h3 {{ margin: 0 0 6px; font-size: .92rem; }}
     .production-failures ul {{ margin: 0; padding-left: 1.2rem; }}
@@ -508,7 +562,7 @@ def html_document(
     .pipeline-artifact pre, .raw-draft pre {{ max-height: 320px; margin: 0; padding: 12px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: #f5f7f9; }}
     .raw-draft {{ margin-bottom: 2rem; border: 1px solid var(--line); border-radius: 6px; background: #f8fafb; }}
     .raw-draft summary {{ cursor: pointer; padding: 10px 12px; font-weight: 600; }}
-    @media (max-width: 700px) {{ article {{ margin: 0; padding: 24px; box-shadow: none; }} h1 {{ font-size: 1.8rem; }} .production-summary-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }} }}
+    @media (max-width: 700px) {{ article {{ margin: 0; padding: 24px; box-shadow: none; }} h1 {{ font-size: 1.8rem; }} .production-summary-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }} .validation-summary-row {{ grid-template-columns: 1fr auto; }} .validation-summary-detail {{ grid-column: 1 / -1; }} }}
   </style>
 </head>
 <body>

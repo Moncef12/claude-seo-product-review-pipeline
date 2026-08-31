@@ -24,6 +24,16 @@
     .production-summary-item span, .production-summary-item strong { display: block; }
     .production-summary-item span { color: var(--muted); font-size: .72rem; text-transform: uppercase; }
     .production-summary-item strong { color: var(--ink); font-size: .95rem; overflow-wrap: anywhere; }
+    .validation-summary { margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px; background: white; }
+    .validation-summary h3 { margin: 0 0 6px; font-size: .92rem; }
+    .validation-summary-row { display: grid; grid-template-columns: 130px 48px minmax(0, 1fr); align-items: center; gap: 8px; padding: 5px 0; }
+    .validation-summary-row + .validation-summary-row { border-top: 1px solid var(--line); }
+    .validation-summary-label { font-size: .86rem; font-weight: 650; }
+    .validation-badge { padding: 2px 6px; border-radius: 999px; text-align: center; font-size: .68rem; }
+    .validation-badge.passed { color: #176638; background: #e6f5eb; }
+    .validation-badge.failed { color: #9b2c2c; background: #fdeaea; }
+    .validation-badge.neutral { color: var(--muted); background: #edf1f4; }
+    .validation-summary-detail { color: var(--muted); font-size: .8rem; }
     .production-failures { margin-top: 10px; padding: 10px 12px; border-left: 4px solid #c47a14; border-radius: 4px; background: #fff8e8; }
     .production-failures h3 { margin: 0 0 6px; font-size: .92rem; }
     .production-failures ul { margin: 0; padding-left: 1.2rem; }
@@ -48,14 +58,15 @@
     .pipeline-artifact pre, .raw-draft pre { max-height: 320px; margin: 0; padding: 12px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: #f5f7f9; }
     .raw-draft { margin-bottom: 2rem; border: 1px solid var(--line); border-radius: 6px; background: #f8fafb; }
     .raw-draft summary { cursor: pointer; padding: 10px 12px; font-weight: 600; }
-    @media (max-width: 700px) { article { margin: 0; padding: 24px; box-shadow: none; } h1 { font-size: 1.8rem; } .production-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 700px) { article { margin: 0; padding: 24px; box-shadow: none; } h1 { font-size: 1.8rem; } .production-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .validation-summary-row { grid-template-columns: 1fr auto; } .validation-summary-detail { grid-column: 1 / -1; } }
   </style>
 </head>
 <body>
   <article>
 <section class="production-summary" aria-label="Production summary">
   <h2>Production summary</h2>
-  <div class="production-summary-grid"><div class="production-summary-item"><span>API calls</span><strong>7 total · Anthropic 6 · DataForSEO 1</strong></div><div class="production-summary-item"><span>Page fetches</span><strong>11</strong></div><div class="production-summary-item"><span>Claude tokens</span><strong>98.7K total · 75.6K in · 23.0K out</strong></div><div class="production-summary-item"><span>Estimated cost</span><strong>$0.29</strong></div><div class="production-summary-item"><span>Python</span><strong>PASS</strong></div><div class="production-summary-item"><span>Haiku</span><strong>PASS</strong></div><div class="production-summary-item"><span>Repair</span><strong>called</strong></div></div>
+  <div class="production-summary-grid"><div class="production-summary-item"><span>API calls</span><strong>7 total · Anthropic 6 · DataForSEO 1</strong></div><div class="production-summary-item"><span>Page fetches</span><strong>11</strong></div><div class="production-summary-item"><span>Claude tokens</span><strong>98.7K total · 75.6K in · 23.0K out</strong></div><div class="production-summary-item"><span>Estimated cost</span><strong>$0.29</strong></div><div class="production-summary-item"><span>Repair</span><strong>called</strong></div></div>
+  <section class="validation-summary" aria-label="Validation results"><h3>Validation results</h3><div class="validation-summary-row"><span class="validation-summary-label">Python rules</span><strong class="validation-badge passed">PASS</strong><span class="validation-summary-detail">Final article passed deterministic structure, policy, provenance, and decision checks. 3 initial issues repaired.</span></div><div class="validation-summary-row"><span class="validation-summary-label">Haiku claim audit</span><strong class="validation-badge passed">PASS</strong><span class="validation-summary-detail">56/56 final claims supported by normalized evidence.</span></div></section>
   <div class="production-failures"><h3>Initial validation failures (repaired)</h3><ul><li><strong>Python · h1:</strong> The article must have exactly one H1 containing the brand, model, and the word &#x27;review&#x27;.</li><li><strong>Python · buyer fit guidance:</strong> The article must explain who should buy and who should avoid the product.</li><li><strong>Python · final conversion cue:</strong> Final Verdict must end with a natural next-step or conversion cue.</li></ul></div>
 </section>
     <section class="pipeline-trace" aria-label="Complete pipeline trace">

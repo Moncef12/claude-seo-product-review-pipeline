@@ -105,7 +105,12 @@ class RenderTests(unittest.TestCase):
             "calls": {"anthropic": 6, "dataforseo": 1},
             "tokens": {"total": 98652, "input": 75643, "output": 23009},
             "estimated_total_usd": 0.012345,
-            "validation": {"final_python": "PASS", "final_haiku": "PASS"},
+            "validation": {
+                "final_python": "PASS",
+                "final_haiku": "PASS",
+                "final_haiku_supported": 56,
+                "final_haiku_audited": 56,
+            },
             "repair": {"status": "skipped <safe>"},
             "initial_failures": [
                 {"validator": "Python", "code": "h1", "message": "Fix <title>"}
@@ -116,6 +121,11 @@ class RenderTests(unittest.TestCase):
         self.assertIn("7 total · Anthropic 6 · DataForSEO 1", rendered)
         self.assertIn("98.7K total · 75.6K in · 23.0K out", rendered)
         self.assertIn("$0.01", rendered)
+        self.assertIn("Validation results", rendered)
+        self.assertIn("Python rules", rendered)
+        self.assertIn("Final article passed deterministic structure, policy, provenance, and decision checks. 1 initial issue repaired.", rendered)
+        self.assertIn("Haiku claim audit", rendered)
+        self.assertIn("56/56 final claims supported by normalized evidence.", rendered)
         self.assertLess(rendered.index('class="production-summary"'), rendered.index('class="pipeline-trace"'))
         self.assertIn("Initial validation failures (repaired)", rendered)
         self.assertIn("Fix &lt;title&gt;", rendered)
