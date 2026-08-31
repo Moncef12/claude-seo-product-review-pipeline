@@ -112,6 +112,7 @@ def _step(
     result_label: str | None = None,
     outcome: str = "",
     result_state: str = "neutral",
+    notice_html: str = "",
 ) -> str:
     available = sum(value is not None for _, value in artifacts)
     status = result_label or ("AVAILABLE" if available else "UNAVAILABLE")
@@ -122,7 +123,7 @@ def _step(
     transition = f'<p class="pipeline-next"><strong>Next:</strong> {html.escape(next_step, quote=True)}</p>' if next_step else ""
     return f'''<details class="pipeline-step">
   <summary><span class="pipeline-number">{number}</span><span>{html.escape(title, quote=True)}</span><span class="pipeline-status {html.escape(state, quote=True)}">{html.escape(status, quote=True)}</span></summary>
-  <div class="pipeline-step-body">{result}{context}{blocks}{transition}</div>
+  <div class="pipeline-step-body">{result}{notice_html}{context}{blocks}{transition}</div>
 </details>
 '''
 
@@ -174,6 +175,65 @@ def _failure_summary(report: Any, validator: str = "") -> str:
     return " Initial failures: " + " | ".join(lines) if lines else ""
 
 
+def _failure_block(failures: Any, *, default_validator: str = "Validation") -> str:
+    failure_items = []
+    if not isinstance(failures, Sequence) or isinstance(failures, (str, bytes)):
+        return ""
+    for failure in failures:
+        if not isinstance(failure, Mapping):
+            continue
+        validator = str(failure.get("validator") or default_validator)
+        code = str(failure.get("code") or failure.get("category") or "failure").replace("_", " ")
+        message = str(failure.get("message") or failure.get("explanation") or "Validation failed.")
+        failure_items.append(
+            f"<li><strong>{html.escape(validator, quote=True)} · {html.escape(code, quote=True)}:</strong> {html.escape(message, quote=True)}</li>"
+        )
+    if not failure_items:
+        return ""
+    return (
+        '<div class="production-failures"><h3>Initial validation failures (repaired)</h3><ul>'
+        + "".join(failure_items)
+        + "</ul></div>"
+    )
+
+
+def _compact_number(value: Any) -> str:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return _display_value(value)
+    absolute = abs(value)
+    if absolute >= 1_000_000:
+        return f"{value / 1_000_000:.1f}M"
+    if absolute >= 1_000:
+        return f"{value / 1_000:.1f}K"
+    return f"{value:g}"
+
+
+def _api_calls_display(summary: Mapping[str, Any], total: Any) -> str:
+    calls = _mapping(summary.get("calls"))
+    parts = [f"{_display_value(total)} total"]
+    for label, key in (("Anthropic", "anthropic"), ("DataForSEO", "dataforseo")):
+        count = calls.get(key)
+        if count is not None:
+            parts.append(f"{label} {count}")
+    return " · ".join(parts)
+
+
+def _tokens_display(tokens: Mapping[str, Any], fallback: Any) -> str:
+    total = tokens.get("total", fallback)
+    parts = [f"{_compact_number(total)} total"]
+    if tokens.get("input") is not None:
+        parts.append(f"{_compact_number(tokens['input'])} in")
+    if tokens.get("output") is not None:
+        parts.append(f"{_compact_number(tokens['output'])} out")
+    return " · ".join(parts)
+
+
+def _cost_display(value: Any) -> str:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return _display_value(value)
+    return f"${value:.2f}"
+
+
 def _repair_artifact() -> Any:
     repair = _read_artifact(REPAIR_PATH)
     if repair is not None:
@@ -200,33 +260,16 @@ def _summary_card(summary: Any) -> str:
     repair_map = _mapping(repair)
     repair_result = repair_map.get("status") or ("called" if value.get("repair_called") else "skipped" if repair is not None else "NOT RUN")
     fields = (
-        ("Total API calls", calls),
+        ("API calls", _api_calls_display(value, calls)),
         ("Page fetches", fetches),
-        ("Claude tokens", token_value),
-        ("Estimated total USD", cost),
+        ("Claude tokens", _tokens_display(tokens, token_value)),
+        ("Estimated cost", _cost_display(cost)),
         ("Python", python_result),
         ("Haiku", haiku_result),
         ("Repair", repair_result),
     )
     cells = "".join(f'<div class="production-summary-item"><span>{html.escape(str(label), quote=True)}</span><strong>{html.escape(_display_value(item), quote=True)}</strong></div>' for label, item in fields)
-    failures = value.get("initial_failures") or []
-    failure_items = []
-    for failure in failures:
-        if not isinstance(failure, Mapping):
-            continue
-        validator = str(failure.get("validator") or "Validation")
-        code = str(failure.get("code") or "failure").replace("_", " ")
-        message = str(failure.get("message") or "Validation failed.")
-        failure_items.append(
-            f"<li><strong>{html.escape(validator, quote=True)} · {html.escape(code, quote=True)}:</strong> {html.escape(message, quote=True)}</li>"
-        )
-    failure_block = (
-        '<div class="production-failures"><h3>Initial validation failures (repaired)</h3><ul>'
-        + "".join(failure_items)
-        + "</ul></div>"
-        if failure_items
-        else ""
-    )
+    failure_block = _failure_block(value.get("initial_failures") or [])
     return f'''<section class="production-summary" aria-label="Production summary">
   <h2>Production summary</h2>
   <div class="production-summary-grid">{cells}</div>
@@ -354,7 +397,7 @@ def pipeline_trace() -> str:
                 ("Input: raw Sonnet candidate", _read_artifact(DRAFT_PATH)),
                 ("Validation rules", {"minimum_words": ARTICLE_MIN_WORDS, "maximum_words": ARTICLE_MAX_WORDS, "required_h2_headings": REQUIRED_HEADINGS, "expected_sources": [item for item in manifest if isinstance(item, Mapping)], "editorial_checks": ["quick verdict decision", "Best for/Avoid if/Biggest compromise labels", "buyer-fit guidance", "final conversion cue"]}),
                 ("Output: validation report", validation),
-            ), "Evaluate structure, length, provenance, policy, and plan-aligned commercial decision support without spending model tokens.", "Run the exhaustive Haiku factual audit.", python_label, f"Python checked the raw candidate: {initial_python.get('word_count', 0)} words, {len(initial_python.get('issues') or [])} issues.{python_failures}", python_state),
+            ), "Evaluate structure, length, provenance, policy, and plan-aligned commercial decision support without spending model tokens.", "Run the exhaustive Haiku factual audit.", python_label, f"Python checked the raw candidate: {initial_python.get('word_count', 0)} words, {len(initial_python.get('issues') or [])} issues.", python_state, _failure_block(initial_python.get("issues") or [], default_validator="Python")),
             _step(8, "Haiku audit", (
                 ("Input: candidate article and normalized evidence", {"article": _read_artifact(DRAFT_PATH), "evidence": normalized}),
                 ("Run metadata and token usage", _run_metadata(factual_audit, "model", "prompt_version", "evidence_sha256", "final_reused_initial")),

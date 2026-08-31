@@ -101,8 +101,9 @@ class RenderTests(unittest.TestCase):
 
     def test_visible_summary_card_is_escaped_and_precedes_collapsed_trace(self):
         summary = {
-            "total_calls": "<script>alert(1)</script>",
-            "tokens": {"total": 1234},
+            "total_calls": 7,
+            "calls": {"anthropic": 6, "dataforseo": 1},
+            "tokens": {"total": 98652, "input": 75643, "output": 23009},
             "estimated_total_usd": 0.012345,
             "validation": {"final_python": "PASS", "final_haiku": "PASS"},
             "repair": {"status": "skipped <safe>"},
@@ -112,16 +113,22 @@ class RenderTests(unittest.TestCase):
         }
         rendered = html_document("Product", "Description", "<p>Review</p>", pipeline_html=pipeline_trace(), production_summary=summary)
         self.assertIn('class="production-summary"', rendered)
-        self.assertIn("&lt;script&gt;alert(1)&lt;/script&gt;", rendered)
-        self.assertNotIn("<script>alert(1)</script>", rendered)
+        self.assertIn("7 total · Anthropic 6 · DataForSEO 1", rendered)
+        self.assertIn("98.7K total · 75.6K in · 23.0K out", rendered)
+        self.assertIn("$0.01", rendered)
         self.assertLess(rendered.index('class="production-summary"'), rendered.index('class="pipeline-trace"'))
         self.assertIn("Initial validation failures (repaired)", rendered)
         self.assertIn("Fix &lt;title&gt;", rendered)
 
     def test_failure_summary_appears_before_full_validation_artifact(self):
         trace = pipeline_trace()
-        self.assertIn("Initial failures:", trace)
-        self.assertLess(trace.index("Initial failures:"), trace.index("Validation rules"))
+        python_step = trace.index("Python validation")
+        failure_block = trace.index("Initial validation failures (repaired)", python_step)
+        validation_rules = trace.index("Validation rules", python_step)
+        self.assertLess(failure_block, validation_rules)
+        self.assertIn("Python · h1:", trace[failure_block:validation_rules])
+        self.assertIn("Python · buyer fit guidance:", trace[failure_block:validation_rules])
+        self.assertIn("Python · final conversion cue:", trace[failure_block:validation_rules])
 
 
 if __name__ == "__main__":
