@@ -18,11 +18,13 @@ COLLECT_STAGES = (
 
 GENERATE_STAGES = (
     "review_pipeline.stages.setup_watermarks",
+    "review_pipeline.stages.plan",
     "review_pipeline.stages.generate",
     "review_pipeline.stages.validate",
     "review_pipeline.stages.audit_initial",
     "review_pipeline.stages.repair",
     "review_pipeline.stages.audit_final",
+    "review_pipeline.stages.summarize",
     "review_pipeline.stages.clean",
     "review_pipeline.stages.render",
 )
@@ -32,6 +34,7 @@ REFRESHABLE_STAGES = {
     "review_pipeline.stages.scrape",
     "review_pipeline.stages.extract",
     "review_pipeline.stages.generate",
+    "review_pipeline.stages.plan",
     "review_pipeline.stages.audit_initial",
     "review_pipeline.stages.repair",
     "review_pipeline.stages.audit_final",

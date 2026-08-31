@@ -1,0 +1,1607 @@
+{
+  "product": {
+    "brand": "Arzopa",
+    "model": "Z3FC",
+    "colour": "Grey",
+    "manufacturer": "Shenzhen G-world Technology Incorporated Company"
+  },
+  "created_at": "2026-08-31T15:49:08.937585+00:00",
+  "criteria": {
+    "minimum_useful_words": 500,
+    "selected_count": 5,
+    "one_selected_page_per_root_domain": true,
+    "rejections": [
+      "wrong model",
+      "thin page",
+      "non-independent type",
+      "duplicate/syndication",
+      "inaccessible"
+    ],
+    "signals_are_observable_not_proof": true
+  },
+  "weights": {
+    "exact_model_relevance": 25,
+    "original_testing_evidence": 20,
+    "editorial_independence": 15,
+    "publisher_site_authority": 10,
+    "author_credibility_transparency": 10,
+    "article_depth": 10,
+    "recency": 5,
+    "accessibility_attribution": 5
+  },
+  "preliminary_pool": [
+    {
+      "url": "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
+      "domain": "www.tomshardware.com",
+      "root_domain": "tomshardware.com",
+      "title": "Arzopa Z3FC 16.1-inch portable monitor review",
+      "description": "Mar 26, 2026 \u2014 Tom's Hardware Verdict. The Arzopa Z3FC is a remarkable value in the portable monitor segment skewed towards a gamer audience. Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review"
+      ],
+      "best_rank": 1,
+      "authority_rank": 75.0
+    },
+    {
+      "url": "https://fstoppers.com/reviews/review-arzopa-z3fc-161-inch-ultra-portable-monitor-photographers-location-712722",
+      "domain": "fstoppers.com",
+      "root_domain": "fstoppers.com",
+      "title": "Arzopa Z3FC 16.1-Inch Review: Portable Without ...",
+      "description": "Nov 1, 2025 \u2014 In day-to-day use, the Arzopa Z3FC feels quick and responsive \u2014 the startup is fast. It will also automatically power on once connected via USB-\u00a0... Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review"
+      ],
+      "best_rank": 3,
+      "authority_rank": 63.0
+    },
+    {
+      "url": "https://root-nation.com/en/pc-en/pc-monitors-en/en-arzopa-z3fc-review",
+      "domain": "root-nation.com",
+      "root_domain": "root-nation.com",
+      "title": "ARZOPA Z3FC Review: 2K 180Hz Mobile Monitor",
+      "description": "Feb 1, 2026 \u2014 The ARZOPA Z3FC uses an IPS panel comparable in quality to those found in high-end laptops. In testing, no notable deficiencies were observed\u00a0... Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review"
+      ],
+      "best_rank": 5,
+      "authority_rank": 63.0
+    },
+    {
+      "url": "https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html",
+      "domain": "www.pcworld.com",
+      "root_domain": "pcworld.com",
+      "title": "Arzopa Z3FC review: A portable monitor with a 180Hz ...",
+      "description": "Sep 29, 2025 \u2014 The Arzopa Z3FC serves up a high-refresh 2560x1440 IPS-LCD in a slim, light package, though it's a tad more expensive than it should be.",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review"
+      ],
+      "best_rank": 6,
+      "authority_rank": 73.0
+    },
+    {
+      "url": "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
+      "domain": "www.servethehome.com",
+      "root_domain": "servethehome.com",
+      "title": "Arzopa Z3FC 16.1in 180Hz 2.5K Portable Monitor",
+      "description": "Apr 12, 2026 \u2014 Compared to its sibling, Arzopa's own Z1FC, the Arzopa Z3FC fares a bit better. Grayscale errors are significantly reduced, and color errors at\u00a0... Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review"
+      ],
+      "best_rank": 7,
+      "authority_rank": 64.0
+    },
+    {
+      "url": "https://techaeris.com/2025/12/24/arzopa-z3fc-portable-monitor-review",
+      "domain": "techaeris.com",
+      "root_domain": "techaeris.com",
+      "title": "ARZOPA Z3FC Portable Monitor Review",
+      "description": "Dec 24, 2025 \u2014 I will say, the ARZOPA Z3FC is easily one of the best portable monitors I've used, and it is, by far, the brightest. Let's get into the review. Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review"
+      ],
+      "best_rank": 8,
+      "authority_rank": 51.0
+    },
+    {
+      "url": "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
+      "domain": "www.techradar.com",
+      "root_domain": "techradar.com",
+      "title": "Arzopa Z3FC portable monitor review",
+      "description": "Jun 12, 2026 \u2014 The Arzopa Z3FC is a super-lightweight and thin portable monitor that performed very well during my tests. I chiefly used this as a second\u00a0... Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review"
+      ],
+      "best_rank": 10,
+      "authority_rank": 81.0
+    },
+    {
+      "url": "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review",
+      "domain": "www.howtogeek.com",
+      "root_domain": "howtogeek.com",
+      "title": "Arzopa Z3FC 16.1-Inch Portable Monitor review",
+      "description": "Dec 17, 2025 \u2014 The Arzopa Z3FC 16.1-Inch Portable Monitor offers a high resolution, fast refresh rate, HDR10+, and other performance-oriented features for\u00a0...",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review"
+      ],
+      "best_rank": 14,
+      "authority_rank": 75.0
+    },
+    {
+      "url": "https://www.technobezz.com/best/arzopa-z3fc-review",
+      "domain": "www.technobezz.com",
+      "root_domain": "technobezz.com",
+      "title": "ARZOPA Z3FC 16.1-inch 2.5K 180Hz Portable Monitor",
+      "description": "May 9, 2026 \u2014 The ARZOPA Z3FC is an IPS portable monitor running (2560 x 1440) at 180Hz over USB-C DisplayPort, with 400 nits of brightness, 107% sRGB\u00a0... Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review"
+      ],
+      "best_rank": 15,
+      "authority_rank": 52.0
+    },
+    {
+      "url": "https://amateurphotographer.com/review/arzopa-z3fc-portable-monitor-review-a-great-second-screen-for-photographers-at-a-tempting-price",
+      "domain": "amateurphotographer.com",
+      "root_domain": "amateurphotographer.com",
+      "title": "Arzopa Z3FC portable monitor review \u2013 a great second ...",
+      "description": "May 4, 2026 \u2014 The Arzopa Z3FC is a portable monitor with a 16.1in screen, that's designed to be used with laptops, tablets, smartphones and gaming consoles. Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review"
+      ],
+      "best_rank": 16,
+      "authority_rank": 56.0
+    },
+    {
+      "url": "https://www.techpowerup.com/reviewdb/Monitors/Arzopa",
+      "domain": "www.techpowerup.com",
+      "root_domain": "techpowerup.com",
+      "title": "Arzopa Reviews | TechPowerUp Review Database",
+      "description": "Our review database with over 35000 product tests helps you find expert ... Arzopa Z3FC 16.1-inch Portable, Tom's Hardware. 2025. Aug 4, 2025, ARZOPA Z1FC\u00a0... Read more",
+      "source_type": "independent_candidate",
+      "queries": [
+        "\"Arzopa Z3FC\" review"
+      ],
+      "best_rank": 18,
+      "authority_rank": 71.0
+    }
+  ],
+  "considered": [
+    {
+      "url": "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
+      "final_url": "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2/",
+      "root_domain": "servethehome.com",
+      "publisher": "ServeTheHome",
+      "source_type": "independent_candidate",
+      "cache_file": "www-servethehome-com-a20112381dd2.json",
+      "content_sha256": "349f1d57258e854f0b4a1420ca9c7e5fe8c537b7ada98d17e6ff01621a8825d8",
+      "authority_rank": 64.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 25.0,
+          "max": 25,
+          "reason": "exact Arzopa Z3FC presence observed"
+        },
+        "original_testing_evidence": {
+          "points": 20.0,
+          "max": 20,
+          "reason": "observable original-testing/evidence signals: 3 pattern groups"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 6.4,
+          "max": 10,
+          "reason": "DataForSEO authority signal 64/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 8.0,
+          "max": 10,
+          "reason": "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 6.02,
+          "max": 10,
+          "reason": "903 useful words"
+        },
+        "recency": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "publication year 2026 yields 5/5 recency points"
+        },
+        "accessibility_attribution": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 90.42,
+      "reasons": [
+        "exact Arzopa Z3FC presence observed",
+        "observable original-testing/evidence signals: 3 pattern groups",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 64/100; SERP rank is not used as authority",
+        "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise",
+        "903 useful words",
+        "publication year 2026 yields 5/5 recency points",
+        "page fetched and publisher/URL attribution is available"
+      ],
+      "hard_rejection_reasons": [],
+      "eligible": true,
+      "result": "selected",
+      "selection_rank": 1,
+      "metadata": {
+        "title": "Arzopa Z3FC 16.1in 180Hz 2.5K Portable Monitor",
+        "author": "Sam Sabinash",
+        "author_profile_url": "https://www.servethehome.com/about/",
+        "publication_date": "2026-04-12T17:00:10+00:00",
+        "headings": [
+          "Arzopa Z3FC 16.1in 180Hz 2.5K Portable Monitor",
+          "Arzopa Z3FC Color Performance",
+          "Power Consumption, Brightness, and Contrast",
+          "Final Words",
+          "Where to Buy",
+          "Waymo Sensor Fusion Processor at Hot Chips 2026",
+          "KYY X90D \u201cTriple\u201d Portable Monitor Review",
+          "Lenovo ThinkPad X1 Carbon Gen 14 Review",
+          "LEAVE A REPLY"
+        ],
+        "content_sha256": "349f1d57258e854f0b4a1420ca9c7e5fe8c537b7ada98d17e6ff01621a8825d8",
+        "useful_word_count": 903
+      }
+    },
+    {
+      "url": "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
+      "final_url": "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
+      "root_domain": "techradar.com",
+      "publisher": "TechRadar",
+      "source_type": "independent_candidate",
+      "cache_file": "www-techradar-com-3555bd955251.json",
+      "content_sha256": "d0c911c2a8a08cd65a7b71ef9eeb94edf33f4fc0ce3838b76f2a71dd03350daa",
+      "authority_rank": 81.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 25.0,
+          "max": 25,
+          "reason": "exact Arzopa Z3FC presence observed"
+        },
+        "original_testing_evidence": {
+          "points": 14.0,
+          "max": 20,
+          "reason": "observable original-testing/evidence signals: 2 pattern groups"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 8.1,
+          "max": 10,
+          "reason": "DataForSEO authority signal 81/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 8.0,
+          "max": 10,
+          "reason": "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 10.0,
+          "max": 10,
+          "reason": "2336 useful words"
+        },
+        "recency": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "publication year 2026 yields 5/5 recency points"
+        },
+        "accessibility_attribution": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 90.1,
+      "reasons": [
+        "exact Arzopa Z3FC presence observed",
+        "observable original-testing/evidence signals: 2 pattern groups",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 81/100; SERP rank is not used as authority",
+        "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise",
+        "2336 useful words",
+        "publication year 2026 yields 5/5 recency points",
+        "page fetched and publisher/URL attribution is available"
+      ],
+      "hard_rejection_reasons": [],
+      "eligible": true,
+      "result": "selected",
+      "selection_rank": 2,
+      "metadata": {
+        "title": "I tested the Arzopa Z3FC and this ultra-light and thin portable monitor is perfectly balanced for work and play",
+        "author": "https://www.techradar.com/author/steve-clark",
+        "author_profile_url": "https://www.techradar.com/author/steve-clark",
+        "publication_date": "2026-06-12T17:02:03Z",
+        "headings": [
+          "Arzopa Z3FC review: An ultra-light and thin portable monitor that's perfectly balanced for work and play",
+          "For business travel and gaming on the go, there's not much I didn't like about this 16.1-inch display",
+          "TechRadar Verdict",
+          "Arzopa Z3FC: 30-second review",
+          "Arzopa Z3FC: Pricing & availability",
+          "Arzopa Z3FC: Design & build",
+          "Arzopa Z3FC: Performance",
+          "Should I buy the Should I buy the Arzopa Z3FC?",
+          "Buy it if...",
+          "Don't buy it if...",
+          "Useful links"
+        ],
+        "content_sha256": "d0c911c2a8a08cd65a7b71ef9eeb94edf33f4fc0ce3838b76f2a71dd03350daa",
+        "useful_word_count": 2336
+      }
+    },
+    {
+      "url": "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
+      "final_url": "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
+      "root_domain": "tomshardware.com",
+      "publisher": "Tom's Hardware",
+      "source_type": "independent_candidate",
+      "cache_file": "www-tomshardware-com-a7b900204cb5.json",
+      "content_sha256": "bbe41e41fdcd575447bd4b5bec7a2b2f0f3b424ce5f656c061b0351137bd728f",
+      "authority_rank": 75.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 25.0,
+          "max": 25,
+          "reason": "exact Arzopa Z3FC presence observed"
+        },
+        "original_testing_evidence": {
+          "points": 14.0,
+          "max": 20,
+          "reason": "observable original-testing/evidence signals: 2 pattern groups"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 7.5,
+          "max": 10,
+          "reason": "DataForSEO authority signal 75/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 8.0,
+          "max": 10,
+          "reason": "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 10.0,
+          "max": 10,
+          "reason": "1636 useful words"
+        },
+        "recency": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "publication year 2026 yields 5/5 recency points"
+        },
+        "accessibility_attribution": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 89.5,
+      "reasons": [
+        "exact Arzopa Z3FC presence observed",
+        "observable original-testing/evidence signals: 2 pattern groups",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 75/100; SERP rank is not used as authority",
+        "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise",
+        "1636 useful words",
+        "publication year 2026 yields 5/5 recency points",
+        "page fetched and publisher/URL attribution is available"
+      ],
+      "hard_rejection_reasons": [],
+      "eligible": true,
+      "result": "selected",
+      "selection_rank": 3,
+      "metadata": {
+        "title": "Arzopa Z3FC 16.1-inch portable monitor review: 1440p resolution and 180 Hz for mobile gamers",
+        "author": "https://www.tomshardware.com/author/brandon-hill",
+        "author_profile_url": "https://www.tomshardware.com/author/brandon-hill",
+        "publication_date": "2026-03-26T12:00:00Z",
+        "headings": [
+          "Arzopa Z3FC 16.1-inch portable monitor review: 1440p resolution and 180 Hz for mobile gamers",
+          "The Z3FC is surprisingly capable, given its sub-$150 price tag.",
+          "Tom's Hardware Verdict",
+          "Design of the Arzopa Z3FC",
+          "Arzopa Z3FC Portable Monitor Specifications",
+          "On-Screen Display for the Arzopa Z3FC Portable Monitor",
+          "Image Quality and Performance of the Arzopa Z3FC Portable Monitor",
+          "Audio on the Arzopa Z3FC Portable Monitor",
+          "Bottom Line"
+        ],
+        "content_sha256": "bbe41e41fdcd575447bd4b5bec7a2b2f0f3b424ce5f656c061b0351137bd728f",
+        "useful_word_count": 1636
+      }
+    },
+    {
+      "url": "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review",
+      "final_url": "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review/",
+      "root_domain": "howtogeek.com",
+      "publisher": "How-To Geek",
+      "source_type": "independent_candidate",
+      "cache_file": "www-howtogeek-com-602eae36e293.json",
+      "content_sha256": "141a46bbfed0b6358176d6bc413e8c52de4cbc4624af11b36f70364595c4e3eb",
+      "authority_rank": 75.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 25.0,
+          "max": 25,
+          "reason": "exact Arzopa Z3FC presence observed"
+        },
+        "original_testing_evidence": {
+          "points": 8.0,
+          "max": 20,
+          "reason": "observable original-testing/evidence signals: 1 pattern groups"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 7.5,
+          "max": 10,
+          "reason": "DataForSEO authority signal 75/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 8.0,
+          "max": 10,
+          "reason": "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 10.0,
+          "max": 10,
+          "reason": "2164 useful words"
+        },
+        "recency": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "publication year 2025 yields 5/5 recency points"
+        },
+        "accessibility_attribution": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 83.5,
+      "reasons": [
+        "exact Arzopa Z3FC presence observed",
+        "observable original-testing/evidence signals: 1 pattern groups",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 75/100; SERP rank is not used as authority",
+        "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise",
+        "2164 useful words",
+        "publication year 2025 yields 5/5 recency points",
+        "page fetched and publisher/URL attribution is available"
+      ],
+      "hard_rejection_reasons": [],
+      "eligible": true,
+      "result": "selected",
+      "selection_rank": 4,
+      "metadata": {
+        "title": "Arzopa's Z3FC performance makes me forget I'm using an inexpensive portable monitor",
+        "author": "Bill Loguidice",
+        "author_profile_url": "https://www.howtogeek.com/author/bill-loguidice/",
+        "publication_date": "2025-12-17T11:00:15Z",
+        "headings": [
+          "Arzopa Z3FC 16.1-Inch Portable Monitor review: Quality where you need it",
+          "Price and availability",
+          "Packs a punch in a surprisingly thin package",
+          "Looks great, runs smoothly, but sounds just OK",
+          "Subscribe to our newsletter for portable-monitor reviews",
+          "Should you buy the Arzopa Z3FC 16.1-Inch Portable Monitor?",
+          "Google is updating how articles are shown. Don't miss our industry-leading content, written by humans, by setting How-To Geek as a preferred source .",
+          "Desktop",
+          "Mobile",
+          "I tested 4 wireless Android Auto adapters, and this is the only survivor",
+          "Google Translate gets a major upgrade from Gemini",
+          "3 free Windows tools that help me fix tough PC problems",
+          "Obsidian 1.11.0 brings markdown links to properties and safer renaming",
+          "Subscribe",
+          "Follow Us",
+          "About",
+          "Contact",
+          "Legal",
+          "Explore",
+          "About",
+          "Contact",
+          "Legal"
+        ],
+        "content_sha256": "141a46bbfed0b6358176d6bc413e8c52de4cbc4624af11b36f70364595c4e3eb",
+        "useful_word_count": 2164
+      }
+    },
+    {
+      "url": "https://fstoppers.com/reviews/review-arzopa-z3fc-161-inch-ultra-portable-monitor-photographers-location-712722",
+      "final_url": "https://fstoppers.com/reviews/review-arzopa-z3fc-161-inch-ultra-portable-monitor-photographers-location-712722",
+      "root_domain": "fstoppers.com",
+      "publisher": "Fstoppers",
+      "source_type": "independent_candidate",
+      "cache_file": "fstoppers-com-da431a1b5bab.json",
+      "content_sha256": "ea7088571ed884af2d8b7b07dc0580fab02b792ae6bab251ef81f6980be09187",
+      "authority_rank": 63.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 25.0,
+          "max": 25,
+          "reason": "exact Arzopa Z3FC presence observed"
+        },
+        "original_testing_evidence": {
+          "points": 8.0,
+          "max": 20,
+          "reason": "observable original-testing/evidence signals: 1 pattern groups"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 6.3,
+          "max": 10,
+          "reason": "DataForSEO authority signal 63/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 8.0,
+          "max": 10,
+          "reason": "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 10.0,
+          "max": 10,
+          "reason": "1538 useful words"
+        },
+        "recency": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "publication year 2025 yields 5/5 recency points"
+        },
+        "accessibility_attribution": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 82.3,
+      "reasons": [
+        "exact Arzopa Z3FC presence observed",
+        "observable original-testing/evidence signals: 1 pattern groups",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 63/100; SERP rank is not used as authority",
+        "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise",
+        "1538 useful words",
+        "publication year 2025 yields 5/5 recency points",
+        "page fetched and publisher/URL attribution is available"
+      ],
+      "hard_rejection_reasons": [],
+      "eligible": true,
+      "result": "selected",
+      "selection_rank": 5,
+      "metadata": {
+        "title": "Arzopa Z3FC 16.1-Inch Review: Portable Without Compromise | Fstoppers",
+        "author": "https://www.facebook.com/zhensiang.y/",
+        "author_profile_url": "https://fstoppers.com/u/406199/articles",
+        "publication_date": "2025-11-01T17:06:01-04:00",
+        "headings": [
+          "We Review the Arzopa Z3FC 16.1-Inch: An Ultra-Portable Monitor for Photographers on Location",
+          "Build Quality",
+          "Features",
+          "Real-World Usage Experience",
+          "Summary",
+          "What I Liked",
+          "What Could Be Improved:",
+          "Final Closing Thoughts",
+          "Join the Fstoppers community for free",
+          "No comments yet",
+          "Warning message"
+        ],
+        "content_sha256": "ea7088571ed884af2d8b7b07dc0580fab02b792ae6bab251ef81f6980be09187",
+        "useful_word_count": 1538
+      }
+    },
+    {
+      "url": "https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html",
+      "final_url": "https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html",
+      "root_domain": "pcworld.com",
+      "publisher": "PCWorld",
+      "source_type": "independent_candidate",
+      "cache_file": "www-pcworld-com-2a676b982cd0.json",
+      "content_sha256": "0c393944f429409c80af0a6d81c35d0d069ff6ffd5da48cdf0af5afd76d69734",
+      "authority_rank": 73.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 25.0,
+          "max": 25,
+          "reason": "exact Arzopa Z3FC presence observed"
+        },
+        "original_testing_evidence": {
+          "points": 14.0,
+          "max": 20,
+          "reason": "observable original-testing/evidence signals: 2 pattern groups"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 7.3,
+          "max": 10,
+          "reason": "DataForSEO authority signal 73/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 0.0,
+          "max": 10,
+          "reason": "no named author found; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 10.0,
+          "max": 10,
+          "reason": "2133 useful words"
+        },
+        "recency": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "publication year 2025 yields 5/5 recency points"
+        },
+        "accessibility_attribution": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 81.3,
+      "reasons": [
+        "exact Arzopa Z3FC presence observed",
+        "observable original-testing/evidence signals: 2 pattern groups",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 73/100; SERP rank is not used as authority",
+        "no named author found; signals are transparency indicators, not proof of expertise",
+        "2133 useful words",
+        "publication year 2025 yields 5/5 recency points",
+        "page fetched and publisher/URL attribution is available",
+        "outside the top selected source count"
+      ],
+      "hard_rejection_reasons": [
+        "outside the top selected source count"
+      ],
+      "eligible": true,
+      "result": "rejected",
+      "metadata": {
+        "title": "Tested: Arzopa's Z3FC portable monitor stands out with a 180Hz refresh rate",
+        "author": "",
+        "author_profile_url": "",
+        "publication_date": "September 29, 2025",
+        "headings": [
+          "Arzopa Z3FC review: A portable monitor with a 180Hz refresh rate",
+          "The Arzopa Z3FC serves up a high-refresh 2560x1440 IPS-LCD in a slim, light package, though it\u2019s a tad more expensive than it should be.",
+          "Expert's Rating",
+          "Pros",
+          "Cons",
+          "Our Verdict",
+          "Best Prices Today: Arzopa Z3FC",
+          "Arzopa Z3FC specs and features",
+          "Arzopa Z3FC design",
+          "Arzopa Z3FC connectivity",
+          "Arzopa Z3FC menus, audio",
+          "Arzopa Z3FC SDR image quality",
+          "Arzopa Z3FC HDR image quality and motion",
+          "Should you buy the Arzopa Z3FC?",
+          "Best Prices Today: Arzopa Z3FC",
+          "More from this author",
+          "Best gaming monitors 2026: Displays that will do your games justice",
+          "Best monitor arms 2026: Tested picks for single- and dual-monitors setups",
+          "HP OmniBook X Flip 14 review: A luxurious 2-in-1 held back by aging graphics",
+          "Best monitors 2026: Top picks for gaming, 4K, HDR, and more",
+          "Acer Chromebook Plus 516 review: Not pretty, but pretty fast",
+          "Best 4K monitors: HDR, gaming, budget, and best overall",
+          "Acer Chromebook Plus 514 review: A $400 Chromebook with surprising specs",
+          "Alienware AW3426DW review: Maximum monitor bang for your buck",
+          "ABOUT",
+          "POLICIES",
+          "PCWORLD CATEGORIES",
+          "SUBSCRIBE"
+        ],
+        "content_sha256": "0c393944f429409c80af0a6d81c35d0d069ff6ffd5da48cdf0af5afd76d69734",
+        "useful_word_count": 2133
+      }
+    },
+    {
+      "url": "https://amateurphotographer.com/review/arzopa-z3fc-portable-monitor-review-a-great-second-screen-for-photographers-at-a-tempting-price",
+      "final_url": "https://amateurphotographer.com/review/arzopa-z3fc-portable-monitor-review-a-great-second-screen-for-photographers-at-a-tempting-price/",
+      "root_domain": "amateurphotographer.com",
+      "publisher": "Amateur Photographer",
+      "source_type": "independent_candidate",
+      "cache_file": "amateurphotographer-com-93fe247869af.json",
+      "content_sha256": "8880176b2ef9bc4c11c4f3f64d7b5c9306f6a4301af97020a73ad330543dca20",
+      "authority_rank": 56.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 25.0,
+          "max": 25,
+          "reason": "exact Arzopa Z3FC presence observed"
+        },
+        "original_testing_evidence": {
+          "points": 14.0,
+          "max": 20,
+          "reason": "observable original-testing/evidence signals: 2 pattern groups"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 5.6,
+          "max": 10,
+          "reason": "DataForSEO authority signal 56/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 0.0,
+          "max": 10,
+          "reason": "no named author found; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 7.53,
+          "max": 10,
+          "reason": "1130 useful words"
+        },
+        "recency": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "publication year 2026 yields 5/5 recency points"
+        },
+        "accessibility_attribution": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 77.13,
+      "reasons": [
+        "exact Arzopa Z3FC presence observed",
+        "observable original-testing/evidence signals: 2 pattern groups",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 56/100; SERP rank is not used as authority",
+        "no named author found; signals are transparency indicators, not proof of expertise",
+        "1130 useful words",
+        "publication year 2026 yields 5/5 recency points",
+        "page fetched and publisher/URL attribution is available",
+        "outside the top selected source count"
+      ],
+      "hard_rejection_reasons": [
+        "outside the top selected source count"
+      ],
+      "eligible": true,
+      "result": "rejected",
+      "metadata": {
+        "title": "Arzopa Z3FC portable monitor review \u2013 a great second screen for photographers at a tempting price",
+        "author": "",
+        "author_profile_url": "",
+        "publication_date": "2026-05-04T10:00:00+01:00",
+        "headings": [
+          "Arzopa Z3FC portable monitor review \u2013 a great second screen for photographers at a tempting price",
+          "This neat portable monitor is a great option for photographers who want a second screen for photo editing with a laptop",
+          "Amateur Photographer verdict",
+          "Arzopa Z3FC at a glance:",
+          "Arzopa Z3FC key features:",
+          "In use",
+          "Arzopa Z3FC: Our Verdict",
+          "Information",
+          "Categories"
+        ],
+        "content_sha256": "8880176b2ef9bc4c11c4f3f64d7b5c9306f6a4301af97020a73ad330543dca20",
+        "useful_word_count": 1130
+      }
+    },
+    {
+      "url": "https://www.techpowerup.com/reviewdb/Monitors/Arzopa",
+      "final_url": null,
+      "root_domain": "techpowerup.com",
+      "publisher": "www.techpowerup.com",
+      "source_type": "independent_candidate",
+      "cache_file": null,
+      "content_sha256": null,
+      "authority_rank": 71.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 0.0,
+          "max": 25,
+          "reason": "exact model presence not observed"
+        },
+        "original_testing_evidence": {
+          "points": 0.0,
+          "max": 20,
+          "reason": "no observable original-testing/evidence signal"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 7.1,
+          "max": 10,
+          "reason": "DataForSEO authority signal 71/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 0.0,
+          "max": 10,
+          "reason": "no named author found; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 0.0,
+          "max": 10,
+          "reason": "0 useful words"
+        },
+        "recency": {
+          "points": 0.0,
+          "max": 5,
+          "reason": "publication date was not observable"
+        },
+        "accessibility_attribution": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 27.1,
+      "reasons": [
+        "exact model presence not observed",
+        "no observable original-testing/evidence signal",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 71/100; SERP rank is not used as authority",
+        "no named author found; signals are transparency indicators, not proof of expertise",
+        "0 useful words",
+        "publication date was not observable",
+        "page fetched and publisher/URL attribution is available",
+        "wrong model or exact Arzopa Z3FC presence was not observed",
+        "only 0 useful words, below the 500-word minimum",
+        "qualification failed: extracted only 33 useful words"
+      ],
+      "hard_rejection_reasons": [
+        "wrong model or exact Arzopa Z3FC presence was not observed",
+        "only 0 useful words, below the 500-word minimum",
+        "qualification failed: extracted only 33 useful words"
+      ],
+      "eligible": false,
+      "result": "rejected",
+      "metadata": {
+        "title": "Arzopa Reviews | TechPowerUp Review Database",
+        "author": null,
+        "author_profile_url": null,
+        "publication_date": null,
+        "headings": null,
+        "content_sha256": null,
+        "useful_word_count": 0
+      }
+    },
+    {
+      "url": "https://root-nation.com/en/pc-en/pc-monitors-en/en-arzopa-z3fc-review",
+      "final_url": null,
+      "root_domain": "root-nation.com",
+      "publisher": "root-nation.com",
+      "source_type": "independent_candidate",
+      "cache_file": null,
+      "content_sha256": null,
+      "authority_rank": 63.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 0.0,
+          "max": 25,
+          "reason": "exact model presence not observed"
+        },
+        "original_testing_evidence": {
+          "points": 0.0,
+          "max": 20,
+          "reason": "no observable original-testing/evidence signal"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 6.3,
+          "max": 10,
+          "reason": "DataForSEO authority signal 63/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 0.0,
+          "max": 10,
+          "reason": "no named author found; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 0.0,
+          "max": 10,
+          "reason": "0 useful words"
+        },
+        "recency": {
+          "points": 0.0,
+          "max": 5,
+          "reason": "publication date was not observable"
+        },
+        "accessibility_attribution": {
+          "points": 0.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 21.3,
+      "reasons": [
+        "exact model presence not observed",
+        "no observable original-testing/evidence signal",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 63/100; SERP rank is not used as authority",
+        "no named author found; signals are transparency indicators, not proof of expertise",
+        "0 useful words",
+        "publication date was not observable",
+        "page fetched and publisher/URL attribution is available",
+        "wrong model or exact Arzopa Z3FC presence was not observed",
+        "only 0 useful words, below the 500-word minimum",
+        "page was inaccessible",
+        "page fetch failed: 403 Client Error: Forbidden for url: https://root-nation.com/en/pc-en/pc-monitors-en/en-arzopa-z3fc-review"
+      ],
+      "hard_rejection_reasons": [
+        "wrong model or exact Arzopa Z3FC presence was not observed",
+        "only 0 useful words, below the 500-word minimum",
+        "page was inaccessible",
+        "page fetch failed: 403 Client Error: Forbidden for url: https://root-nation.com/en/pc-en/pc-monitors-en/en-arzopa-z3fc-review"
+      ],
+      "eligible": false,
+      "result": "rejected",
+      "metadata": {
+        "title": "ARZOPA Z3FC Review: 2K 180Hz Mobile Monitor",
+        "author": null,
+        "author_profile_url": null,
+        "publication_date": null,
+        "headings": null,
+        "content_sha256": null,
+        "useful_word_count": 0
+      }
+    },
+    {
+      "url": "https://www.technobezz.com/best/arzopa-z3fc-review",
+      "final_url": null,
+      "root_domain": "technobezz.com",
+      "publisher": "www.technobezz.com",
+      "source_type": "independent_candidate",
+      "cache_file": null,
+      "content_sha256": null,
+      "authority_rank": 52.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 0.0,
+          "max": 25,
+          "reason": "exact model presence not observed"
+        },
+        "original_testing_evidence": {
+          "points": 0.0,
+          "max": 20,
+          "reason": "no observable original-testing/evidence signal"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 5.2,
+          "max": 10,
+          "reason": "DataForSEO authority signal 52/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 0.0,
+          "max": 10,
+          "reason": "no named author found; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 0.0,
+          "max": 10,
+          "reason": "0 useful words"
+        },
+        "recency": {
+          "points": 0.0,
+          "max": 5,
+          "reason": "publication date was not observable"
+        },
+        "accessibility_attribution": {
+          "points": 0.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 20.2,
+      "reasons": [
+        "exact model presence not observed",
+        "no observable original-testing/evidence signal",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 52/100; SERP rank is not used as authority",
+        "no named author found; signals are transparency indicators, not proof of expertise",
+        "0 useful words",
+        "publication date was not observable",
+        "page fetched and publisher/URL attribution is available",
+        "wrong model or exact Arzopa Z3FC presence was not observed",
+        "only 0 useful words, below the 500-word minimum",
+        "page was inaccessible",
+        "page fetch failed: 403 Client Error: Forbidden for url: https://www.technobezz.com/best/arzopa-z3fc-review"
+      ],
+      "hard_rejection_reasons": [
+        "wrong model or exact Arzopa Z3FC presence was not observed",
+        "only 0 useful words, below the 500-word minimum",
+        "page was inaccessible",
+        "page fetch failed: 403 Client Error: Forbidden for url: https://www.technobezz.com/best/arzopa-z3fc-review"
+      ],
+      "eligible": false,
+      "result": "rejected",
+      "metadata": {
+        "title": "ARZOPA Z3FC 16.1-inch 2.5K 180Hz Portable Monitor",
+        "author": null,
+        "author_profile_url": null,
+        "publication_date": null,
+        "headings": null,
+        "content_sha256": null,
+        "useful_word_count": 0
+      }
+    },
+    {
+      "url": "https://techaeris.com/2025/12/24/arzopa-z3fc-portable-monitor-review",
+      "final_url": null,
+      "root_domain": "techaeris.com",
+      "publisher": "techaeris.com",
+      "source_type": "independent_candidate",
+      "cache_file": null,
+      "content_sha256": null,
+      "authority_rank": 51.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 0.0,
+          "max": 25,
+          "reason": "exact model presence not observed"
+        },
+        "original_testing_evidence": {
+          "points": 0.0,
+          "max": 20,
+          "reason": "no observable original-testing/evidence signal"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 5.1,
+          "max": 10,
+          "reason": "DataForSEO authority signal 51/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 0.0,
+          "max": 10,
+          "reason": "no named author found; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 0.0,
+          "max": 10,
+          "reason": "0 useful words"
+        },
+        "recency": {
+          "points": 0.0,
+          "max": 5,
+          "reason": "publication date was not observable"
+        },
+        "accessibility_attribution": {
+          "points": 0.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 20.1,
+      "reasons": [
+        "exact model presence not observed",
+        "no observable original-testing/evidence signal",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 51/100; SERP rank is not used as authority",
+        "no named author found; signals are transparency indicators, not proof of expertise",
+        "0 useful words",
+        "publication date was not observable",
+        "page fetched and publisher/URL attribution is available",
+        "wrong model or exact Arzopa Z3FC presence was not observed",
+        "only 0 useful words, below the 500-word minimum",
+        "page was inaccessible",
+        "page fetch failed: 403 Client Error: Forbidden for url: https://techaeris.com/2025/12/24/arzopa-z3fc-portable-monitor-review"
+      ],
+      "hard_rejection_reasons": [
+        "wrong model or exact Arzopa Z3FC presence was not observed",
+        "only 0 useful words, below the 500-word minimum",
+        "page was inaccessible",
+        "page fetch failed: 403 Client Error: Forbidden for url: https://techaeris.com/2025/12/24/arzopa-z3fc-portable-monitor-review"
+      ],
+      "eligible": false,
+      "result": "rejected",
+      "metadata": {
+        "title": "ARZOPA Z3FC Portable Monitor Review",
+        "author": null,
+        "author_profile_url": null,
+        "publication_date": null,
+        "headings": null,
+        "content_sha256": null,
+        "useful_word_count": 0
+      }
+    }
+  ],
+  "selected": [
+    {
+      "url": "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
+      "final_url": "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2/",
+      "root_domain": "servethehome.com",
+      "publisher": "ServeTheHome",
+      "source_type": "independent_candidate",
+      "cache_file": "www-servethehome-com-a20112381dd2.json",
+      "content_sha256": "349f1d57258e854f0b4a1420ca9c7e5fe8c537b7ada98d17e6ff01621a8825d8",
+      "authority_rank": 64.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 25.0,
+          "max": 25,
+          "reason": "exact Arzopa Z3FC presence observed"
+        },
+        "original_testing_evidence": {
+          "points": 20.0,
+          "max": 20,
+          "reason": "observable original-testing/evidence signals: 3 pattern groups"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 6.4,
+          "max": 10,
+          "reason": "DataForSEO authority signal 64/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 8.0,
+          "max": 10,
+          "reason": "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 6.02,
+          "max": 10,
+          "reason": "903 useful words"
+        },
+        "recency": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "publication year 2026 yields 5/5 recency points"
+        },
+        "accessibility_attribution": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 90.42,
+      "reasons": [
+        "exact Arzopa Z3FC presence observed",
+        "observable original-testing/evidence signals: 3 pattern groups",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 64/100; SERP rank is not used as authority",
+        "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise",
+        "903 useful words",
+        "publication year 2026 yields 5/5 recency points",
+        "page fetched and publisher/URL attribution is available"
+      ],
+      "hard_rejection_reasons": [],
+      "eligible": true,
+      "result": "selected",
+      "selection_rank": 1,
+      "metadata": {
+        "title": "Arzopa Z3FC 16.1in 180Hz 2.5K Portable Monitor",
+        "author": "Sam Sabinash",
+        "author_profile_url": "https://www.servethehome.com/about/",
+        "publication_date": "2026-04-12T17:00:10+00:00",
+        "headings": [
+          "Arzopa Z3FC 16.1in 180Hz 2.5K Portable Monitor",
+          "Arzopa Z3FC Color Performance",
+          "Power Consumption, Brightness, and Contrast",
+          "Final Words",
+          "Where to Buy",
+          "Waymo Sensor Fusion Processor at Hot Chips 2026",
+          "KYY X90D \u201cTriple\u201d Portable Monitor Review",
+          "Lenovo ThinkPad X1 Carbon Gen 14 Review",
+          "LEAVE A REPLY"
+        ],
+        "content_sha256": "349f1d57258e854f0b4a1420ca9c7e5fe8c537b7ada98d17e6ff01621a8825d8",
+        "useful_word_count": 903
+      }
+    },
+    {
+      "url": "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
+      "final_url": "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
+      "root_domain": "techradar.com",
+      "publisher": "TechRadar",
+      "source_type": "independent_candidate",
+      "cache_file": "www-techradar-com-3555bd955251.json",
+      "content_sha256": "d0c911c2a8a08cd65a7b71ef9eeb94edf33f4fc0ce3838b76f2a71dd03350daa",
+      "authority_rank": 81.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 25.0,
+          "max": 25,
+          "reason": "exact Arzopa Z3FC presence observed"
+        },
+        "original_testing_evidence": {
+          "points": 14.0,
+          "max": 20,
+          "reason": "observable original-testing/evidence signals: 2 pattern groups"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 8.1,
+          "max": 10,
+          "reason": "DataForSEO authority signal 81/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 8.0,
+          "max": 10,
+          "reason": "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 10.0,
+          "max": 10,
+          "reason": "2336 useful words"
+        },
+        "recency": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "publication year 2026 yields 5/5 recency points"
+        },
+        "accessibility_attribution": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 90.1,
+      "reasons": [
+        "exact Arzopa Z3FC presence observed",
+        "observable original-testing/evidence signals: 2 pattern groups",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 81/100; SERP rank is not used as authority",
+        "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise",
+        "2336 useful words",
+        "publication year 2026 yields 5/5 recency points",
+        "page fetched and publisher/URL attribution is available"
+      ],
+      "hard_rejection_reasons": [],
+      "eligible": true,
+      "result": "selected",
+      "selection_rank": 2,
+      "metadata": {
+        "title": "I tested the Arzopa Z3FC and this ultra-light and thin portable monitor is perfectly balanced for work and play",
+        "author": "https://www.techradar.com/author/steve-clark",
+        "author_profile_url": "https://www.techradar.com/author/steve-clark",
+        "publication_date": "2026-06-12T17:02:03Z",
+        "headings": [
+          "Arzopa Z3FC review: An ultra-light and thin portable monitor that's perfectly balanced for work and play",
+          "For business travel and gaming on the go, there's not much I didn't like about this 16.1-inch display",
+          "TechRadar Verdict",
+          "Arzopa Z3FC: 30-second review",
+          "Arzopa Z3FC: Pricing & availability",
+          "Arzopa Z3FC: Design & build",
+          "Arzopa Z3FC: Performance",
+          "Should I buy the Should I buy the Arzopa Z3FC?",
+          "Buy it if...",
+          "Don't buy it if...",
+          "Useful links"
+        ],
+        "content_sha256": "d0c911c2a8a08cd65a7b71ef9eeb94edf33f4fc0ce3838b76f2a71dd03350daa",
+        "useful_word_count": 2336
+      }
+    },
+    {
+      "url": "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
+      "final_url": "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
+      "root_domain": "tomshardware.com",
+      "publisher": "Tom's Hardware",
+      "source_type": "independent_candidate",
+      "cache_file": "www-tomshardware-com-a7b900204cb5.json",
+      "content_sha256": "bbe41e41fdcd575447bd4b5bec7a2b2f0f3b424ce5f656c061b0351137bd728f",
+      "authority_rank": 75.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 25.0,
+          "max": 25,
+          "reason": "exact Arzopa Z3FC presence observed"
+        },
+        "original_testing_evidence": {
+          "points": 14.0,
+          "max": 20,
+          "reason": "observable original-testing/evidence signals: 2 pattern groups"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 7.5,
+          "max": 10,
+          "reason": "DataForSEO authority signal 75/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 8.0,
+          "max": 10,
+          "reason": "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 10.0,
+          "max": 10,
+          "reason": "1636 useful words"
+        },
+        "recency": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "publication year 2026 yields 5/5 recency points"
+        },
+        "accessibility_attribution": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 89.5,
+      "reasons": [
+        "exact Arzopa Z3FC presence observed",
+        "observable original-testing/evidence signals: 2 pattern groups",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 75/100; SERP rank is not used as authority",
+        "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise",
+        "1636 useful words",
+        "publication year 2026 yields 5/5 recency points",
+        "page fetched and publisher/URL attribution is available"
+      ],
+      "hard_rejection_reasons": [],
+      "eligible": true,
+      "result": "selected",
+      "selection_rank": 3,
+      "metadata": {
+        "title": "Arzopa Z3FC 16.1-inch portable monitor review: 1440p resolution and 180 Hz for mobile gamers",
+        "author": "https://www.tomshardware.com/author/brandon-hill",
+        "author_profile_url": "https://www.tomshardware.com/author/brandon-hill",
+        "publication_date": "2026-03-26T12:00:00Z",
+        "headings": [
+          "Arzopa Z3FC 16.1-inch portable monitor review: 1440p resolution and 180 Hz for mobile gamers",
+          "The Z3FC is surprisingly capable, given its sub-$150 price tag.",
+          "Tom's Hardware Verdict",
+          "Design of the Arzopa Z3FC",
+          "Arzopa Z3FC Portable Monitor Specifications",
+          "On-Screen Display for the Arzopa Z3FC Portable Monitor",
+          "Image Quality and Performance of the Arzopa Z3FC Portable Monitor",
+          "Audio on the Arzopa Z3FC Portable Monitor",
+          "Bottom Line"
+        ],
+        "content_sha256": "bbe41e41fdcd575447bd4b5bec7a2b2f0f3b424ce5f656c061b0351137bd728f",
+        "useful_word_count": 1636
+      }
+    },
+    {
+      "url": "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review",
+      "final_url": "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review/",
+      "root_domain": "howtogeek.com",
+      "publisher": "How-To Geek",
+      "source_type": "independent_candidate",
+      "cache_file": "www-howtogeek-com-602eae36e293.json",
+      "content_sha256": "141a46bbfed0b6358176d6bc413e8c52de4cbc4624af11b36f70364595c4e3eb",
+      "authority_rank": 75.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 25.0,
+          "max": 25,
+          "reason": "exact Arzopa Z3FC presence observed"
+        },
+        "original_testing_evidence": {
+          "points": 8.0,
+          "max": 20,
+          "reason": "observable original-testing/evidence signals: 1 pattern groups"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 7.5,
+          "max": 10,
+          "reason": "DataForSEO authority signal 75/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 8.0,
+          "max": 10,
+          "reason": "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 10.0,
+          "max": 10,
+          "reason": "2164 useful words"
+        },
+        "recency": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "publication year 2025 yields 5/5 recency points"
+        },
+        "accessibility_attribution": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 83.5,
+      "reasons": [
+        "exact Arzopa Z3FC presence observed",
+        "observable original-testing/evidence signals: 1 pattern groups",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 75/100; SERP rank is not used as authority",
+        "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise",
+        "2164 useful words",
+        "publication year 2025 yields 5/5 recency points",
+        "page fetched and publisher/URL attribution is available"
+      ],
+      "hard_rejection_reasons": [],
+      "eligible": true,
+      "result": "selected",
+      "selection_rank": 4,
+      "metadata": {
+        "title": "Arzopa's Z3FC performance makes me forget I'm using an inexpensive portable monitor",
+        "author": "Bill Loguidice",
+        "author_profile_url": "https://www.howtogeek.com/author/bill-loguidice/",
+        "publication_date": "2025-12-17T11:00:15Z",
+        "headings": [
+          "Arzopa Z3FC 16.1-Inch Portable Monitor review: Quality where you need it",
+          "Price and availability",
+          "Packs a punch in a surprisingly thin package",
+          "Looks great, runs smoothly, but sounds just OK",
+          "Subscribe to our newsletter for portable-monitor reviews",
+          "Should you buy the Arzopa Z3FC 16.1-Inch Portable Monitor?",
+          "Google is updating how articles are shown. Don't miss our industry-leading content, written by humans, by setting How-To Geek as a preferred source .",
+          "Desktop",
+          "Mobile",
+          "I tested 4 wireless Android Auto adapters, and this is the only survivor",
+          "Google Translate gets a major upgrade from Gemini",
+          "3 free Windows tools that help me fix tough PC problems",
+          "Obsidian 1.11.0 brings markdown links to properties and safer renaming",
+          "Subscribe",
+          "Follow Us",
+          "About",
+          "Contact",
+          "Legal",
+          "Explore",
+          "About",
+          "Contact",
+          "Legal"
+        ],
+        "content_sha256": "141a46bbfed0b6358176d6bc413e8c52de4cbc4624af11b36f70364595c4e3eb",
+        "useful_word_count": 2164
+      }
+    },
+    {
+      "url": "https://fstoppers.com/reviews/review-arzopa-z3fc-161-inch-ultra-portable-monitor-photographers-location-712722",
+      "final_url": "https://fstoppers.com/reviews/review-arzopa-z3fc-161-inch-ultra-portable-monitor-photographers-location-712722",
+      "root_domain": "fstoppers.com",
+      "publisher": "Fstoppers",
+      "source_type": "independent_candidate",
+      "cache_file": "fstoppers-com-da431a1b5bab.json",
+      "content_sha256": "ea7088571ed884af2d8b7b07dc0580fab02b792ae6bab251ef81f6980be09187",
+      "authority_rank": 63.0,
+      "score_breakdown": {
+        "exact_model_relevance": {
+          "points": 25.0,
+          "max": 25,
+          "reason": "exact Arzopa Z3FC presence observed"
+        },
+        "original_testing_evidence": {
+          "points": 8.0,
+          "max": 20,
+          "reason": "observable original-testing/evidence signals: 1 pattern groups"
+        },
+        "editorial_independence": {
+          "points": 15.0,
+          "max": 15,
+          "reason": "classified as an independent editorial candidate"
+        },
+        "publisher_site_authority": {
+          "points": 6.3,
+          "max": 10,
+          "reason": "DataForSEO authority signal 63/100; SERP rank is not used as authority"
+        },
+        "author_credibility_transparency": {
+          "points": 8.0,
+          "max": 10,
+          "reason": "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise"
+        },
+        "article_depth": {
+          "points": 10.0,
+          "max": 10,
+          "reason": "1538 useful words"
+        },
+        "recency": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "publication year 2025 yields 5/5 recency points"
+        },
+        "accessibility_attribution": {
+          "points": 5.0,
+          "max": 5,
+          "reason": "page fetched and publisher/URL attribution is available"
+        }
+      },
+      "total_score": 82.3,
+      "reasons": [
+        "exact Arzopa Z3FC presence observed",
+        "observable original-testing/evidence signals: 1 pattern groups",
+        "classified as an independent editorial candidate",
+        "DataForSEO authority signal 63/100; SERP rank is not used as authority",
+        "named author is visible; author/profile URL is visible; signals are transparency indicators, not proof of expertise",
+        "1538 useful words",
+        "publication year 2025 yields 5/5 recency points",
+        "page fetched and publisher/URL attribution is available"
+      ],
+      "hard_rejection_reasons": [],
+      "eligible": true,
+      "result": "selected",
+      "selection_rank": 5,
+      "metadata": {
+        "title": "Arzopa Z3FC 16.1-Inch Review: Portable Without Compromise | Fstoppers",
+        "author": "https://www.facebook.com/zhensiang.y/",
+        "author_profile_url": "https://fstoppers.com/u/406199/articles",
+        "publication_date": "2025-11-01T17:06:01-04:00",
+        "headings": [
+          "We Review the Arzopa Z3FC 16.1-Inch: An Ultra-Portable Monitor for Photographers on Location",
+          "Build Quality",
+          "Features",
+          "Real-World Usage Experience",
+          "Summary",
+          "What I Liked",
+          "What Could Be Improved:",
+          "Final Closing Thoughts",
+          "Join the Fstoppers community for free",
+          "No comments yet",
+          "Warning message"
+        ],
+        "content_sha256": "ea7088571ed884af2d8b7b07dc0580fab02b792ae6bab251ef81f6980be09187",
+        "useful_word_count": 1538
+      }
+    }
+  ],
+  "selected_count": 5,
+  "fetch_count": 11,
+  "cached_count": 0
+}

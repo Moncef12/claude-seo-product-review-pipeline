@@ -6,6 +6,7 @@ from review_pipeline.factual_validation import (
     summarize_claim_checks,
     validate_audit,
     visible_text,
+    quote_matches_article,
 )
 from review_pipeline.stages.repair import repair_issues
 
@@ -91,6 +92,8 @@ class FactualValidationTests(unittest.TestCase):
         self.assertIn("Absence-of-evidence qualifiers are not contradictions", prompt)
         self.assertIn("conflicts` as first-class evidence", prompt)
         self.assertIn("Calibration examples", prompt)
+        self.assertIn("buyer-fit statements", prompt)
+        self.assertIn("commercial call to action", prompt)
         self.assertIn("claim-2", prompt)
         self.assertIn("The monitor supports 180Hz.", prompt)
 
@@ -135,6 +138,10 @@ class FactualValidationTests(unittest.TestCase):
         article = "PCWorld measured [99% sRGB](https://example.com/review)."
         quote = "PCWorld measured 99% sRGB."
         self.assertIn(visible_text(quote), visible_text(article))
+
+    def test_quote_match_ignores_table_and_punctuation_formatting(self):
+        article = "| **Weight** | 1.6–1.72 lb (780g) |"
+        self.assertTrue(quote_matches_article("Weight: 1.6-1.72 lb (780g)", article))
 
     def test_claim_matrix_derives_blocking_audit(self):
         article = "The monitor has no battery. It has a 10,000mAh battery."
@@ -183,7 +190,7 @@ class FactualValidationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             summarize_claim_checks(payload, EVIDENCE, "The monitor has no battery.")
 
-    def test_paraphrased_quote_is_recorded_without_losing_verdict(self):
+    def test_supported_paraphrased_quote_is_recorded_but_does_not_block(self):
         payload = {
             "claim_checks": [
                 {
@@ -204,6 +211,23 @@ class FactualValidationTests(unittest.TestCase):
         )
         self.assertTrue(audit["passed"])
         self.assertFalse(audit["claim_checks"][0]["quote_verified"])
+
+    def test_blocking_issue_requires_an_exact_article_quote(self):
+        payload = {
+            "claim_checks": [
+                {
+                    "index": 1,
+                    "article_quote": "It contains an internal battery.",
+                    "verdict": "contradiction",
+                    "severity": "critical",
+                    "explanation": "The evidence says no battery is built in.",
+                    "evidence_ids": ["claim-1"],
+                    "suggested_correction": "State that there is no built-in battery.",
+                }
+            ]
+        }
+        with self.assertRaisesRegex(ValueError, "Blocking Haiku"):
+            summarize_claim_checks(payload, EVIDENCE, "It has a battery inside.")
 
 
 if __name__ == "__main__":

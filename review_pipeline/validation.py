@@ -32,12 +32,12 @@ _FIRST_HAND_PATTERNS = (
     re.compile(r"\b(?:i|we)\s+(?:ran|put|connected|played|spent)\b", re.IGNORECASE),
 )
 _CURRENCY_RE = re.compile(
-    r"(?:[$€£¥]\s*\d|\b\d[\d,]*(?:\.\d+)?\s*(?:USD|EUR|GBP|CAD|AUD|dollars?|euros?|pounds?)\b)",
+    r"(?:[$€£¥]\s*\d|\b\d[\d,]*(?:\.\d+)?\s*(?:USD|EUR|GBP|CAD|AUD|dollars?|euros?|pounds?\s+sterling)\b)",
     re.IGNORECASE,
 )
 _CURRENT_PRICE_RE = re.compile(
     r"\b(?:current(?:ly)?|today(?:'s)?|now)\s+(?:price|pricing|cost)\b"
-    r"|\b(?:priced|sells?|costs?)\s+(?:at|for)\b",
+    r"|\b(?:priced|sells?|costs)\s+(?:at|for)\b",
     re.IGNORECASE,
 )
 
@@ -138,6 +138,86 @@ def _issue(code: str, message: str, **details: Any) -> dict[str, Any]:
     return result
 
 
+def _section_text(
+    markdown_text: str,
+    headings: list[dict[str, Any]],
+    requested: str,
+) -> str:
+    requested_normalized = _normalize_heading(requested)
+    for index, heading in enumerate(headings):
+        if heading["level"] != 2 or heading["normalized"] != requested_normalized:
+            continue
+        next_h2 = next((item for item in headings[index + 1 :] if item["level"] <= 2), None)
+        return markdown_text[heading["end"] : next_h2["start"] if next_h2 else len(markdown_text)]
+    return ""
+
+
+def validate_editorial_contract(
+    markdown_text: str,
+    headings: list[dict[str, Any]],
+    editorial_plan: Mapping[str, Any] | None = None,
+) -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]]]:
+    """Check decision support without requiring one exact generated sentence.
+
+    The optional plan flag intentionally gates these checks so the long-standing
+    ``validate_markdown`` callers remain backward compatible.  The checks look
+    for reader-facing decisions and labels, not fragile wording copied from a
+    prompt or planning model.
+    """
+
+    if editorial_plan is None:
+        return {}, []
+    checks: dict[str, dict[str, Any]] = {}
+    issues: list[dict[str, Any]] = []
+    quick = _section_text(markdown_text, headings, "Quick Verdict")
+    quick_passed = bool(
+        quick
+        and re.search(
+            r"\b(?:recommend(?:ed|ation)?|worth|buy(?:ing)?|choose|skip|avoid|good fit|not for|suits?)\b",
+            quick,
+            re.IGNORECASE,
+        )
+    )
+    checks["quick_verdict_decision"] = {"passed": quick_passed, "section_present": bool(quick)}
+    if not quick_passed:
+        issues.append(_issue("quick_verdict_decision", "Quick Verdict must contain a clear recommendation or conditional buying decision."))
+
+    snapshot = _section_text(markdown_text, headings, "Review Snapshot")
+    snapshot_labels = {
+        "best_for": bool(re.search(r"\bbest\s+for\b", snapshot, re.IGNORECASE)),
+        "avoid_if": bool(re.search(r"\bavoid\s+if\b", snapshot, re.IGNORECASE)),
+        "biggest_compromise": bool(re.search(r"\bbiggest\s+compromise\b", snapshot, re.IGNORECASE)),
+    }
+    snapshot_passed = bool(snapshot) and all(snapshot_labels.values())
+    checks["review_snapshot_decision_labels"] = {"passed": snapshot_passed, **snapshot_labels, "section_present": bool(snapshot)}
+    if not snapshot_passed:
+        issues.append(_issue("review_snapshot_decision_labels", "Review Snapshot must label Best for, Avoid if, and Biggest compromise."))
+
+    audience = _section_text(markdown_text, headings, "Who Should Buy It and Who Should Not")
+    audience_passed = bool(
+        audience
+        and re.search(r"\b(?:should\s+buy|buy\s+it|best\s+for|ideal\s+for|suits?)\b", audience, re.IGNORECASE)
+        and re.search(r"\b(?:should\s+not|do\s+not\s+buy|avoid|not\s+for|skip)\b", audience, re.IGNORECASE)
+    )
+    checks["buyer_fit_guidance"] = {"passed": audience_passed, "section_present": bool(audience)}
+    if not audience_passed:
+        issues.append(_issue("buyer_fit_guidance", "The article must explain who should buy and who should avoid the product."))
+
+    final_verdict = _section_text(markdown_text, headings, "Final Verdict")
+    conversion_passed = bool(
+        final_verdict
+        and re.search(
+            r"\b(?:next\s+step|next\s+move|consider|choose|buy|purchase|look\s+for|see\s+whether|if\s+you|go\s+ahead|buying\s+decision|good\s+fit|worth\s+it|accept\s+(?:that|the|those|these))\b",
+            final_verdict,
+            re.IGNORECASE,
+        )
+    )
+    checks["final_conversion_cue"] = {"passed": conversion_passed, "section_present": bool(final_verdict)}
+    if not conversion_passed:
+        issues.append(_issue("final_conversion_cue", "Final Verdict must end with a natural next-step or conversion cue."))
+    return checks, issues
+
+
 def _first_hand_matches(markdown_text: str) -> list[str]:
     """Find first-person testing claims while allowing a methodology disclaimer."""
 
@@ -167,6 +247,7 @@ def validate_markdown(
     max_words: int = DEFAULT_WORD_MAX,
     meta_min: int = DEFAULT_META_MIN,
     meta_max: int = DEFAULT_META_MAX,
+    editorial_plan: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Validate a review and return a JSON-serializable report.
 
@@ -282,6 +363,14 @@ def validate_markdown(
     if not checks["faq_questions"]["passed"]:
         issues.append(_issue("faq_questions", "The article must contain exactly three FAQ questions.", count=faq_count))
 
+    editorial_checks, editorial_issues = validate_editorial_contract(
+        markdown_text,
+        headings,
+        editorial_plan,
+    )
+    checks.update(editorial_checks)
+    issues.extend(editorial_issues)
+
     report = {"passed": not issues, "word_count": words, "checks": checks, "issues": issues}
     return report
 
@@ -293,4 +382,9 @@ validate_review = validate_markdown
 validate_article = validate_markdown
 
 
-__all__ = ["validate_markdown", "validate_review", "validate_article"]
+__all__ = [
+    "validate_markdown",
+    "validate_review",
+    "validate_article",
+    "validate_editorial_contract",
+]

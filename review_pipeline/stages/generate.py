@@ -7,16 +7,19 @@ import anthropic
 from dotenv import load_dotenv
 
 from review_pipeline.config import (
+    GENERATION_PROMPT_VERSION,
     NORMALIZED_EVIDENCE_PATH,
     OUTPUT_DIR,
+    PLAN_PATH,
     PRODUCT,
     PROJECT_ROOT,
+    SONNET_MODEL,
     ensure_data_directories,
 )
 
 
-MODEL = "claude-sonnet-4-6"
-PROMPT_VERSION = "z3fc-final-review-v3-grounded"
+MODEL = SONNET_MODEL
+PROMPT_VERSION = GENERATION_PROMPT_VERSION
 DRAFT_PATH = OUTPUT_DIR / "draft.md"
 GENERATION_PATH = OUTPUT_DIR / "generation.json"
 
@@ -41,7 +44,12 @@ def evidence_hash(evidence: dict) -> str:
     return hashlib.sha256(serialized).hexdigest()
 
 
-def generation_prompt(evidence: dict) -> str:
+def plan_hash(plan: dict) -> str:
+    return hashlib.sha256(json.dumps(plan or {}, sort_keys=True).encode("utf-8")).hexdigest()
+
+
+def generation_prompt(evidence: dict, plan: dict | None = None) -> str:
+    plan = plan or {}
     return f"""Write the final product review for:
 
 {json.dumps(PRODUCT, indent=2)}
@@ -98,39 +106,54 @@ Hard requirements:
 - Avoid words such as "rare" or "uncommon" unless that exact comparison is supported
   by the normalized evidence. Prefer a neutral description such as "a strong
   specification combination for a portable monitor."
-- Weight must remain approximately 1.6 to 1.72 lb, never under 400 g.
-- Mini HDMI carries audio and video but does not power the monitor.
-- State that AMD FreeSync is supported without assigning an unverified tier or
-  connection-specific guarantee.
+- Use only normalized evidence for physical specifications, port behavior, and
+  compatibility. Preserve each claim's manufacturer/observed/measured status and
+  conditions, and state conflicts instead of resolving them from memory.
 - Resolve nothing beyond the evidence. If evidence conflicts, state the conflict.
 - Before returning, remove repetition and ensure the complete article remains
   inside 950 to 1,050 visible words while retaining all 13 required H2 headings.
+
+EDITORIAL / SEO / AIO / CRO PLANNING BRIEF
+{json.dumps(plan, indent=2)}
+
+Use the planning brief to choose intent, section emphasis, direct-answer targets,
+buyer-objection responses, and CTA placement. It is a planning brief, not a source of product facts.
+Every factual premise behind a verdict, best-for or avoid-if
+recommendation, objection response, value judgment, or CTA must be supported by
+the evidence below. Evidence overrides any plan wording that conflicts with it.
+Use normal SEO and people-first answer practices rather than AIO hacks. Do not add
+affiliate URLs, unsupported rival comparisons, current-price claims, or first-hand
+implications. Make the verdict decisive but conditional, and explain both the
+prioritized advantage and the largest compromise.
 
 COMPACT NORMALIZED EVIDENCE
 {json.dumps(evidence, indent=2)}
 """
 
 
-def current_generation(content_hash: str) -> dict | None:
+def current_generation(content_hash: str, editorial_plan_hash: str | dict | None = None) -> dict | None:
     if not GENERATION_PATH.exists():
         return None
     cached = json.loads(GENERATION_PATH.read_text(encoding="utf-8"))
-    expected = (content_hash, MODEL, PROMPT_VERSION)
+    if isinstance(editorial_plan_hash, dict):
+        editorial_plan_hash = plan_hash(editorial_plan_hash)
+    expected = (content_hash, editorial_plan_hash or plan_hash({}), MODEL, PROMPT_VERSION)
     actual = (
         cached.get("evidence_sha256"),
+        cached.get("plan_sha256", plan_hash({})),
         cached.get("model"),
         cached.get("prompt_version"),
     )
     return cached if actual == expected else None
 
 
-def call_sonnet(client: anthropic.Anthropic, evidence: dict):
+def call_sonnet(client: anthropic.Anthropic, evidence: dict, plan: dict | None = None):
     return client.messages.create(
         model=MODEL,
         max_tokens=2600,
         temperature=0,
         system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": generation_prompt(evidence)}],
+        messages=[{"role": "user", "content": generation_prompt(evidence, plan)}],
     )
 
 
@@ -145,19 +168,28 @@ def save_generation(
     content_hash: str,
     message,
     prompt: str,
+    plan: dict | None = None,
 ) -> dict:
+    usage = getattr(message, "usage", {})
+    input_tokens = usage.get("input_tokens", 0) if isinstance(usage, dict) else getattr(usage, "input_tokens", 0)
+    output_tokens = usage.get("output_tokens", 0) if isinstance(usage, dict) else getattr(usage, "output_tokens", 0)
     record = {
         "model": MODEL,
         "prompt_version": PROMPT_VERSION,
+        "cached": False,
+        "last_run_cache_hit": False,
+        "call_count": 1,
         "evidence_sha256": content_hash,
+        "plan_sha256": plan_hash(plan or {}),
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "word_count": len(article.split()),
         "usage": {
-            "input_tokens": message.usage.input_tokens,
-            "output_tokens": message.usage.output_tokens,
+            "input_tokens": int(input_tokens or 0),
+            "output_tokens": int(output_tokens or 0),
         },
         "system_prompt": SYSTEM_PROMPT,
         "prompt": prompt,
+        "plan": plan or {},
         "article": article,
     }
     DRAFT_PATH.write_text(f"{article}\n", encoding="utf-8")
@@ -170,15 +202,30 @@ def main() -> None:
     load_dotenv(PROJECT_ROOT / ".env")
     ensure_data_directories()
     evidence = json.loads(NORMALIZED_EVIDENCE_PATH.read_text(encoding="utf-8"))
+    plan_record = json.loads(PLAN_PATH.read_text(encoding="utf-8"))
+    plan = plan_record.get("plan", plan_record) if isinstance(plan_record, dict) else {}
+    if not isinstance(plan, dict) or not plan:
+        raise SystemExit("SEO/AIO/CRO plan is missing; run the plan stage first")
     content_hash = evidence_hash(evidence)
-    cached = None if args.refresh else current_generation(content_hash)
+    editorial_plan_hash = plan_hash(plan)
+    cached = None if args.refresh else current_generation(content_hash, editorial_plan_hash)
     if cached:
+        # Preserve the original Sonnet producer usage/count.  ``cached`` and
+        # ``last_run_cache_hit`` describe this invocation, not the artifact's
+        # provenance.
+        cached["cached"] = True
+        cached["last_run_cache_hit"] = True
+        if "call_count" not in cached or int(cached.get("call_count") or 0) == 0:
+            usage = cached.get("usage") or {}
+            if int(usage.get("input_tokens") or 0) or int(usage.get("output_tokens") or 0) or cached.get("article"):
+                cached["call_count"] = 1
+        GENERATION_PATH.write_text(json.dumps(cached, indent=2), encoding="utf-8")
         DRAFT_PATH.write_text(f"{cached['article']}\n", encoding="utf-8")
         print(f"CACHED final Sonnet candidate: {cached['word_count']} words")
         return
 
-    prompt = generation_prompt(evidence)
-    message = call_sonnet(anthropic.Anthropic(), evidence)
+    prompt = generation_prompt(evidence, plan)
+    message = call_sonnet(anthropic.Anthropic(), evidence, plan)
     if message.stop_reason != "end_turn":
         raise RuntimeError(f"Sonnet generation stopped early: {message.stop_reason}")
     record = save_generation(
@@ -186,6 +233,7 @@ def main() -> None:
         content_hash,
         message,
         prompt,
+        plan,
     )
     print(
         f"GENERATED final Sonnet candidate: {record['word_count']} words, "

@@ -10,6 +10,7 @@ from review_pipeline.config import (
     FACTUAL_AUDIT_PATH,
     NORMALIZED_EVIDENCE_PATH,
     OUTPUT_DIR,
+    PLAN_PATH,
     PROJECT_ROOT,
     REPAIR_PATH,
     VALIDATION_PATH,
@@ -44,15 +45,19 @@ def evidence_hash(evidence: dict) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
-def repair_prompt(article: str, issues: list[dict], evidence: dict) -> str:
+def plan_hash(plan: dict) -> str:
+    return hashlib.sha256(json.dumps(plan or {}, sort_keys=True).encode("utf-8")).hexdigest()
+
+
+def repair_prompt(article: str, issues: list[dict], evidence: dict, plan: dict | None = None) -> str:
     return f"""Repair the article so every listed Python or factual-audit issue is resolved.
 
 VALIDATION ISSUES
 {json.dumps(issues, indent=2)}
 
 Rules:
-- Use this exact H1 as the first line:
-  `# Arzopa Z3FC Review: A 2.5K 180Hz Portable Monitor`
+- Begin with one H1 containing "Arzopa", "Z3FC", and "Review". Do not imply
+  first-hand testing in the title and do not add unsupported product facts.
 - Keep every existing required H2 heading exactly as supplied and in the same order.
   Never merge, rename, or remove a required heading.
 - Keep exactly three FAQs.
@@ -66,6 +71,13 @@ Rules:
   specific claim using its explanation and evidence IDs.
 - Do not make unrelated stylistic rewrites.
 
+EDITORIAL / SEO / AIO / CRO PLANNING BRIEF
+{json.dumps(plan or {}, indent=2)}
+
+Preserve plan-aligned intent, reader-fit decisions, evidence-grounded objections,
+and natural CTA placement when supported by the normalized evidence. The plan is
+not a source of product facts; evidence overrides it.
+
 NORMALIZED EVIDENCE
 {json.dumps(evidence, indent=2)}
 
@@ -74,7 +86,7 @@ ARTICLE TO REPAIR
 """
 
 
-def call_sonnet(client, article: str, issues: list[dict], evidence: dict):
+def call_sonnet(client, article: str, issues: list[dict], evidence: dict, plan: dict | None = None):
     return client.messages.create(
         model=MODEL,
         max_tokens=2600,
@@ -83,7 +95,7 @@ def call_sonnet(client, article: str, issues: list[dict], evidence: dict):
         messages=[
             {
                 "role": "user",
-                "content": repair_prompt(article, issues, evidence),
+                "content": repair_prompt(article, issues, evidence, plan),
             }
         ],
     )
@@ -115,14 +127,18 @@ def cached_repair(
     draft_hash: str,
     brief_hash: str,
     repair_issues_hash: str,
+    editorial_plan_hash: str | dict | None = None,
 ) -> dict | None:
     if not REPAIR_PATH.exists():
         return None
     cached = json.loads(REPAIR_PATH.read_text(encoding="utf-8"))
+    if isinstance(editorial_plan_hash, dict):
+        editorial_plan_hash = plan_hash(editorial_plan_hash)
     expected = (
         draft_hash,
         brief_hash,
         repair_issues_hash,
+        editorial_plan_hash or plan_hash({}),
         MODEL,
         PROMPT_VERSION,
     )
@@ -130,6 +146,7 @@ def cached_repair(
         cached.get("draft_sha256"),
         cached.get("evidence_sha256"),
         cached.get("issues_sha256"),
+        cached.get("plan_sha256", plan_hash({})),
         cached.get("model"),
         cached.get("prompt_version"),
     )
@@ -161,20 +178,28 @@ def save_record(
     final: dict,
     message=None,
     prompt: str | None = None,
+    editorial_plan_hash: str | None = None,
 ) -> dict:
     repair_called = message is not None
+    usage = getattr(message, "usage", {}) if message else {}
+    input_tokens = usage.get("input_tokens", 0) if isinstance(usage, dict) else getattr(usage, "input_tokens", 0)
+    output_tokens = usage.get("output_tokens", 0) if isinstance(usage, dict) else getattr(usage, "output_tokens", 0)
     record = {
         "model": MODEL,
         "prompt_version": PROMPT_VERSION,
+        "cached": False,
+        "last_run_cache_hit": False,
+        "call_count": 1 if repair_called else 0,
         "draft_sha256": draft_hash,
         "evidence_sha256": brief_hash,
+        "plan_sha256": editorial_plan_hash or plan_hash({}),
         "issues_sha256": issues_hash(issues),
         "repaired_at": datetime.now(timezone.utc).isoformat(),
         "repair_called": repair_called,
         "word_count": final["word_count"],
         "usage": {
-            "input_tokens": message.usage.input_tokens if message else 0,
-            "output_tokens": message.usage.output_tokens if message else 0,
+            "input_tokens": int(input_tokens or 0),
+            "output_tokens": int(output_tokens or 0),
         },
         "system_prompt": SYSTEM_PROMPT if repair_called else None,
         "prompt": prompt,
@@ -202,6 +227,10 @@ def main() -> None:
     ensure_data_directories()
     article = DRAFT_PATH.read_text(encoding="utf-8").strip()
     evidence = json.loads(NORMALIZED_EVIDENCE_PATH.read_text(encoding="utf-8"))
+    plan_record = json.loads(PLAN_PATH.read_text(encoding="utf-8"))
+    plan = plan_record.get("plan", plan_record) if isinstance(plan_record, dict) else {}
+    if not isinstance(plan, dict) or not plan:
+        raise SystemExit("SEO/AIO/CRO plan is missing; run the plan stage first")
     validation = json.loads(VALIDATION_PATH.read_text(encoding="utf-8"))
     factual_record = json.loads(FACTUAL_AUDIT_PATH.read_text(encoding="utf-8"))
     initial = validation["initial"]
@@ -209,6 +238,7 @@ def main() -> None:
     initial_factual = initial_factual_run.get("audit") or {}
     draft_hash = content_hash(article)
     brief_hash = evidence_hash(evidence)
+    editorial_plan_hash = plan_hash(plan)
     if initial_factual_run.get("article_sha256") != stable_hash(article):
         raise SystemExit("Initial factual audit is stale for the current draft")
     if factual_record.get("evidence_sha256") != stable_hash(evidence):
@@ -219,9 +249,16 @@ def main() -> None:
     cached = (
         None
         if args.refresh
-        else cached_repair(draft_hash, brief_hash, combined_issues_hash)
+        else cached_repair(draft_hash, brief_hash, combined_issues_hash, editorial_plan_hash)
     )
     if cached:
+        cached["cached"] = True
+        cached["last_run_cache_hit"] = True
+        if "call_count" not in cached or int(cached.get("call_count") or 0) == 0:
+            usage = cached.get("usage") or {}
+            if cached.get("repair_called") or int(usage.get("input_tokens") or 0) or int(usage.get("output_tokens") or 0):
+                cached["call_count"] = 1
+        REPAIR_PATH.write_text(json.dumps(cached, indent=2), encoding="utf-8")
         FINAL_CANDIDATE_PATH.write_text(f"{cached['article']}\n", encoding="utf-8")
         VALIDATION_PATH.write_text(
             json.dumps(
@@ -250,21 +287,23 @@ def main() -> None:
             initial_factual,
             combined_issues,
             initial,
+            editorial_plan_hash=editorial_plan_hash,
         )
         print(f"NO REPAIR NEEDED: {record['word_count']} words, 0 Sonnet calls")
         return
 
-    prompt = repair_prompt(article, combined_issues, evidence)
+    prompt = repair_prompt(article, combined_issues, evidence, plan)
     message = call_sonnet(
         anthropic.Anthropic(),
         article,
         combined_issues,
         evidence,
+        plan,
     )
     if message.stop_reason != "end_turn":
         raise RuntimeError(f"Sonnet repair stopped early: {message.stop_reason}")
     repaired = message_text(message)
-    final = validate_article(repaired)
+    final = validate_article(repaired, editorial_plan=plan)
     record = save_record(
         repaired,
         draft_hash,
@@ -275,6 +314,7 @@ def main() -> None:
         final,
         message,
         prompt,
+        editorial_plan_hash,
     )
     print(
         f"REPAIRED with one Sonnet call: {record['word_count']} words, "

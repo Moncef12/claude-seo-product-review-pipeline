@@ -14,13 +14,15 @@ from review_pipeline.config import HAIKU_MODEL
 
 
 MODEL = HAIKU_MODEL
-PROMPT_VERSION = "z3fc-factual-audit-v6-claim-matrix"
+PROMPT_VERSION = "z3fc-factual-audit-v7-compact-claim-matrix"
 
 SYSTEM_PROMPT = """You are a strict factual-grounding auditor.
 Audit an article only against the supplied normalized evidence. Do not use outside
 knowledge. Check every factual assertion, number, product specification, source
-attribution, and treatment of conflicting evidence. Report only factual-grounding
-problems, not style preferences. Return valid JSON matching the supplied schema."""
+attribution, treatment of conflicting evidence, and the factual premises behind
+recommendations, buyer fit, objections, value judgments, and commercial calls to
+action. Report only factual-grounding problems, not style preferences. Return
+valid JSON matching the supplied schema."""
 
 AUDIT_SCHEMA = {
     "type": "object",
@@ -98,14 +100,20 @@ evidence. Return exactly one JSON object matching the structured-output schema.
 Coverage contract:
 - Return one claim_checks row for every distinct factual assertion in the title,
   metadata, prose, tables, bullets, and FAQs. Do not output only failures.
+- Audit the factual premises behind the quick verdict, overall recommendation,
+  best-for and avoid-if guidance, buyer-fit statements, buyer objections,
+  compromise/value judgments, comparisons, and every commercial call to action.
+  Editorial opinion may synthesize supported evidence, but its factual premises
+  must still be represented by supported evidence IDs.
 - Use consecutive index values starting at 1 in article order.
 - Quote the smallest visible article span that contains the assertion. Visible link
-  text may be quoted without the Markdown URL.
+  text may be quoted without the Markdown URL. Keep the quote to 25 words or fewer.
 - Use verdict `supported` and severity `none` when the assertion is grounded.
 - For supported rows, briefly name the evidence IDs or conflict position that
-  grounds the assertion and leave suggested_correction as an empty string.
+  grounds the assertion in no more than 18 words and leave suggested_correction
+  as an empty string.
 - For every other verdict, use severity `major` or `critical` and provide the exact
-  factual correction. These rows block publication.
+  factual correction in no more than 25 words. These rows block publication.
 
 Grounding rules:
 - Use only the supplied evidence. Do not validate claims from general knowledge.
@@ -177,7 +185,7 @@ ARTICLE TO AUDIT
 def call_haiku(client: anthropic.Anthropic, article: str, evidence: dict):
     return client.messages.create(
         model=MODEL,
-        max_tokens=7000,
+        max_tokens=10000,
         temperature=0,
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": audit_prompt(article, evidence)}],
@@ -222,6 +230,21 @@ def visible_text(value: str) -> str:
     text = re.sub(r"[*_`#>]", "", text)
     text = text.replace("’", "'").replace("“", '"').replace("”", '"')
     return re.sub(r"\s+", " ", text).strip().casefold()
+
+
+def quote_matches_article(quote: str, article: str) -> bool:
+    """Match a copied visible quote while ignoring Markdown punctuation.
+
+    Table pipes, list markers, smart punctuation, and link markup are formatting,
+    not factual differences. The normalized word sequence must still occur
+    verbatim, so a paraphrase cannot masquerade as an article quote.
+    """
+
+    def lexical(value: str) -> str:
+        return re.sub(r"[^\w]+", " ", visible_text(value), flags=re.UNICODE).strip()
+
+    normalized_quote = lexical(quote)
+    return bool(normalized_quote) and normalized_quote in lexical(article)
 
 
 def self_exonerating_issue(issue: dict) -> bool:
@@ -290,7 +313,11 @@ def summarize_claim_checks(payload: dict, evidence: dict, article: str) -> dict:
         explanation = str(check.get("explanation") or "").strip()
         if not quote or not explanation:
             raise ValueError("Haiku factual claim check is missing its quote or explanation")
-        check["quote_verified"] = visible_text(quote) in visible_text(article)
+        check["quote_verified"] = quote_matches_article(quote, article)
+        if check.get("verdict") != "supported" and not check["quote_verified"]:
+            raise ValueError(
+                "Blocking Haiku factual issue quoted text that is not present in the article"
+            )
         unknown = set(check.get("evidence_ids") or []) - known_ids
         if unknown:
             raise ValueError(f"Haiku factual audit used unknown evidence IDs: {unknown}")
@@ -420,4 +447,5 @@ __all__ = [
     "summarize_claim_checks",
     "validate_audit",
     "visible_text",
+    "quote_matches_article",
 ]

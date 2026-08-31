@@ -1,21 +1,21 @@
 {
-  "validated_at": "2026-08-30T13:25:09.577571+00:00",
-  "candidate_sha256": "4eb76f1b90af9dc1e8c524a26cba1d34c76e3d14621ad22fe1ead4b6a5095d2b",
-  "repair_called": false,
+  "validated_at": "2026-08-31T16:19:49.929379+00:00",
+  "candidate_sha256": "662ce9c1991d241a28561b882a87649a0357a530c27c1216a746d730412a7850",
+  "repair_called": true,
   "initial": {
-    "passed": true,
-    "word_count": 1109,
+    "passed": false,
+    "word_count": 1107,
     "checks": {
       "word_count": {
         "passed": true,
-        "value": 1109,
+        "value": 1107,
         "minimum": 800,
         "maximum": 1200
       },
       "h1": {
-        "passed": true,
+        "passed": false,
         "count": 1,
-        "title": "Arzopa Z3FC Review: 2.5K 180Hz Portable Monitor Assessed"
+        "title": "Arzopa Z3FC Portable Monitor: Specs, Performance, Limits"
       },
       "h1_tested": {
         "passed": true
@@ -81,7 +81,7 @@
         "sources": [
           {
             "publisher": "ServeTheHome",
-            "url": "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/",
+            "url": "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
             "present": true
           },
           {
@@ -96,12 +96,12 @@
           },
           {
             "publisher": "How-To Geek",
-            "url": "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review/",
+            "url": "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review",
             "present": true
           },
           {
-            "publisher": "PCWorld",
-            "url": "https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html",
+            "publisher": "Fstoppers",
+            "url": "https://fstoppers.com/reviews/review-arzopa-z3fc-161-inch-ultra-portable-monitor-photographers-location-712722",
             "present": true
           }
         ]
@@ -109,16 +109,14 @@
       "article_links": {
         "passed": true,
         "links": [
-          "https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html",
           "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
-          "https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html",
+          "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
+          "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
+          "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
+          "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
           "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
-          "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
-          "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review/",
-          "https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html",
-          "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/",
-          "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
-          "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review"
+          "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review",
+          "https://fstoppers.com/reviews/review-arzopa-z3fc-161-inch-ultra-portable-monitor-photographers-location-712722"
         ],
         "unauthorized": []
       },
@@ -132,24 +130,59 @@
         "count": 3,
         "heading": "Frequently Asked Questions",
         "expected": 3
+      },
+      "quick_verdict_decision": {
+        "passed": true,
+        "section_present": true
+      },
+      "review_snapshot_decision_labels": {
+        "passed": true,
+        "best_for": true,
+        "avoid_if": true,
+        "biggest_compromise": true,
+        "section_present": true
+      },
+      "buyer_fit_guidance": {
+        "passed": false,
+        "section_present": true
+      },
+      "final_conversion_cue": {
+        "passed": false,
+        "section_present": true
       }
     },
-    "issues": []
+    "issues": [
+      {
+        "code": "h1",
+        "message": "The article must have exactly one H1 containing the brand, model, and the word 'review'.",
+        "details": {
+          "count": 1
+        }
+      },
+      {
+        "code": "buyer_fit_guidance",
+        "message": "The article must explain who should buy and who should avoid the product."
+      },
+      {
+        "code": "final_conversion_cue",
+        "message": "Final Verdict must end with a natural next-step or conversion cue."
+      }
+    ]
   },
   "final": {
     "passed": true,
-    "word_count": 1109,
+    "word_count": 1180,
     "checks": {
       "word_count": {
         "passed": true,
-        "value": 1109,
+        "value": 1180,
         "minimum": 800,
         "maximum": 1200
       },
       "h1": {
         "passed": true,
         "count": 1,
-        "title": "Arzopa Z3FC Review: 2.5K 180Hz Portable Monitor Assessed"
+        "title": "Arzopa Z3FC Portable Monitor Review: Specs, Performance, and Limits"
       },
       "h1_tested": {
         "passed": true
@@ -215,7 +248,7 @@
         "sources": [
           {
             "publisher": "ServeTheHome",
-            "url": "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/",
+            "url": "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
             "present": true
           },
           {
@@ -230,12 +263,12 @@
           },
           {
             "publisher": "How-To Geek",
-            "url": "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review/",
+            "url": "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review",
             "present": true
           },
           {
-            "publisher": "PCWorld",
-            "url": "https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html",
+            "publisher": "Fstoppers",
+            "url": "https://fstoppers.com/reviews/review-arzopa-z3fc-161-inch-ultra-portable-monitor-photographers-location-712722",
             "present": true
           }
         ]
@@ -243,16 +276,14 @@
       "article_links": {
         "passed": true,
         "links": [
-          "https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html",
           "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
-          "https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html",
+          "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
+          "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
+          "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
+          "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
           "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
-          "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
-          "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review/",
-          "https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html",
-          "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/",
-          "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
-          "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review"
+          "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review",
+          "https://fstoppers.com/reviews/review-arzopa-z3fc-161-inch-ultra-portable-monitor-photographers-location-712722"
         ],
         "unauthorized": []
       },
@@ -266,6 +297,25 @@
         "count": 3,
         "heading": "Frequently Asked Questions",
         "expected": 3
+      },
+      "quick_verdict_decision": {
+        "passed": true,
+        "section_present": true
+      },
+      "review_snapshot_decision_labels": {
+        "passed": true,
+        "best_for": true,
+        "avoid_if": true,
+        "biggest_compromise": true,
+        "section_present": true
+      },
+      "buyer_fit_guidance": {
+        "passed": true,
+        "section_present": true
+      },
+      "final_conversion_cue": {
+        "passed": true,
+        "section_present": true
       }
     },
     "issues": []

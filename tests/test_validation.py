@@ -1,6 +1,7 @@
 import unittest
 
 from review_pipeline.validation import validate_markdown
+from review_pipeline.stages.validate import dynamic_expected_sources
 
 
 SOURCES = [
@@ -103,6 +104,14 @@ class ValidationTests(unittest.TestCase):
         report = self.validate(valid_article("\nIt costs $199 and the current price may change."))
         self.assertIn("currency_price_claims", {issue["code"] for issue in report["issues"]})
 
+    def test_weight_and_non_price_cost_language_are_not_currency_claims(self):
+        report = self.validate(
+            valid_article(
+                "\nIt weighs 1.6 pounds and trades some weight and cost for portability."
+            )
+        )
+        self.assertTrue(report["checks"]["currency_price_claims"]["passed"], report["issues"])
+
     def test_punctuation_check_ignores_table_separators_and_url_hyphens(self):
         report = self.validate()
         self.assertTrue(report["checks"]["double_hyphen"]["passed"], report["issues"])
@@ -115,6 +124,25 @@ class ValidationTests(unittest.TestCase):
         article = valid_article().replace("## Quick Verdict", "## Quick Verdict ##").replace("\n\n## Specifications", "\n## Specifications")
         report = self.validate(article)
         self.assertTrue(report["checks"]["required_headings"]["passed"], report["issues"])
+
+    def test_optional_editorial_contract_checks_decision_support(self):
+        article = valid_article()
+        article = article.replace(
+            "## Specifications",
+            "## Review Snapshot\n\n| Label | Finding |\n|---|---|\n| Best for | Travel readers |\n| Avoid if | You need built-in speakers |\n| Biggest compromise | Limited ports |\n\n## Specifications",
+        )
+        article += "\n## Who Should Buy It and Who Should Not\n\nReaders should buy it for travel and avoid it if they need a desktop dock.\n\n## Final Verdict\n\nConsider it as your next step if the trade-offs fit.\n"
+        report = self.validate(article, editorial_plan={"article_angle": "decision support"})
+        self.assertTrue(report["checks"]["quick_verdict_decision"]["passed"])
+        self.assertTrue(report["checks"]["review_snapshot_decision_labels"]["passed"])
+        self.assertTrue(report["checks"]["buyer_fit_guidance"]["passed"])
+        self.assertTrue(report["checks"]["final_conversion_cue"]["passed"])
+
+    def test_dynamic_runtime_sources_fail_closed_when_missing_or_partial(self):
+        with self.assertRaisesRegex(ValueError, "exactly 5"):
+            dynamic_expected_sources([], {"sources": SOURCES})
+        five = [{"publisher": f"Publisher {index}", "url": f"https://p{index}.test/review"} for index in range(5)]
+        self.assertEqual(dynamic_expected_sources(five, {}), five)
 
 
 if __name__ == "__main__":

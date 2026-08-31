@@ -51,16 +51,16 @@ class RenderTests(unittest.TestCase):
             "<h1>Final review</h1>",
             pipeline_html=trace,
         )
-        self.assertEqual(trace.count('class="pipeline-step"'), 10)
-        self.assertEqual(trace.count('class="pipeline-number"'), 10)
+        self.assertEqual(trace.count('class="pipeline-step"'), 12)
+        self.assertEqual(trace.count('class="pipeline-number"'), 12)
         self.assertNotIn('<details class="pipeline-step" open', trace)
         self.assertLess(rendered.index("Pipeline trace"), rendered.index("Final review"))
-        for number in range(1, 11):
+        for number in range(1, 13):
             self.assertIn(f'pipeline-number">{number}</span>', trace)
         for label in (
             "Input: DataForSEO request",
             "System prompt",
-            "User prompt and source input",
+            "User prompt and selected source input",
             "Raw Haiku output",
             "Raw Sonnet output",
             "Validation rules",
@@ -73,12 +73,8 @@ class RenderTests(unittest.TestCase):
         ):
             self.assertIn(label, trace)
         self.assertIn("<strong>Next:</strong>", trace)
-        self.assertIn("PASS · 53/53 SUPPORTED", trace)
-        self.assertIn("REPAIR SKIPPED · FINAL PASS", trace)
-        self.assertIn("Repair did NOT run", trace)
-        self.assertIn("0 Sonnet repair calls", trace)
-        self.assertIn("Final Python: PASS. Final Haiku: PASS.", trace)
-        self.assertIn("class=\"pipeline-outcome passed\"", trace)
+        self.assertIn("Production summary", trace)
+        self.assertIn("Conditional repair/final gate", trace)
 
     def test_pipeline_artifacts_are_escaped_and_missing_is_available(self):
         step = _step(1, "<Discovery>", [("payload <x>", {"html": "<script>alert(1)</script>"})])
@@ -102,6 +98,20 @@ class RenderTests(unittest.TestCase):
         self.assertIn("SKIPPED &lt;safe&gt;", step)
         self.assertIn("No repair &lt;script&gt;", step)
         self.assertNotIn("<script>alert(1)</script>", step)
+
+    def test_visible_summary_card_is_escaped_and_precedes_collapsed_trace(self):
+        summary = {
+            "total_calls": "<script>alert(1)</script>",
+            "tokens": {"total": 1234},
+            "estimated_total_usd": 0.012345,
+            "validation": {"final_python": "PASS", "final_haiku": "PASS"},
+            "repair": {"status": "skipped <safe>"},
+        }
+        rendered = html_document("Product", "Description", "<p>Review</p>", pipeline_html=pipeline_trace(), production_summary=summary)
+        self.assertIn('class="production-summary"', rendered)
+        self.assertIn("&lt;script&gt;alert(1)&lt;/script&gt;", rendered)
+        self.assertNotIn("<script>alert(1)</script>", rendered)
+        self.assertLess(rendered.index('class="production-summary"'), rendered.index('class="pipeline-trace"'))
 
 
 if __name__ == "__main__":

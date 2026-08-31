@@ -1,0 +1,142 @@
+{
+  "generated_at": "2026-08-31T16:19:50.496082+00:00",
+  "total_calls": 7,
+  "total_external_api_calls": 7,
+  "total_provider_calls": 7,
+  "total_external_operations": 18,
+  "calls": {
+    "dataforseo": 1,
+    "anthropic": 6,
+    "source_fetches": 11
+  },
+  "calls_by_provider_stage": {
+    "DataForSEO": {
+      "discovery": 1,
+      "authority_bulk_ranks": 0,
+      "total": 1
+    },
+    "Anthropic": {
+      "stages": [
+        {
+          "provider": "Anthropic",
+          "stage": "extraction",
+          "model": "claude-haiku-4-5-20251001",
+          "called": true,
+          "input_tokens": 15322,
+          "output_tokens": 3414,
+          "estimated_cost_usd": 0.032392
+        },
+        {
+          "provider": "Anthropic",
+          "stage": "plan",
+          "model": "claude-haiku-4-5-20251001",
+          "called": true,
+          "input_tokens": 13380,
+          "output_tokens": 2557,
+          "estimated_cost_usd": 0.026165
+        },
+        {
+          "provider": "Anthropic",
+          "stage": "generation",
+          "model": "claude-sonnet-4-6",
+          "called": true,
+          "input_tokens": 12476,
+          "output_tokens": 2122,
+          "estimated_cost_usd": 0.069258
+        },
+        {
+          "provider": "Anthropic",
+          "stage": "initial_factual_audit",
+          "model": "claude-haiku-4-5-20251001",
+          "called": true,
+          "input_tokens": 10198,
+          "output_tokens": 5668,
+          "estimated_cost_usd": 0.038538
+        },
+        {
+          "provider": "Anthropic",
+          "stage": "final_factual_audit",
+          "model": "claude-haiku-4-5-20251001",
+          "called": true,
+          "input_tokens": 10295,
+          "output_tokens": 7029,
+          "estimated_cost_usd": 0.04544
+        },
+        {
+          "provider": "Anthropic",
+          "stage": "repair",
+          "model": "claude-sonnet-4-6",
+          "called": true,
+          "input_tokens": 13972,
+          "output_tokens": 2219,
+          "estimated_cost_usd": 0.075201
+        }
+      ],
+      "total": 6
+    },
+    "source_fetches": 11
+  },
+  "tokens": {
+    "input": 75643,
+    "output": 23009,
+    "total": 98652
+  },
+  "total_input_tokens": 75643,
+  "total_output_tokens": 23009,
+  "dataforseo": {
+    "calls": 1,
+    "recorded_cost_usd": 0.0035
+  },
+  "validation": {
+    "initial_python": "FAIL",
+    "final_python": "PASS",
+    "initial_haiku": "PASS",
+    "final_haiku": "PASS",
+    "initial_haiku_supported": 59,
+    "initial_haiku_audited": 59,
+    "final_haiku_supported": 56,
+    "final_haiku_audited": 56
+  },
+  "repair": {
+    "required": true,
+    "called": true,
+    "status": "called"
+  },
+  "final_word_count": 1180,
+  "cost": {
+    "estimated_claude_standard_api_usd": 0.286994,
+    "recorded_dataforseo_usd": 0.0035,
+    "estimated_total_usd": 0.290494,
+    "pricing_basis": {
+      "effective_date": "2026-08-31",
+      "rates_usd_per_million_tokens": {
+        "claude-haiku-4-5-20251001": {
+          "input": 1.0,
+          "output": 5.0
+        },
+        "claude-sonnet-4-6": {
+          "input": 3.0,
+          "output": 15.0
+        }
+      }
+    }
+  },
+  "pricing_basis": "Anthropic standard API rates dated 2026-08-31; DataForSEO uses recorded task costs.",
+  "exclusions": "No live calls are made by summary generation. Estimates exclude hosting, browser rendering, taxes, discounts, and any provider pricing not recorded in the artifacts.",
+  "estimated_total_usd": 0.290494,
+  "estimated_claude_cost_usd": 0.286994,
+  "estimated_total_cost_usd": 0.290494,
+  "total_api_calls": 7,
+  "total_claude_calls": 6,
+  "source_fetch_count": 11,
+  "initial_python_result": "FAIL",
+  "final_python_result": "PASS",
+  "initial_haiku_result": "PASS",
+  "final_haiku_result": "PASS",
+  "initial_haiku_supported_count": 59,
+  "initial_haiku_audited_count": 59,
+  "final_haiku_supported_count": 56,
+  "final_haiku_audited_count": 56,
+  "repair_required": true,
+  "repair_called": true
+}

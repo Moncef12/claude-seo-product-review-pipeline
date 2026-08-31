@@ -1,0 +1,230 @@
+{
+  "version": 1,
+  "ttl_days": 90,
+  "entries": {
+    "amateurphotographer.com": {
+      "score": 56.0,
+      "authority_rank": 56.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "amateurphotographer.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    },
+    "amazon.com": {
+      "score": 97.0,
+      "authority_rank": 97.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "amazon.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    },
+    "arzopa.com": {
+      "score": 46.0,
+      "authority_rank": 46.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "arzopa.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    },
+    "fstoppers.com": {
+      "score": 63.0,
+      "authority_rank": 63.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "fstoppers.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    },
+    "howtogeek.com": {
+      "score": 75.0,
+      "authority_rank": 75.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "howtogeek.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    },
+    "instagram.com": {
+      "score": 100.0,
+      "authority_rank": 100.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "instagram.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    },
+    "pcworld.com": {
+      "score": 73.0,
+      "authority_rank": 73.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "pcworld.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    },
+    "reddit.com": {
+      "score": 95.0,
+      "authority_rank": 95.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "reddit.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    },
+    "root-nation.com": {
+      "score": 63.0,
+      "authority_rank": 63.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "root-nation.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    },
+    "servethehome.com": {
+      "score": 64.0,
+      "authority_rank": 64.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "servethehome.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    },
+    "techaeris.com": {
+      "score": 51.0,
+      "authority_rank": 51.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "techaeris.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    },
+    "technobezz.com": {
+      "score": 52.0,
+      "authority_rank": 52.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "technobezz.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    },
+    "techpowerup.com": {
+      "score": 71.0,
+      "authority_rank": 71.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "techpowerup.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    },
+    "techradar.com": {
+      "score": 81.0,
+      "authority_rank": 81.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "techradar.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    },
+    "tomshardware.com": {
+      "score": 75.0,
+      "authority_rank": 75.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "tomshardware.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    },
+    "youtube.com": {
+      "score": 100.0,
+      "authority_rank": 100.0,
+      "fetched_at": "2026-08-31T00:00:00+00:00",
+      "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+      "rank_scale": "one_hundred",
+      "provenance": {
+        "provider": "DataForSEO",
+        "endpoint": "https://api.dataforseo.com/v3/backlinks/bulk_ranks/live",
+        "rank_scale": "one_hundred",
+        "target": "youtube.com",
+        "method": "migrated_product_authority_artifact"
+      }
+    }
+  }
+}

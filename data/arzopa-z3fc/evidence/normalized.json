@@ -8,55 +8,55 @@
   "source_count": 5,
   "all_sources_confirm_exact_model": true,
   "category_counts": {
-    "compatibility": 6,
-    "measurement": 11,
+    "compatibility": 3,
+    "measurement": 13,
     "purchase_advice": 4,
-    "specification": 19,
+    "specification": 17,
     "strength": 7,
     "uncertainty": 1,
-    "weakness": 11
+    "weakness": 12
   },
   "sources": [
     {
-      "publisher": "How-To Geek",
-      "url": "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review/",
-      "exact_model_reviewed": true,
-      "review_context": "Comprehensive hands-on review of the Arzopa Z3FC 16.1-inch portable monitor, testing display quality, connectivity, audio, and various use cases including gaming and productivity."
-    },
-    {
-      "publisher": "PCWorld",
-      "url": "https://www.pcworld.com/article/2915268/arzopa-z3fc-review-a-portable-monitor-with-a-180hz-refresh-rate.html",
-      "exact_model_reviewed": true,
-      "review_context": "Detailed technical review with instrumented measurements of image quality, contrast, color gamut, brightness, and comparison to competing portable monitors."
-    },
-    {
       "publisher": "ServeTheHome",
-      "url": "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/",
+      "url": "https://www.servethehome.com/arzopa-z3fc-16-1in-180hz-2-5k-portable-monitor/2",
       "exact_model_reviewed": true,
-      "review_context": "Hardware overview and specifications review of the Arzopa Z3FC, focusing on design, connectivity, and included accessories."
+      "review_context": "Comprehensive technical review including color performance measurement via Datacolor SpyderPro, power consumption testing, brightness and contrast analysis, and comparison to competing models."
     },
     {
       "publisher": "TechRadar",
       "url": "https://www.techradar.com/pro/arzopa-z3fc-portable-monitor-review",
       "exact_model_reviewed": true,
-      "review_context": "Hands-on review testing the Z3FC for work and gaming use cases, including performance with Nintendo Switch, Switch 2, and Xbox Series X."
+      "review_context": "Hands-on review covering design, build quality, performance across work and gaming scenarios, HDR testing on multiple gaming consoles, and overall value assessment."
     },
     {
       "publisher": "Tom's Hardware",
       "url": "https://www.tomshardware.com/monitors/portable-monitors/arzopa-z3fc-16-1-inch-portable-monitor-review",
       "exact_model_reviewed": true,
-      "review_context": "Comprehensive review with instrumented testing of brightness, color gamut, contrast, and real-world usage testing with multiple devices."
+      "review_context": "Technical review with instrumented color testing, brightness measurement, gaming performance evaluation, and audio quality assessment."
+    },
+    {
+      "publisher": "How-To Geek",
+      "url": "https://www.howtogeek.com/arzopa-z3fc-161-inch-portable-monitor-review",
+      "exact_model_reviewed": true,
+      "review_context": "Detailed review covering connectivity scenarios, brightness and HDR performance, viewing angles, image quality, and audio evaluation."
+    },
+    {
+      "publisher": "Fstoppers",
+      "url": "https://fstoppers.com/reviews/review-arzopa-z3fc-161-inch-ultra-portable-monitor-photographers-location-712722",
+      "exact_model_reviewed": true,
+      "review_context": "Photography-focused review examining build quality, portability, color accuracy for editing workflows, real-world usage with Mac systems, and heat management."
     }
   ],
   "claims": [
     {
-      "id": "d7074f73d3532353",
+      "id": "fd22f25b53c0781f",
       "category": "specification",
-      "claim": "16.1-inch diagonal IPS display panel",
+      "claim": "16.1-inch IPS panel display",
       "status": "manufacturer_claim",
       "sources": [
+        "Fstoppers",
         "How-To Geek",
-        "PCWorld",
         "ServeTheHome",
         "TechRadar",
         "Tom's Hardware"
@@ -64,13 +64,13 @@
       "conditions": null
     },
     {
-      "id": "9cbb2d3f74547c29",
+      "id": "73ef0052256fce00",
       "category": "specification",
       "claim": "2560 x 1440 resolution (2.5K QHD)",
       "status": "manufacturer_claim",
       "sources": [
+        "Fstoppers",
         "How-To Geek",
-        "PCWorld",
         "ServeTheHome",
         "TechRadar",
         "Tom's Hardware"
@@ -78,168 +78,176 @@
       "conditions": null
     },
     {
-      "id": "e51da9ab19e89b13",
+      "id": "c087e45135bcbefe",
       "category": "specification",
-      "claim": "180Hz refresh rate via USB-C DisplayPort",
+      "claim": "180Hz refresh rate via DisplayPort/USB-C",
       "status": "manufacturer_claim",
       "sources": [
+        "Fstoppers",
         "How-To Geek",
-        "PCWorld",
+        "ServeTheHome",
         "TechRadar",
         "Tom's Hardware"
       ],
-      "conditions": "USB-C connection"
+      "conditions": null
     },
     {
-      "id": "8dba2bc8f612ae70",
+      "id": "c84461d68affadea",
       "category": "specification",
       "claim": "144Hz refresh rate via HDMI",
       "status": "manufacturer_claim",
       "sources": [
+        "How-To Geek",
         "TechRadar",
         "Tom's Hardware"
-      ],
-      "conditions": "Mini-HDMI connection"
-    },
-    {
-      "id": "4073c307d05f148c",
-      "category": "specification",
-      "claim": "HDR10+ support",
-      "status": "manufacturer_claim",
-      "sources": [
-        "How-To Geek"
       ],
       "conditions": null
     },
     {
-      "id": "a96a7305b3aa1a2d",
+      "id": "6f1d90232e0afac7",
       "category": "specification",
       "claim": "400 nits maximum brightness",
       "status": "manufacturer_claim",
       "sources": [
+        "Fstoppers",
         "How-To Geek",
-        "PCWorld",
         "TechRadar",
         "Tom's Hardware"
       ],
       "conditions": null
     },
     {
-      "id": "4d409e2e3ccca551",
+      "id": "e90b8a7fb65737fd",
       "category": "specification",
       "claim": "1000:1 contrast ratio",
       "status": "manufacturer_claim",
       "sources": [
-        "How-To Geek",
-        "TechRadar"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "dd2cd2fe4e160fe8",
-      "category": "specification",
-      "claim": "1.6 to 1.72 lbs weight",
-      "status": "manufacturer_claim",
-      "sources": [
-        "How-To Geek",
-        "PCWorld",
-        "TechRadar",
-        "Tom's Hardware"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "83949f7264c93a71",
-      "category": "specification",
-      "claim": "0.36 to 0.39 inches thickness",
-      "status": "manufacturer_claim",
-      "sources": [
-        "How-To Geek",
-        "PCWorld",
-        "ServeTheHome",
-        "Tom's Hardware"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "7db1e83d0b44a650",
-      "category": "specification",
-      "claim": "Two USB-C ports with DisplayPort Alt Mode and Power Delivery",
-      "status": "manufacturer_claim",
-      "sources": [
-        "How-To Geek",
-        "PCWorld",
-        "ServeTheHome",
-        "Tom's Hardware"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "2c81c3e2958c9eb3",
-      "category": "specification",
-      "claim": "Mini-HDMI 2.0 port",
-      "status": "manufacturer_claim",
-      "sources": [
-        "How-To Geek",
-        "PCWorld",
-        "ServeTheHome",
-        "Tom's Hardware"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "8a14ce36acae5fc7",
-      "category": "specification",
-      "claim": "Two 1-watt stereo speakers",
-      "status": "manufacturer_claim",
-      "sources": [
-        "How-To Geek",
-        "PCWorld",
-        "TechRadar",
-        "Tom's Hardware"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "0b437b6524ea2089",
-      "category": "specification",
-      "claim": "16:9 aspect ratio",
-      "status": "manufacturer_claim",
-      "sources": [
-        "How-To Geek",
-        "PCWorld"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "d7fc46905dd08374",
-      "category": "specification",
-      "claim": "AMD FreeSync support",
-      "status": "manufacturer_claim",
-      "sources": [
+        "Fstoppers",
         "How-To Geek",
         "Tom's Hardware"
       ],
       "conditions": null
     },
     {
-      "id": "27d11d3f50c72fe4",
+      "id": "3bd72e85a44a67f2",
       "category": "specification",
-      "claim": "Supports 5V, 9V, 12V, 15V, or 20V voltage input with PD 2.0 protocol",
+      "claim": "HDR10 support",
       "status": "manufacturer_claim",
       "sources": [
+        "Fstoppers",
         "How-To Geek"
       ],
       "conditions": null
     },
     {
-      "id": "27ffe44dd102407c",
+      "id": "5367f74ce5e1191e",
+      "category": "specification",
+      "claim": "Two USB-C ports and one mini-HDMI port",
+      "status": "manufacturer_claim",
+      "sources": [
+        "Fstoppers",
+        "How-To Geek",
+        "ServeTheHome",
+        "TechRadar",
+        "Tom's Hardware"
+      ],
+      "conditions": null
+    },
+    {
+      "id": "40851e59934af88d",
+      "category": "specification",
+      "claim": "Two 1-watt stereo speakers",
+      "status": "manufacturer_claim",
+      "sources": [
+        "Fstoppers",
+        "How-To Geek",
+        "Tom's Hardware"
+      ],
+      "conditions": null
+    },
+    {
+      "id": "2d79b768e9f7a486",
+      "category": "specification",
+      "claim": "Weight of 1.6-1.72 pounds (780g)",
+      "status": "manufacturer_claim",
+      "sources": [
+        "Fstoppers",
+        "How-To Geek",
+        "TechRadar",
+        "Tom's Hardware"
+      ],
+      "conditions": null
+    },
+    {
+      "id": "3c82f6171d6eb731",
+      "category": "specification",
+      "claim": "Thickness of 0.36-0.37 inches (9.3mm)",
+      "status": "manufacturer_claim",
+      "sources": [
+        "Fstoppers",
+        "How-To Geek",
+        "TechRadar",
+        "Tom's Hardware"
+      ],
+      "conditions": null
+    },
+    {
+      "id": "7eae492ca925553b",
+      "category": "specification",
+      "claim": "Aluminum alloy chassis construction",
+      "status": "manufacturer_claim",
+      "sources": [
+        "Fstoppers",
+        "TechRadar",
+        "Tom's Hardware"
+      ],
+      "conditions": null
+    },
+    {
+      "id": "8459024650b923b3",
+      "category": "specification",
+      "claim": "Adjustable metal kickstand with up to 80-degree range",
+      "status": "manufacturer_claim",
+      "sources": [
+        "Fstoppers",
+        "How-To Geek",
+        "Tom's Hardware"
+      ],
+      "conditions": null
+    },
+    {
+      "id": "b0f8ad04a18234ba",
+      "category": "specification",
+      "claim": "Supports landscape and portrait orientations",
+      "status": "manufacturer_claim",
+      "sources": [
+        "Fstoppers",
+        "How-To Geek",
+        "TechRadar",
+        "Tom's Hardware"
+      ],
+      "conditions": null
+    },
+    {
+      "id": "390137055a2eb203",
+      "category": "specification",
+      "claim": "Includes carrying sleeve and braided cables in box",
+      "status": "manufacturer_claim",
+      "sources": [
+        "Fstoppers",
+        "TechRadar",
+        "Tom's Hardware"
+      ],
+      "conditions": null
+    },
+    {
+      "id": "c98b57ca25505e34",
       "category": "specification",
       "claim": "No built-in battery",
       "status": "manufacturer_claim",
       "sources": [
+        "Fstoppers",
         "How-To Geek",
-        "PCWorld",
         "TechRadar",
         "Tom's Hardware"
       ],
@@ -256,156 +264,197 @@
       "conditions": null
     },
     {
-      "id": "03a963448a1a45e2",
-      "category": "specification",
-      "claim": "Adjustable kickstand supporting up to 80 degrees viewing angle",
-      "status": "manufacturer_claim",
+      "id": "68393ea475e87a82",
+      "category": "measurement",
+      "claim": "99% sRGB color gamut coverage",
+      "status": "measured",
       "sources": [
+        "ServeTheHome"
+      ],
+      "conditions": "Measured via Datacolor SpyderPro; uncalibrated monitor"
+    },
+    {
+      "id": "ee6ad72769d3bc1a",
+      "category": "measurement",
+      "claim": "Average color accuracy of dE 1.20",
+      "status": "measured",
+      "sources": [
+        "ServeTheHome"
+      ],
+      "conditions": "Measured via Datacolor SpyderPro; uncalibrated monitor"
+    },
+    {
+      "id": "6b8e286c700f6e07",
+      "category": "measurement",
+      "claim": "Cyan reproduction delta error over 6",
+      "status": "measured",
+      "sources": [
+        "ServeTheHome"
+      ],
+      "conditions": "Measured via Datacolor SpyderPro; noted as noticeable outlier"
+    },
+    {
+      "id": "7a265f532d7faef3",
+      "category": "measurement",
+      "claim": "78% AdobeRGB and 79% DCI-P3 color gamut",
+      "status": "measured",
+      "sources": [
+        "ServeTheHome"
+      ],
+      "conditions": "Measured via Datacolor SpyderPro"
+    },
+    {
+      "id": "b70440ded5ad8bcb",
+      "category": "measurement",
+      "claim": "115.7% sRGB color gamut coverage",
+      "status": "measured",
+      "sources": [
+        "Tom's Hardware"
+      ],
+      "conditions": "Instrumented color testing"
+    },
+    {
+      "id": "9982a061e3925fa3",
+      "category": "measurement",
+      "claim": "82% DCI-P3 color gamut coverage",
+      "status": "measured",
+      "sources": [
+        "Tom's Hardware"
+      ],
+      "conditions": "Instrumented color testing"
+    },
+    {
+      "id": "31aee95fb5184494",
+      "category": "measurement",
+      "claim": "Maximum brightness of 287.7 nits in default display mode",
+      "status": "measured",
+      "sources": [
+        "Tom's Hardware"
+      ],
+      "conditions": "Default display mode testing"
+    },
+    {
+      "id": "4a99b434cb791e56",
+      "category": "measurement",
+      "claim": "Maximum brightness of 322.6 nits in FPS display mode",
+      "status": "measured",
+      "sources": [
+        "Tom's Hardware"
+      ],
+      "conditions": "FPS display mode testing"
+    },
+    {
+      "id": "f739466ae2da515e",
+      "category": "measurement",
+      "claim": "Power consumption at 0% brightness: 5.9W (47.2 nits)",
+      "status": "measured",
+      "sources": [
+        "ServeTheHome"
+      ],
+      "conditions": "Type-C power input measurement"
+    },
+    {
+      "id": "b38c00182596db96",
+      "category": "measurement",
+      "claim": "Power consumption at 25% brightness: 7.8W (141.4 nits)",
+      "status": "measured",
+      "sources": [
+        "ServeTheHome"
+      ],
+      "conditions": "Type-C power input measurement"
+    },
+    {
+      "id": "24f6d503b60ec754",
+      "category": "measurement",
+      "claim": "Power consumption at 50% brightness: 9.8W (232.0 nits)",
+      "status": "measured",
+      "sources": [
+        "ServeTheHome"
+      ],
+      "conditions": "Type-C power input measurement"
+    },
+    {
+      "id": "4eda8001998c0f47",
+      "category": "measurement",
+      "claim": "Power consumption at 75% brightness: 10.8W (320.0 nits)",
+      "status": "measured",
+      "sources": [
+        "ServeTheHome"
+      ],
+      "conditions": "Type-C power input measurement"
+    },
+    {
+      "id": "9c37b0e7f9a96979",
+      "category": "measurement",
+      "claim": "Power consumption at 100% brightness: 11.8W (409.0 nits)",
+      "status": "measured",
+      "sources": [
+        "ServeTheHome"
+      ],
+      "conditions": "Type-C power input measurement"
+    },
+    {
+      "id": "00eee6549cb0e44e",
+      "category": "strength",
+      "claim": "Sharp and clear 2.5K image quality",
+      "status": "reviewer_assessment",
+      "sources": [
+        "Fstoppers",
         "How-To Geek",
+        "TechRadar"
+      ],
+      "conditions": null
+    },
+    {
+      "id": "4807d67228765b7d",
+      "category": "strength",
+      "claim": "Lightweight and thin design suitable for travel",
+      "status": "reviewer_assessment",
+      "sources": [
+        "Fstoppers",
+        "How-To Geek",
+        "TechRadar",
+        "Tom's Hardware"
+      ],
+      "conditions": null
+    },
+    {
+      "id": "7f7115d6aca4df02",
+      "category": "strength",
+      "claim": "Good color accuracy out of the box for uncalibrated monitor",
+      "status": "reviewer_assessment",
+      "sources": [
+        "Fstoppers",
+        "ServeTheHome"
+      ],
+      "conditions": null
+    },
+    {
+      "id": "42b166d8da56e9c4",
+      "category": "strength",
+      "claim": "Excellent value at current price point",
+      "status": "reviewer_assessment",
+      "sources": [
         "ServeTheHome",
-        "Tom's Hardware"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "eb6070b8a86bb534",
-      "category": "specification",
-      "claim": "Supports both landscape and portrait orientations",
-      "status": "manufacturer_claim",
-      "sources": [
-        "How-To Geek",
-        "PCWorld",
         "TechRadar",
         "Tom's Hardware"
       ],
       "conditions": null
     },
     {
-      "id": "5404951bd105b4f9",
-      "category": "measurement",
-      "claim": "Measured maximum brightness of 287.7 nits in default display mode",
-      "status": "measured",
-      "sources": [
-        "Tom's Hardware"
-      ],
-      "conditions": "Default display mode"
-    },
-    {
-      "id": "461f8515a32ecf30",
-      "category": "measurement",
-      "claim": "Measured maximum brightness of 322.6 nits in FPS display mode",
-      "status": "measured",
-      "sources": [
-        "Tom's Hardware"
-      ],
-      "conditions": "FPS display mode"
-    },
-    {
-      "id": "d6fac06b25a94ef3",
-      "category": "measurement",
-      "claim": "Covers 115.7 percent of sRGB color gamut",
-      "status": "measured",
-      "sources": [
-        "Tom's Hardware"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "5d998943f0071801",
-      "category": "measurement",
-      "claim": "Covers 82 percent of DCI-P3 color gamut",
-      "status": "measured",
-      "sources": [
-        "Tom's Hardware"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "4daafeb1efd5a7ed",
-      "category": "measurement",
-      "claim": "Covers 99 percent of sRGB color gamut",
-      "status": "measured",
-      "sources": [
-        "PCWorld"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "46e4e98e5658f919",
-      "category": "measurement",
-      "claim": "Covers 78 percent of DCI-P3 color gamut",
-      "status": "measured",
-      "sources": [
-        "PCWorld"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "2f2ca55bfebd3e20",
-      "category": "measurement",
-      "claim": "Covers 78 percent of AdobeRGB color gamut",
-      "status": "measured",
-      "sources": [
-        "PCWorld"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "30aa10844378bcd3",
-      "category": "measurement",
-      "claim": "Color temperature of 6300K",
-      "status": "measured",
-      "sources": [
-        "PCWorld"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "8ffea823c72dc516",
-      "category": "measurement",
-      "claim": "Gamma curve of 2.2",
-      "status": "measured",
-      "sources": [
-        "PCWorld"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "3543a47ea8ed1801",
-      "category": "measurement",
-      "claim": "Pixel density of approximately 182 pixels per inch",
-      "status": "measured",
-      "sources": [
-        "PCWorld"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "a088892d552b71bc",
-      "category": "measurement",
-      "claim": "Pixel response time of 9 milliseconds",
-      "status": "manufacturer_claim",
-      "sources": [
-        "PCWorld"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "876ba5f3e2d9259c",
+      "id": "c2db56359842f265",
       "category": "strength",
-      "claim": "High resolution and fast refresh rate for a portable monitor at the price point",
+      "claim": "Handles 120Hz gaming performance adequately",
       "status": "reviewer_assessment",
       "sources": [
-        "How-To Geek",
-        "PCWorld",
-        "Tom's Hardware"
+        "TechRadar"
       ],
-      "conditions": null
+      "conditions": "Tested on Nintendo Switch 2 and Xbox Series X"
     },
     {
-      "id": "da85ba1a06e257ed",
+      "id": "69d5e37935b1dcc0",
       "category": "strength",
-      "claim": "Excellent image quality with vibrant colors in both SDR and HDR modes",
+      "claim": "Vibrant colors and good contrast in SDR and HDR modes",
       "status": "reviewer_assessment",
       "sources": [
         "How-To Geek"
@@ -413,145 +462,34 @@
       "conditions": null
     },
     {
-      "id": "284e492cf4543c4a",
+      "id": "615797dd776c281a",
       "category": "strength",
-      "claim": "Thin and lightweight design makes it highly portable",
+      "claim": "Plug-and-play connectivity without requiring drivers",
       "status": "reviewer_assessment",
       "sources": [
-        "How-To Geek",
-        "PCWorld",
-        "TechRadar",
-        "Tom's Hardware"
+        "Fstoppers"
       ],
       "conditions": null
     },
     {
-      "id": "d6a59c2d8577bfa7",
-      "category": "strength",
-      "claim": "High brightness suitable for use in bright environments",
-      "status": "reviewer_assessment",
+      "id": "aad4ac7a1bd4388b",
+      "category": "weakness",
+      "claim": "Cyan color reproduction is notably inaccurate",
+      "status": "measured",
       "sources": [
-        "PCWorld",
-        "TechRadar"
+        "ServeTheHome"
       ],
-      "conditions": null
+      "conditions": "Delta error over 6 measured via Datacolor SpyderPro"
     },
     {
-      "id": "4277248d35eb640b",
-      "category": "strength",
-      "claim": "Aluminum chassis provides premium feel and resists flexing",
+      "id": "df4c4309646cec36",
+      "category": "weakness",
+      "claim": "No built-in battery limits portability",
       "status": "reviewer_assessment",
       "sources": [
-        "Tom's Hardware"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "51670ebda092f5c6",
-      "category": "strength",
-      "claim": "Includes protective sleeve and braided cables",
-      "status": "reviewer_assessment",
-      "sources": [
+        "Fstoppers",
         "How-To Geek",
         "TechRadar",
-        "Tom's Hardware"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "c01de276a54ccbbd",
-      "category": "strength",
-      "claim": "Speakers are better than expected for a portable monitor",
-      "status": "reviewer_assessment",
-      "sources": [
-        "TechRadar"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "f0b308b037ac59c6",
-      "category": "weakness",
-      "claim": "Limited viewing angles; screen darkens noticeably when viewed off-axis",
-      "status": "reviewer_assessment",
-      "sources": [
-        "How-To Geek",
-        "PCWorld"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "955f2ccf4e85b583",
-      "category": "weakness",
-      "claim": "No built-in battery requires external power source for operation",
-      "status": "reviewer_assessment",
-      "sources": [
-        "How-To Geek",
-        "PCWorld",
-        "TechRadar",
-        "Tom's Hardware"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "8522d466eec84a37",
-      "category": "weakness",
-      "claim": "No touchscreen functionality",
-      "status": "reviewer_assessment",
-      "sources": [
-        "How-To Geek"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "7eadb505e29e0932",
-      "category": "weakness",
-      "claim": "Mini-HDMI port is less common and inconvenient; full-size HDMI adapter required",
-      "status": "reviewer_assessment",
-      "sources": [
-        "How-To Geek",
-        "PCWorld",
-        "ServeTheHome",
-        "Tom's Hardware"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "ef13af1d813bab76",
-      "category": "weakness",
-      "claim": "Settings apply globally to all inputs instead of per-input configuration",
-      "status": "reviewer_assessment",
-      "sources": [
-        "How-To Geek"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "99b8cb536df4915e",
-      "category": "weakness",
-      "claim": "Contrast ratio is limited compared to OLED alternatives",
-      "status": "reviewer_assessment",
-      "sources": [
-        "PCWorld"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "98a2be28a7102a4c",
-      "category": "weakness",
-      "claim": "HDR implementation is underwhelming with limited practical benefit",
-      "status": "reviewer_assessment",
-      "sources": [
-        "PCWorld",
-        "TechRadar"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "7fe0d446f4bd6cae",
-      "category": "weakness",
-      "claim": "Speakers lack bass and sound tinny at higher volumes",
-      "status": "reviewer_assessment",
-      "sources": [
         "Tom's Hardware"
       ],
       "conditions": null
@@ -564,115 +502,148 @@
       "sources": [
         "TechRadar"
       ],
-      "conditions": "Nintendo Switch 2 with HDR enabled"
+      "conditions": "Tested with Switch 2; not observed on Xbox Series X"
     },
     {
-      "id": "ca15961a99fa5c57",
+      "id": "84716d89f846b087",
+      "category": "weakness",
+      "claim": "Limited viewing angles with noticeable darkening off-axis",
+      "status": "observed",
+      "sources": [
+        "Fstoppers",
+        "How-To Geek"
+      ],
+      "conditions": null
+    },
+    {
+      "id": "c8e5b8fe46459b84",
+      "category": "weakness",
+      "claim": "Built-in speakers lack bass and sound tinny at higher volumes",
+      "status": "reviewer_assessment",
+      "sources": [
+        "Fstoppers",
+        "How-To Geek",
+        "Tom's Hardware"
+      ],
+      "conditions": null
+    },
+    {
+      "id": "b1860736b035d4c3",
       "category": "weakness",
       "claim": "On-screen display menu navigation is clunky",
       "status": "reviewer_assessment",
       "sources": [
+        "How-To Geek",
         "TechRadar"
       ],
       "conditions": null
     },
     {
-      "id": "70b84445373bca47",
+      "id": "2c168692b9302819",
       "category": "weakness",
-      "claim": "Monitor runs warm after extended use",
+      "claim": "Monitor runs warm around port area after extended use",
       "status": "observed",
+      "sources": [
+        "Fstoppers"
+      ],
+      "conditions": null
+    },
+    {
+      "id": "62d509fcf36bb247",
+      "category": "weakness",
+      "claim": "Color coverage of 107% sRGB insufficient for professional content creators",
+      "status": "reviewer_assessment",
       "sources": [
         "TechRadar"
       ],
       "conditions": null
     },
     {
-      "id": "358e0bafc8b6e682",
-      "category": "compatibility",
-      "claim": "Works with laptops and tablets via USB-C for extended or duplicated display",
-      "status": "reviewer_assessment",
-      "sources": [
-        "How-To Geek"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "14a8cfa6a0732db9",
-      "category": "compatibility",
-      "claim": "Compatible with smartphones with TV-out functionality via USB-C",
-      "status": "reviewer_assessment",
-      "sources": [
-        "How-To Geek"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "b331459c1ff233da",
-      "category": "compatibility",
-      "claim": "Compatible with Nintendo Switch when connected to 15V minimum PD power source",
-      "status": "reviewer_assessment",
-      "sources": [
-        "How-To Geek"
-      ],
-      "conditions": "15V minimum PD power source required for charging"
-    },
-    {
-      "id": "5dfe9f8580e080a6",
-      "category": "compatibility",
-      "claim": "Compatible with Xbox Series X and PlayStation 5 Pro via HDMI",
-      "status": "reviewer_assessment",
-      "sources": [
-        "How-To Geek"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "855705c8a6a27c8a",
-      "category": "compatibility",
-      "claim": "Works with Nintendo Switch 2 via HDMI with external power",
+      "id": "7267b8620a52e200",
+      "category": "weakness",
+      "claim": "Settings apply globally to all inputs rather than per-input",
       "status": "observed",
       "sources": [
-        "TechRadar"
+        "How-To Geek"
       ],
-      "conditions": "Requires docking console and external power supply"
+      "conditions": null
     },
     {
-      "id": "272cfe182904763d",
-      "category": "compatibility",
-      "claim": "Compatible with Lenovo Legion Go handheld gaming PC",
+      "id": "6e6ff15a36875f19",
+      "category": "weakness",
+      "claim": "Brightness defaults to 15% when powered via single USB-C cable",
       "status": "observed",
+      "sources": [
+        "Fstoppers"
+      ],
+      "conditions": "Firmware behavior with single USB-C connection"
+    },
+    {
+      "id": "4f88b8085c9c68d2",
+      "category": "weakness",
+      "claim": "Single kickstand support leg may cause tipping when pressing upper left corner",
+      "status": "observed",
+      "sources": [
+        "Fstoppers"
+      ],
+      "conditions": "Depending on angle of use"
+    },
+    {
+      "id": "1e855ccdc2494cb3",
+      "category": "weakness",
+      "claim": "Angled USB-C cable creates awkward positioning if monitor placed on right side of setup",
+      "status": "observed",
+      "sources": [
+        "Fstoppers"
+      ],
+      "conditions": null
+    },
+    {
+      "id": "1f17d35f7852fa73",
+      "category": "compatibility",
+      "claim": "Works with laptops, tablets, smartphones, gaming consoles, and Nintendo Switch",
+      "status": "reviewer_assessment",
+      "sources": [
+        "Fstoppers"
+      ],
+      "conditions": "USB-C models for tablets and phones"
+    },
+    {
+      "id": "40cd5091ce520ac0",
+      "category": "compatibility",
+      "claim": "Compatible with Mac systems but drains laptop battery during standby",
+      "status": "observed",
+      "sources": [
+        "Fstoppers"
+      ],
+      "conditions": "12 hours of standby can fully drain battery"
+    },
+    {
+      "id": "377bc45b114c4324",
+      "category": "compatibility",
+      "claim": "Supports AMD FreeSync variable refresh rate",
+      "status": "manufacturer_claim",
       "sources": [
         "Tom's Hardware"
       ],
       "conditions": null
     },
     {
-      "id": "e1d788d2344af15e",
+      "id": "bc5249b1610e4a3d",
       "category": "purchase_advice",
-      "claim": "Recommended for business travel and professionals needing portable screen expansion",
+      "claim": "Good value for mid-tier portable monitor at $143-150 price range",
       "status": "reviewer_assessment",
       "sources": [
+        "ServeTheHome",
         "TechRadar",
         "Tom's Hardware"
       ],
       "conditions": null
     },
     {
-      "id": "10d67b22e7936b51",
+      "id": "cbf52129a7b7c227",
       "category": "purchase_advice",
-      "claim": "Suitable for mobile gaming with 180Hz refresh rate",
-      "status": "reviewer_assessment",
-      "sources": [
-        "How-To Geek",
-        "PCWorld",
-        "Tom's Hardware"
-      ],
-      "conditions": null
-    },
-    {
-      "id": "666287228385b89f",
-      "category": "purchase_advice",
-      "claim": "Not recommended for professional content creators due to limited color accuracy at 107% sRGB",
+      "claim": "Suitable for business travel and gaming on the go",
       "status": "reviewer_assessment",
       "sources": [
         "TechRadar"
@@ -680,80 +651,58 @@
       "conditions": null
     },
     {
-      "id": "6fb358b86aa5c63d",
+      "id": "c037becc4299c26e",
       "category": "purchase_advice",
-      "claim": "Better value proposition than predecessor Arzopa Z1FC at similar price",
+      "claim": "Practical for on-location photo editing workflows",
       "status": "reviewer_assessment",
       "sources": [
-        "How-To Geek"
+        "Fstoppers"
       ],
       "conditions": null
     },
     {
-      "id": "0f5e7aea293ab2fe",
-      "category": "uncertainty",
-      "claim": "Exact power requirements for USB-C power delivery not specified in documentation",
-      "status": "unclear",
+      "id": "dd28910ddaef06d0",
+      "category": "purchase_advice",
+      "claim": "Not recommended for professional content creators requiring color accuracy",
+      "status": "reviewer_assessment",
       "sources": [
-        "PCWorld"
+        "TechRadar"
       ],
       "conditions": null
+    },
+    {
+      "id": "e645d2b1dde5ea5b",
+      "category": "uncertainty",
+      "claim": "Actual brightness performance falls short of 400 nits specification in standard modes",
+      "status": "unclear",
+      "sources": [
+        "Tom's Hardware"
+      ],
+      "conditions": "Measured 287.7 nits default, 322.6 nits FPS mode versus 400 nits spec"
     }
   ],
   "conflicts": [
     {
-      "topic": "HDR support specification",
+      "topic": "sRGB color gamut coverage",
       "positions": [
         {
-          "publisher": "How-To Geek",
-          "claim": "Monitor supports HDR10+"
-        },
-        {
-          "publisher": "PCWorld",
-          "claim": "Monitor supports HDR but quality is underwhelming"
+          "publisher": "ServeTheHome",
+          "claim": "99% sRGB coverage"
         },
         {
           "publisher": "TechRadar",
-          "claim": "Monitor supports HDR 10"
-        }
-      ],
-      "editorial_guidance": "Reviewers agree HDR is present but differ on designation (HDR10+ vs HDR10) and implementation quality. How-To Geek claims HDR10+ support while PCWorld and TechRadar indicate HDR10. The practical consensus is that HDR implementation is limited in benefit regardless of specification."
-    },
-    {
-      "topic": "Color gamut coverage",
-      "positions": [
+          "claim": "107% sRGB coverage"
+        },
         {
           "publisher": "Tom's Hardware",
-          "claim": "Covers 115.7% sRGB and 82% DCI-P3"
+          "claim": "115.7% sRGB coverage"
         },
         {
-          "publisher": "PCWorld",
-          "claim": "Covers 99% sRGB and 78% DCI-P3"
-        },
-        {
-          "publisher": "TechRadar",
-          "claim": "Covers 107% sRGB"
+          "publisher": "Fstoppers",
+          "claim": "107% sRGB coverage"
         }
       ],
-      "editorial_guidance": "Measured color gamut varies across reviewers, likely due to different measurement conditions and calibration methods. Tom's Hardware reports the highest sRGB coverage at 115.7%, while PCWorld reports 99% and TechRadar reports 107%. These differences are within typical measurement variance for portable displays."
-    },
-    {
-      "topic": "Maximum brightness measurement",
-      "positions": [
-        {
-          "publisher": "Tom's Hardware",
-          "claim": "Measured 287.7 nits maximum in default mode and 322.6 nits in FPS mode"
-        },
-        {
-          "publisher": "How-To Geek",
-          "claim": "400 nits maximum brightness specification met or exceeded in testing"
-        },
-        {
-          "publisher": "PCWorld",
-          "claim": "Comes close to 400 nits of SDR brightness"
-        }
-      ],
-      "editorial_guidance": "Tom's Hardware's instrumented measurements show lower brightness than manufacturer spec and other reviewers' observations. This may reflect different measurement methodology or display settings. Readers should note the discrepancy between manufacturer claim (400 nits) and Tom's Hardware's measured results (287.7-322.6 nits)."
+      "editorial_guidance": "Different measurement methodologies and equipment produce varying results. ServeTheHome used Datacolor SpyderPro, Tom's Hardware used instrumented testing. Manufacturers may also report different values. All measurements are valid within their respective testing contexts."
     }
   ]
 }
